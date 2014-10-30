@@ -1,16 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
+using System.IO;
+using System.Reflection;
 using MineLib.Network.IO;
 
 namespace MineLib.Network
 {
+    public interface IPluginBase
+    {
+        string Name { get; }
+        string Version { get; }
+    }
+
+    public static class Plugin
+    {
+        public static T CreatePlugin<T>(string file)
+        {
+            T plugin = default(T);
+
+            Type pluginType = null;
+
+            if (File.Exists(file))
+            {
+                Assembly asm = Assembly.LoadFile(file);
+
+                if (asm != null)
+                {
+                    for (int i = 0; i < asm.GetTypes().Length; i++)
+                    {
+                        Type type = (Type)asm.GetTypes().GetValue(i);
+
+                        if (IsImplementationOf(type, typeof(IPluginBase)))
+                        {
+                            plugin = (T)Activator.CreateInstance(type);
+                        }
+                    }
+                }
+            }
+
+            return plugin;
+        }
+
+        private static bool IsImplementationOf(Type type, Type @interface)
+        {
+            Type[] interfaces = type.GetInterfaces();
+
+            for (int index = 0; index < interfaces.Length; index++)
+            {
+                Type current = interfaces[index];
+                if (IsSubtypeOf(ref current, @interface)) return true;
+            }
+            return false;
+        }
+
+        private static bool IsSubtypeOf(ref Type a, Type b)
+        {
+            if (a == b)
+            {
+                return true;
+            }
+
+            if (a.IsGenericType)
+            {
+                a = a.GetGenericTypeDefinition();
+
+                if (a == b)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
     public sealed partial class NetworkHandler : INetworkHandler
     {
         // -- Debugging
         public List<IPacket> PacketsReceived { get; set; }
         public List<IPacket> PacketsSended { get; set; }
-        // -- Debugging.
+        // -- Debugging
 
         #region Properties
 
@@ -18,16 +87,16 @@ namespace MineLib.Network
 
         public bool DebugPackets { get; set; }
 
-        public bool Connected { get { return _baseSock.Connected; } }
+        public bool Connected { get { return _protocol.Connected; } }
 
-        public bool Crashed { get; private set; }
+        public bool Crashed { get { return _protocol.Crashed; } }
 
         #endregion
 
-        private readonly IMinecraftClient _minecraft;
+        public IPacketSender PacketSender { get { return _protocol.PacketSender; } }
 
-        private Socket _baseSock;
-        private IMinecraftStream _stream;
+        private readonly IMinecraftClient _minecraft;
+        private readonly IProtocol _protocol;
 
         public NetworkHandler(IMinecraftClient client)
         {
@@ -35,34 +104,22 @@ namespace MineLib.Network
 
             PacketsReceived = new List<IPacket>();
             PacketsSended = new List<IPacket>();
+
+            _protocol = Plugin.CreatePlugin<IProtocol>(string.Format(Environment.CurrentDirectory + "\\" + "{0}.dll", NetworkMode));
         }
+
 
         /// <summary>
         /// Start NetworkHandler.
         /// </summary>
-        public void Start(bool debugPackets = true)
+        public void Connect(bool debugPackets = true)
         {
             DebugPackets = debugPackets;
-
-            // -- Connect to server.
-            switch (NetworkMode)
-            {
-                case NetworkMode.Modern:
-                    _baseSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    _baseSock.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, ConnectedModern, null);
-                    break;
-
-                case NetworkMode.Classic:
-                    _baseSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    _baseSock.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, ConnectedClassic, null);
-                    break;
-
-                case NetworkMode.PocketEdition:
-                    _baseSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Udp);
-                    _baseSock.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, ConnectedPocketEdition, null);
-                    break;
-            }
+            
+            _protocol.PacketHandled += RaisePacketHandled;
+            _protocol.Connect(_minecraft);
         }
+
 
         public IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, object state)
         {
@@ -79,24 +136,22 @@ namespace MineLib.Network
 
         public IAsyncResult BeginSend(IPacket packet, AsyncCallback asyncCallback, object state)
         {
-            return _stream.BeginWrite(packet, asyncCallback, state);
+            return _protocol.BeginSend(packet, asyncCallback, state);
         }
 
         public void EndSend(IAsyncResult asyncResult)
         {
-            _stream.EndWrite(asyncResult);
+            _protocol.EndSend(asyncResult);
         }
+
 
         /// <summary>
         /// Dispose NetworkHandler.
         /// </summary>
         public void Dispose()
         {
-            if (_baseSock != null)
-                _baseSock.Close();
-            
-            if (_stream != null)        
-                _stream.Dispose();       
+            if (_protocol != null)
+                _protocol.Dispose();
 
             if (PacketsReceived != null)
                 PacketsReceived.Clear();

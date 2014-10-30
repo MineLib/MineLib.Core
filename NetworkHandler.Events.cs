@@ -5,10 +5,8 @@ namespace MineLib.Network
     public sealed partial class NetworkHandler
     {
         public event PacketHandler OnPacketHandled;
-        private event DataReceived OnDataReceived;
 
-
-        private void RaisePacketHandled(int id, IPacket packet, ServerState? state)
+        public void RaisePacketHandled(int id, IPacket packet, ServerState? state)
         {
             if (DebugPackets)
                 PacketsReceived.Add(packet);

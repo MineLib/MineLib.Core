@@ -9,19 +9,6 @@ namespace MineLib.Network.IO
     /// </summary>
     public interface IMinecraftStream : IDisposable
     {
-        NetworkMode Mode { get; set; }
-
-        // -- Modern
-        bool EncryptionEnabled { get; set; }
-
-        bool ModernCompressionEnabled { get; set; }
-        long ModernCompressionThreshold { get; set; }
-
-        void InitializeEncryption(byte[] key);
-
-        void SetCompression(long threshold);
-        // -- Modern
-
         void WriteString(string value);
 
         void WriteVarInt(int value);
@@ -64,11 +51,10 @@ namespace MineLib.Network.IO
         byte[] ReadByteArray(int value);
 
 
-        IAsyncResult BeginWrite(IPacket packet, AsyncCallback callback, object state);
+        IAsyncResult BeginWritePacket(IPacket packet, AsyncCallback callback, object state);
         void EndWrite(IAsyncResult asyncResult);
 
         IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state);
-
         int EndRead(IAsyncResult asyncResult);
 
 

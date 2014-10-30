@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using MineLib.Network.Events;
+using MineLib.Network.IO;
 
 namespace MineLib.Network
 {
@@ -13,10 +15,7 @@ namespace MineLib.Network
         List<IPacket> PacketsSended { get; set; }
         // -- Debugging
 
-        // -- Modern
-        bool CompressionEnabled { get; }
-        long CompressionThreshold { get; }
-        // -- Modern
+        IPacketSender PacketSender { get; }
 
         NetworkMode NetworkMode { get; }
 
@@ -26,10 +25,12 @@ namespace MineLib.Network
         bool Crashed { get; }
 
 
-        void Start(bool debugPackets = true);
+        void Connect(bool debugPackets = true);
 
         IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, object state);
         IAsyncResult BeginSend(IPacket packet, AsyncCallback asyncCallback, object state);
         void EndSend(IAsyncResult asyncResult);
+
+        void RaisePacketHandled(int id, IPacket packet, ServerState? state);
     }
 }

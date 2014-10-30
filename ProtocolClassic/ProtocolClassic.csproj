@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BDADDF68-34A0-41C9-8728-8DE743CC4383}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProtocolClassic</RootNamespace>
+    <AssemblyName>ProtocolClassic</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\Libraries\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enum\AllowDeletion.cs" />
+    <Compile Include="Enum\AllowPlacement.cs" />
+    <Compile Include="Enum\Block.cs" />
+    <Compile Include="Enum\EnvironmentalVariable.cs" />
+    <Compile Include="Enum\Flying.cs" />
+    <Compile Include="Enum\KeyMods.cs" />
+    <Compile Include="Enum\NoClip.cs" />
+    <Compile Include="Enum\PacketsEnums.cs" />
+    <Compile Include="Enum\PreventChange.cs" />
+    <Compile Include="Enum\SetBlockMode.cs" />
+    <Compile Include="Enum\SpawnControl.cs" />
+    <Compile Include="Enum\Speeding.cs" />
+    <Compile Include="Enum\ThirdPersonView.cs" />
+    <Compile Include="Enum\UserType.cs" />
+    <Compile Include="Enum\WeatherType.cs" />
+    <Compile Include="Protocol.cs" />
+    <Compile Include="IO\MinecraftDataReader.cs" />
+    <Compile Include="IO\MinecraftStream.cs" />
+    <Compile Include="Packets\Client\MessagePacket.cs" />
+    <Compile Include="Packets\Client\PlayerIdentification.cs" />
+    <Compile Include="Packets\Client\PositionAndOrientation.cs" />
+    <Compile Include="Packets\Client\SetBlock.cs" />
+    <Compile Include="Packets\Extension\Client\ExtEntryPacket.cs" />
+    <Compile Include="Packets\Extension\Client\ExtInfoPacket.cs" />
+    <Compile Include="Packets\Extension\Server\ChangeModelPacket.cs" />
+    <Compile Include="Packets\Extension\Server\CustomBlockSupportLevelPacket.cs" />
+    <Compile Include="Packets\Extension\Server\EnvSetColorPacket.cs" />
+    <Compile Include="Packets\Extension\Server\EnvSetMapAppearancePacket.cs" />
+    <Compile Include="Packets\Extension\Server\EnvSetWeatherTypePacket.cs" />
+    <Compile Include="Packets\Extension\Server\ExtAddEntity2Packet.cs" />
+    <Compile Include="Packets\Extension\Server\ExtAddPlayerNamePacket.cs" />
+    <Compile Include="Packets\Extension\Server\ExtRemovePlayerNamePacket.cs" />
+    <Compile Include="Packets\Extension\Server\HackControlPacket.cs" />
+    <Compile Include="Packets\Extension\Server\HoldThisPacket.cs" />
+    <Compile Include="Packets\Extension\Server\MakeSelectionPacket.cs" />
+    <Compile Include="Packets\Extension\Server\RemoveSelectionPacket.cs" />
+    <Compile Include="Packets\Extension\Server\SetBlockPermissionPacket.cs" />
+    <Compile Include="Packets\Extension\Server\SetClickDistancePacket.cs" />
+    <Compile Include="Packets\Extension\Server\SetTextHotKeyPacket.cs" />
+    <Compile Include="Packets\ServerResponse.cs" />
+    <Compile Include="Packets\Server\DespawnPlayer.cs" />
+    <Compile Include="Packets\Server\DisconnectPlayer.cs" />
+    <Compile Include="Packets\Server\LevelDataChunk.cs" />
+    <Compile Include="Packets\Server\LevelFinalize.cs" />
+    <Compile Include="Packets\Server\LevelInitialize.cs" />
+    <Compile Include="Packets\Server\Message.cs" />
+    <Compile Include="Packets\Server\OrientationUpdate.cs" />
+    <Compile Include="Packets\Server\Ping.cs" />
+    <Compile Include="Packets\Server\PositionAndOrientationTeleport.cs" />
+    <Compile Include="Packets\Server\PositionAndOrientationUpdate.cs" />
+    <Compile Include="Packets\Server\PositionUpdate.cs" />
+    <Compile Include="Packets\Server\ServerIdentification.cs" />
+    <Compile Include="Packets\Server\SetBlock.cs" />
+    <Compile Include="Packets\Server\SpawnPlayer.cs" />
+    <Compile Include="Packets\Server\UpdateUserType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MineLib.Network.csproj">
+      <Project>{e7c8320e-49a4-4187-afe3-15c814201e1e}</Project>
+      <Name>MineLib.Network</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

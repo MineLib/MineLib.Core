@@ -2,8 +2,8 @@
 {
     public enum NetworkMode
     {
-        Modern,
-        Classic,
-        PocketEdition
+        ProtocolModern,
+        ProtocolClassic,
+        ProtocolPocketEdition
     }
 }

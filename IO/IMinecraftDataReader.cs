@@ -8,8 +8,6 @@ namespace MineLib.Network.IO
     /// </summary>
     public interface IMinecraftDataReader : IDisposable
     {
-        NetworkMode Mode { get; set; }
-
         string ReadString();
 
         int ReadVarInt();
