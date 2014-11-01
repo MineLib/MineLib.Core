@@ -3,7 +3,7 @@ using MineLib.Network.IO;
 
 namespace ProtocolModern.Packets.Client
 {
-    public struct HeldItemChangPacket : IPacket
+    public struct HeldItemChangePacket : IPacket
     {
         public short Slot;
 

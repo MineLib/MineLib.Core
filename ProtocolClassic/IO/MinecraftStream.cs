@@ -265,18 +265,7 @@ namespace ProtocolClassic.IO
         }
 
 
-        #region BeginWrite and BeginRead
-
-        public IAsyncResult BeginWritePacket(IPacket packet, AsyncCallback callback, object state)
-        {
-            _packetWriteDelegate = WriteFunction;
-
-            return _packetWriteDelegate.BeginInvoke(packet, callback, state);
-        }
-
-        #region BeginWrite
-
-        private IAsyncResult WriteFunction(IPacket packet)
+        public void SendPacket(IPacket packet)
         {
             using (var ms = new MemoryStream())
             using (var stream = new MinecraftStream(ms))
@@ -284,18 +273,39 @@ namespace ProtocolClassic.IO
                 packet.WritePacket(stream);
                 var data = ms.ToArray();
 
-                return BeginWriteClassic(data, null, null);
+                _stream.Write(data, 0, data.Length);
             }
         }
 
-        private IAsyncResult BeginWriteClassic(byte[] data, AsyncCallback callback, object state)
+        public int Read(byte[] buffer, int offset, int count)
+        {
+            return _stream.Read(buffer, offset, count);
+        }
+
+
+        public IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback callback, object state)
+        {
+            _packetWriteDelegate = packet1 =>
+            {
+                using (var ms = new MemoryStream())
+                using (var stream = new MinecraftStream(ms))
+                {
+                    packet.WritePacket(stream);
+                    var data = ms.ToArray();
+
+                    return BeginSend(data, null, null);
+                }
+            };
+
+            return _packetWriteDelegate.BeginInvoke(packet, callback, state);
+        }
+
+        public IAsyncResult BeginSend(byte[] data, AsyncCallback callback, object state)
         {
             return _stream.BeginWrite(data, 0, data.Length, callback, state);
         }
 
-        #endregion
-
-        public void EndWrite(IAsyncResult asyncResult)
+        public void EndSend(IAsyncResult asyncResult)
         {
 
             try { _packetWriteDelegate.EndInvoke(asyncResult); }
@@ -312,8 +322,6 @@ namespace ProtocolClassic.IO
         {
             return _stream.EndRead(asyncResult);
         }
-
-        #endregion
 
 
         public void Purge()

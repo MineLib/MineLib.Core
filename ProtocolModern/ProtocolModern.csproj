@@ -33,8 +33,9 @@
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\Libraries\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
@@ -43,10 +44,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseClients\ServerInfoParser.cs" />
-    <Compile Include="BaseClients\ServerInfoParser.Events.cs" />
-    <Compile Include="BaseClients\ServerInfoParser.Json.cs" />
-    <Compile Include="BaseClients\ServerInfoParser.Packets.cs" />
     <Compile Include="DebugHelpers.cs" />
     <Compile Include="IO\MinecraftDataReader.cs" />
     <Compile Include="IO\MinecraftStream.cs" />
@@ -83,7 +80,7 @@
     <Compile Include="Enum\UpdateBlockEntityAction.cs" />
     <Compile Include="Enum\UseEntity.cs" />
     <Compile Include="Enum\WorldBorderAction.cs" />
-    <Compile Include="IO\PacketSender.cs" />
+    <Compile Include="Protocol.Packets.cs" />
     <Compile Include="Protocol.cs" />
     <Compile Include="Packets\ClientResponse.cs" />
     <Compile Include="Packets\Client\AnimationPacket.cs" />
@@ -96,7 +93,7 @@
     <Compile Include="Packets\Client\CreativeInventoryActionPacket.cs" />
     <Compile Include="Packets\Client\EnchantItemPacket.cs" />
     <Compile Include="Packets\Client\EntityActionPacket.cs" />
-    <Compile Include="Packets\Client\HeldItemChangPacket.cs" />
+    <Compile Include="Packets\Client\HeldItemChangePacket.cs" />
     <Compile Include="Packets\Client\KeepAlivePacket.cs" />
     <Compile Include="Packets\Client\Login\EncryptionResponsePacket.cs" />
     <Compile Include="Packets\Client\Login\LoginStartPacket.cs" />
@@ -199,12 +196,17 @@
     <Compile Include="Packets\Server\WindowPropertyPacket.cs" />
     <Compile Include="Packets\Server\WorldBorderPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol.AsyncSender.cs" />
+    <Compile Include="Protocol.AsyncReceiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MineLib.Network.csproj">
       <Project>{e7c8320e-49a4-4187-afe3-15c814201e1e}</Project>
       <Name>MineLib.Network</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Libraries\ICSharpCode.SharpZipLib.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

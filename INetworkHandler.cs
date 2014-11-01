@@ -1,36 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using MineLib.Network.Events;
-using MineLib.Network.IO;
+using MineLib.Network.Data;
 
 namespace MineLib.Network
 {
     public interface INetworkHandler : IDisposable
     {
-        event PacketHandler OnPacketHandled;
-
-        // -- Debugging
-        List<IPacket> PacketsReceived { get; set;}
-        List<IPacket> PacketsSended { get; set; }
-        // -- Debugging
-
-        IPacketSender PacketSender { get; }
+        #region Properties
 
         NetworkMode NetworkMode { get; }
-
-        bool DebugPackets { get; set; }
+        ConnectionState ConnectionState { get; }
+        
+        bool SavePackets { get; }
 
         bool Connected { get; }
-        bool Crashed { get; }
 
+        #endregion
 
-        void Connect(bool debugPackets = true);
+        INetworkHandler Create(IMinecraftClient client, bool debugPackets = true);
 
-        IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginSend(IPacket packet, AsyncCallback asyncCallback, object state);
-        void EndSend(IAsyncResult asyncResult);
+        IAsyncResult BeginConnect(string ip, short port, AsyncCallback asyncCallback, object state);
+        void EndConnect(IAsyncResult asyncResult);
+        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state);
+        void EndDisconnect(IAsyncResult asyncResult);
 
-        void RaisePacketHandled(int id, IPacket packet, ServerState? state);
+        void Connect();
+        void Disconnect();
+
+        IAsyncResult BeginConnectToServer(AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginKeepAlive(int value, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginSendClientInfo(AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginRespawn(AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginPlayerMoved(PlaverMovedData data, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginPlayerSetRemoveBlock(PlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginSendMessage(string message, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginPlayerHeldItem(short slot, AsyncCallback asyncCallback, object state);
+    }
+
+    public class NetworkHandlerException : Exception
+    {
+        public NetworkHandlerException()
+            : base() { }
+
+        public NetworkHandlerException(string message)
+            : base(message) { }
+
+        public NetworkHandlerException(string format, params object[] args)
+            : base(string.Format(format, args)) { }
+
+        public NetworkHandlerException(string message, Exception innerException)
+            : base(message, innerException) { }
+
+        public NetworkHandlerException(string format, Exception innerException, params object[] args)
+            : base(string.Format(format, args), innerException) { }
     }
 }

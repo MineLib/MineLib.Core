@@ -1,147 +1,100 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using MineLib.Network.IO;
+using MineLib.Network.Module;
 
 namespace MineLib.Network
 {
-    public interface IPluginBase
-    {
-        string Name { get; }
-        string Version { get; }
-    }
-
-    public static class Plugin
-    {
-        public static T CreatePlugin<T>(string file)
-        {
-            T plugin = default(T);
-
-            Type pluginType = null;
-
-            if (File.Exists(file))
-            {
-                Assembly asm = Assembly.LoadFile(file);
-
-                if (asm != null)
-                {
-                    for (int i = 0; i < asm.GetTypes().Length; i++)
-                    {
-                        Type type = (Type)asm.GetTypes().GetValue(i);
-
-                        if (IsImplementationOf(type, typeof(IPluginBase)))
-                        {
-                            plugin = (T)Activator.CreateInstance(type);
-                        }
-                    }
-                }
-            }
-
-            return plugin;
-        }
-
-        private static bool IsImplementationOf(Type type, Type @interface)
-        {
-            Type[] interfaces = type.GetInterfaces();
-
-            for (int index = 0; index < interfaces.Length; index++)
-            {
-                Type current = interfaces[index];
-                if (IsSubtypeOf(ref current, @interface)) return true;
-            }
-            return false;
-        }
-
-        private static bool IsSubtypeOf(ref Type a, Type b)
-        {
-            if (a == b)
-            {
-                return true;
-            }
-
-            if (a.IsGenericType)
-            {
-                a = a.GetGenericTypeDefinition();
-
-                if (a == b)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-    }
-
     public sealed partial class NetworkHandler : INetworkHandler
     {
-        // -- Debugging
-        public List<IPacket> PacketsReceived { get; set; }
-        public List<IPacket> PacketsSended { get; set; }
-        // -- Debugging
-
         #region Properties
 
         public NetworkMode NetworkMode { get { return _minecraft.Mode; } }
+        public ConnectionState ConnectionState { get { return _protocol.ConnectionState; } }
 
-        public bool DebugPackets { get; set; }
+        public bool SavePackets { get { return _protocol.SavePackets; } }
 
         public bool Connected { get { return _protocol.Connected; } }
 
-        public bool Crashed { get { return _protocol.Crashed; } }
-
         #endregion
 
-        public IPacketSender PacketSender { get { return _protocol.PacketSender; } }
 
-        private readonly IMinecraftClient _minecraft;
-        private readonly IProtocol _protocol;
+        private IProtocol _protocol;
 
-        public NetworkHandler(IMinecraftClient client)
-        {
-            _minecraft = client;
-
-            PacketsReceived = new List<IPacket>();
-            PacketsSended = new List<IPacket>();
-
-            _protocol = Plugin.CreatePlugin<IProtocol>(string.Format(Environment.CurrentDirectory + "\\" + "{0}.dll", NetworkMode));
-        }
+        private bool _customModule;
 
 
         /// <summary>
         /// Start NetworkHandler.
         /// </summary>
-        public void Connect(bool debugPackets = true)
+        public INetworkHandler Create(IMinecraftClient client, bool debugPackets = true)
         {
-            DebugPackets = debugPackets;
-            
-            _protocol.PacketHandled += RaisePacketHandled;
-            _protocol.Connect(_minecraft);
+            _minecraft = client;
+
+            if (File.Exists(string.Format(Environment.CurrentDirectory + "\\{0}.dll", NetworkMode)) && NetworkMode == NetworkMode.CustomModule)
+                _customModule = true;
+            else if(NetworkMode == NetworkMode.CustomModule)
+                throw new NetworkHandlerException(string.Format("Custom module loading error: {0}.dll was not found.", NetworkMode));
+
+            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            _protocol = ModuleLoader.CreateModule<IProtocol>(string.Format(path + "\\{0}.dll", NetworkMode));
+            if(_protocol == null)
+                throw new NetworkHandlerException(string.Format("Native module loading error: {0}.dll was not found or corrupted.", NetworkMode));
+
+            _protocol.Create(_minecraft, debugPackets);
+        
+            return this;
+        }
+
+        public IAsyncResult BeginConnect(string ip, short port, AsyncCallback asyncCallback, object state)
+        {
+            if(_customModule)
+                throw new NetworkHandlerException("Custom module error: Use non-async methods in a custom library");
+
+            return _protocol.BeginConnect(ip, port, asyncCallback, state);
+        }
+
+        public void EndConnect(IAsyncResult asyncResult)
+        {
+            if (_customModule)
+                throw new NetworkHandlerException("Custom module error: Use non-async methods in a custom library");
+
+            _protocol.EndConnect(asyncResult);
+        }
+
+        public IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state)
+        {
+            if (_customModule)
+                throw new NetworkHandlerException("Custom module error: Use non-async methods in a custom library");
+
+            return _protocol.BeginDisconnect(asyncCallback, state);
+        }
+
+        public void EndDisconnect(IAsyncResult asyncResult)
+        {
+            if (_customModule)
+                throw new NetworkHandlerException("Custom module error: Use non-async methods in a custom library");
+
+            _protocol.EndDisconnect(asyncResult);
         }
 
 
-        public IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, object state)
+        public void Connect()
         {
-            if (!Connected)
-                throw new Exception("Connection error");
-
-            if (DebugPackets)
-                PacketsSended.Add(packet);
-
-            IAsyncResult result = BeginSend(packet, asyncCallback, state);
-            EndSend(result);
-            return result;
+            if (_customModule)
+                ModuleConnect(_minecraft.ServerHost, _minecraft.ServerPort);
+            else
+                _protocol.Connect();
         }
 
-        public IAsyncResult BeginSend(IPacket packet, AsyncCallback asyncCallback, object state)
+        public void Disconnect()
         {
-            return _protocol.BeginSend(packet, asyncCallback, state);
-        }
+            if (_customModule)
+                ModuleDisconnect();
+            else
+                _protocol.Disconnect();
 
-        public void EndSend(IAsyncResult asyncResult)
-        {
-            _protocol.EndSend(asyncResult);
+            Dispose();
         }
 
 
@@ -150,14 +103,11 @@ namespace MineLib.Network
         /// </summary>
         public void Dispose()
         {
+            if (_customModule)
+                ModuleDispose();
+
             if (_protocol != null)
                 _protocol.Dispose();
-
-            if (PacketsReceived != null)
-                PacketsReceived.Clear();
-
-            if (PacketsSended != null)
-                PacketsSended.Clear();
         }
     }
 }

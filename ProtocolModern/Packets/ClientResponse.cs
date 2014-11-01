@@ -37,7 +37,7 @@ namespace ProtocolModern.Packets
             () => new PlayerPositionAndLookPacket(),        // 0x06
             () => new PlayerDiggingPacket(),                // 0x07
             () => new PlayerBlockPlacementPacket(),         // 0x08
-            () => new HeldItemChangPacket(),                // 0x09
+            () => new HeldItemChangePacket(),                // 0x09
             () => new AnimationPacket(),                    // 0x0A
             () => new EntityActionPacket(),                 // 0x0B
             () => new SteerVehiclePacket(),                 // 0x0C

@@ -51,12 +51,14 @@ namespace MineLib.Network.IO
         byte[] ReadByteArray(int value);
 
 
-        IAsyncResult BeginWritePacket(IPacket packet, AsyncCallback callback, object state);
-        void EndWrite(IAsyncResult asyncResult);
+        IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback callback, object state);
+        IAsyncResult BeginSend(byte[] data, AsyncCallback callback, object state);
+        void EndSend(IAsyncResult asyncResult);
 
         IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state);
         int EndRead(IAsyncResult asyncResult);
 
+        void SendPacket(IPacket packet);
 
         void Purge();
     }

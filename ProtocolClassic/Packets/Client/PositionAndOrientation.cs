@@ -7,7 +7,7 @@ namespace ProtocolClassic.Packets.Client
     public struct PositionAndOrientationPacket : IPacketWithSize
     {
         public byte PlayerID;
-        public Position Coordinates;
+        public Vector3 Position;
         public byte Yaw;
         public byte Pitch;
 
@@ -17,9 +17,9 @@ namespace ProtocolClassic.Packets.Client
         public IPacketWithSize ReadPacket(IMinecraftDataReader stream)
         {
             PlayerID = stream.ReadByte();
-            Coordinates.X = stream.ReadShort();
-            Coordinates.Y = stream.ReadShort();
-            Coordinates.Z = stream.ReadShort();
+            Position.X = stream.ReadShort();
+            Position.Y = stream.ReadShort();
+            Position.Z = stream.ReadShort();
             Yaw = stream.ReadByte();
             Pitch = stream.ReadByte();
 
@@ -35,9 +35,9 @@ namespace ProtocolClassic.Packets.Client
         {
             stream.WriteByte(ID);
             stream.WriteByte(PlayerID);
-            stream.WriteShort((short)Coordinates.X);
-            stream.WriteShort((short)Coordinates.Y);
-            stream.WriteShort((short)Coordinates.Z);
+            stream.WriteShort((short)Position.X);
+            stream.WriteShort((short)Position.Y);
+            stream.WriteShort((short)Position.Z);
             stream.WriteByte(Yaw);
             stream.WriteByte(Pitch);
             stream.Purge();

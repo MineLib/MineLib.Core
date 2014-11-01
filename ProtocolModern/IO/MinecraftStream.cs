@@ -17,15 +17,19 @@ namespace ProtocolModern.IO
         private delegate IAsyncResult PacketWrite(IPacket packet);
         private PacketWrite _packetWriteDelegate;
 
-        public bool EncryptionEnabled { get; set; }
+        #region Properties
 
-        public bool ModernCompressionEnabled { get; set; }
-        public long ModernCompressionThreshold { get; set; }
+        public bool EncryptionEnabled { get; private set; }
+
+        public bool ModernCompressionEnabled { get; private set; }
+        public long ModernCompressionThreshold { get; private set; }
+
+        #endregion
 
         private Stream _stream;
         private IAesStream _aesStream;
         private byte[] _buffer;
-        private readonly Encoding _encoding = Encoding.UTF8;
+        private Encoding _encoding = Encoding.UTF8;
 
         public MinecraftStream(Stream stream)
         {
@@ -35,6 +39,8 @@ namespace ProtocolModern.IO
         public void InitializeEncryption(byte[] key)
         {
             _aesStream = new BouncyCastleAesStream(_stream, key);
+
+            EncryptionEnabled = true;
         }
 
         public void SetCompression(long threshold)
@@ -150,7 +156,7 @@ namespace ProtocolModern.IO
             WriteByteArray(bytes);
         }
 
-        public void WriteUInt(uint value) // Implement
+        public void WriteUInt(uint value)
         {
             WriteByteArray(new[]
             {
@@ -333,35 +339,7 @@ namespace ProtocolModern.IO
 
 
 
-        #region BeginWrite and BeginRead
-
-        public IAsyncResult BeginWritePacket(IPacket packet, AsyncCallback callback, object state)
-        {
-            _packetWriteDelegate = WriteFunction;
-
-            return _packetWriteDelegate.BeginInvoke(packet, callback, state);
-        }
-
-        #region BeginWrite
-
-        private IAsyncResult WriteFunction(IPacket packet)
-        {
-            using (var ms = new MemoryStream())
-            using (var stream = new MinecraftStream(ms))
-            {
-                packet.WritePacket(stream);
-                var data = ms.ToArray();
-
-
-                if (ModernCompressionEnabled)
-                    return BeginWriteWithCompression(data, null, null);
-                else
-                    return BeginWriteWithoutCompression(data, null, null);
-
-            }
-        }
-
-        private IAsyncResult BeginWriteWithCompression(byte[] data, AsyncCallback callback, object state)
+        private byte[] CompressData(byte[] data)
         {
             int dataLength = 0; // UncompressedData.Length
 
@@ -398,32 +376,73 @@ namespace ProtocolModern.IO
 
                 var tempBuf2 = new byte[tempBuf1.Length + packetLengthByteLength.Length + dataLengthByteLength.Length];
 
-                Buffer.BlockCopy(packetLengthByteLength, 0, tempBuf2, 0                                                          , packetLengthByteLength.Length);
-                Buffer.BlockCopy(dataLengthByteLength  , 0, tempBuf2, packetLengthByteLength.Length                              , dataLengthByteLength.Length);
-                Buffer.BlockCopy(tempBuf1              , 0, tempBuf2, packetLengthByteLength.Length + dataLengthByteLength.Length, tempBuf1.Length);
+                Buffer.BlockCopy(packetLengthByteLength, 0, tempBuf2, 0, packetLengthByteLength.Length);
+                Buffer.BlockCopy(dataLengthByteLength, 0, tempBuf2, packetLengthByteLength.Length, dataLengthByteLength.Length);
+                Buffer.BlockCopy(tempBuf1, 0, tempBuf2, packetLengthByteLength.Length + dataLengthByteLength.Length, tempBuf1.Length);
 
-                if (EncryptionEnabled)
-                    return _aesStream.BeginWrite(tempBuf2, 0, tempBuf2.Length, callback, state);
-                else
-                    return _stream.BeginWrite(tempBuf2, 0, tempBuf2.Length, callback, state);
+                return tempBuf2;
             }
         }
 
-        private IAsyncResult BeginWriteWithoutCompression(byte[] data, AsyncCallback callback, object state)
+        public void SendPacket(IPacket packet)
         {
-            // -- We have already in data Packet length and other stuff, just send it.
+            using (var ms = new MemoryStream())
+            using (var stream = new MinecraftStream(ms))
+            {
+                packet.WritePacket(stream);
+                var data = ms.ToArray();
 
+
+                if (ModernCompressionEnabled)
+                {
+                    data = CompressData(data);
+                    _aesStream.Write(data, 0, data.Length);
+                }
+                else
+                    _stream.Write(data, 0, data.Length);
+            }
+        }
+
+        public int Read(byte[] buffer, int offset, int count)
+        {
+            if (ModernCompressionEnabled)
+                return _aesStream.Read(buffer, offset, count);          
+            else
+                return _stream.Read(buffer, offset, count);
+        }
+
+
+        public IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback callback, object state)
+        {
+            _packetWriteDelegate = packet1 =>
+            {
+                using (var ms = new MemoryStream())
+                using (var stream = new MinecraftStream(ms))
+                {
+                    packet.WritePacket(stream);
+                    var data = ms.ToArray();
+
+
+                    if (ModernCompressionEnabled)
+                        return BeginSend(CompressData(data), null, null);
+                    else
+                        return BeginSend(data, null, null);
+                }
+            };
+
+            return _packetWriteDelegate.BeginInvoke(packet, callback, state);
+        }
+
+        public IAsyncResult BeginSend(byte[] data, AsyncCallback callback, object state)
+        {
             if (EncryptionEnabled)
                 return _aesStream.BeginWrite(data, 0, data.Length, callback, state);
             else
                 return _stream.BeginWrite(data, 0, data.Length, callback, state);
         }
 
-        #endregion
-
-        public void EndWrite(IAsyncResult asyncResult)
+        public void EndSend(IAsyncResult asyncResult)
         {
-
             try { _packetWriteDelegate.EndInvoke(asyncResult); }
             catch (Exception) { }
         }
@@ -444,8 +463,6 @@ namespace ProtocolModern.IO
             else
                 return _stream.EndRead(asyncResult);
         }
-
-        #endregion
 
 
         #region Purge

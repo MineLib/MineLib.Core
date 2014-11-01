@@ -4,6 +4,7 @@
     {
         ProtocolModern,
         ProtocolClassic,
-        ProtocolPocketEdition
+        ProtocolPocketEdition,
+        CustomModule
     }
 }
