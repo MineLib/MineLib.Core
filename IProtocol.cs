@@ -69,6 +69,8 @@ namespace MineLib.Network
     {
         event EventHandler ChatMessage;
 
+        //event EventHandler PlayerPositionFix;
+
     }
 
     public class ProtocolAsyncReceiverEventArgs : EventArgs

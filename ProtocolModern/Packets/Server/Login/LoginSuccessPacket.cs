@@ -10,7 +10,7 @@ namespace ProtocolModern.Packets.Server.Login
 
         public byte ID { get { return 0x02; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             UUID = reader.ReadString();
             Username = reader.ReadString();
@@ -18,7 +18,7 @@ namespace ProtocolModern.Packets.Server.Login
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteString(UUID);

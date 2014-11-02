@@ -48,7 +48,7 @@ namespace MineLib.Network.Data
 
         #region Network
 
-        public static Position FromReaderVarInt(IMinecraftDataReader reader)
+        public static Position FromReaderVarInt(IProtocolDataReader reader)
         {
             return new Position
             {
@@ -58,7 +58,7 @@ namespace MineLib.Network.Data
             };
         }
 
-        public static Position FromReaderByte(IMinecraftDataReader reader)
+        public static Position FromReaderByte(IProtocolDataReader reader)
         {
             return new Position
             {
@@ -68,7 +68,7 @@ namespace MineLib.Network.Data
             };
         }
 
-        public static Position FromReaderInt(IMinecraftDataReader reader)
+        public static Position FromReaderInt(IProtocolDataReader reader)
         {
             return new Position
             {
@@ -78,34 +78,34 @@ namespace MineLib.Network.Data
             };
         }
 
-        public static Position FromReaderLong(IMinecraftDataReader reader)
+        public static Position FromReaderLong(IProtocolDataReader reader)
         {
             return FromLong(reader.ReadLong());
         }
 
 
-        public void ToStreamVarInt(IMinecraftStream stream)
+        public void ToStreamVarInt(IProtocolStream stream)
         {
             stream.WriteVarInt(X);
             stream.WriteVarInt(Y);
             stream.WriteVarInt(Z);
         }
 
-        public void ToStreamByte(IMinecraftStream stream)
+        public void ToStreamByte(IProtocolStream stream)
         {
             stream.WriteByte((byte)X);
             stream.WriteByte((byte)Y);
             stream.WriteByte((byte)Z);
         }
 
-        public void ToStreamInt(IMinecraftStream stream)
+        public void ToStreamInt(IProtocolStream stream)
         {
             stream.WriteInt(X);
             stream.WriteInt(Y);
             stream.WriteInt(Z);
         }
 
-        public void ToStreamLong(IMinecraftStream stream)
+        public void ToStreamLong(IProtocolStream stream)
         {
             stream.WriteLong(ToLong());
         }

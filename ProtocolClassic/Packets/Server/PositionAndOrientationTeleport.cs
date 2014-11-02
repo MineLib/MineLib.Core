@@ -14,7 +14,7 @@ namespace ProtocolClassic.Packets.Server
         public byte ID { get { return 0x08; } }
         public short Size { get { return 10; } }
 
-        public IPacketWithSize ReadPacket(IMinecraftDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
         {
             PlayerID = stream.ReadSByte();
             Coordinates.X = stream.ReadShort();
@@ -26,12 +26,12 @@ namespace ProtocolClassic.Packets.Server
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IMinecraftDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
         {
             return ReadPacket(stream);
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteByte(ID);
             stream.WriteSByte(PlayerID);

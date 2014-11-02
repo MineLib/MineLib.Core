@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using MineLib.Network;
+using MineLib.Network.IO;
 using ProtocolClassic.IO;
 using ProtocolClassic.Packets;
 
@@ -15,7 +16,6 @@ namespace ProtocolClassic
         public string Version { get { return "0.30"; } }
 
         public ConnectionState ConnectionState { get; set; }
-        public IProtocolAsyncReceiver PacketReceiver { get; set; }
 
         public bool Connected { get { return _baseSock != null && _baseSock.Connected; } }
 
@@ -38,10 +38,12 @@ namespace ProtocolClassic
 
         #endregion
 
+        private bool UsingExtensions { get; set; }
+
         private IMinecraftClient _minecraft;
 
-        private Socket _baseSock;
-        private MinecraftStream _stream;
+        private TcpClient _baseSock;
+        private IProtocolStream _stream;
 
 
         public IProtocol Create(IMinecraftClient client, bool debugPackets = false)
@@ -55,27 +57,7 @@ namespace ProtocolClassic
             return this;
         }
 
-        public void Connect(IMinecraftClient client)
-        {
-            _minecraft = client;
-
-            // -- Connect to server.
-            _baseSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _baseSock.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, OnConnected, null);
-        }
-
-        private void OnConnected(IAsyncResult asyncResult)
-        {
-            _baseSock.EndConnect(asyncResult);
-
-            // -- Create our Wrapped socket.
-            _stream = new MinecraftStream(new NetworkStream(_baseSock));
-
-            // -- Begin data reading.
-            _stream.BeginRead(new byte[0], 0, 0, PacketReceiverAsync, null);
-        }
-
-
+        
         private void PacketReceiverAsync(IAsyncResult ar)
         {
             if (!Connected)
@@ -92,8 +74,8 @@ namespace ProtocolClassic
 
             HandlePacket(packetId, data);
 
-            _baseSock.EndReceive(ar);
-            _baseSock.BeginReceive(new byte[0], 0, 0, SocketFlags.None, PacketReceiverAsync, null);
+            _baseSock.Client.EndReceive(ar);
+            _baseSock.Client.BeginReceive(new byte[0], 0, 0, SocketFlags.None, PacketReceiverAsync, null);
         }
 
         /// <summary>
@@ -103,7 +85,7 @@ namespace ProtocolClassic
         /// <param name="data">Packet byte[] data</param>
         private void HandlePacket(int id, byte[] data)
         {
-            using (var reader = new MinecraftDataReader(data))
+            using (var reader = new ClassicDataReader(data))
             {
                 if (ServerResponseClassic.ServerResponse[id] == null)
                     return;
@@ -120,7 +102,7 @@ namespace ProtocolClassic
         public IAsyncResult BeginSendPacketHandled(IPacket packet, AsyncCallback asyncCallback, object state)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
             IAsyncResult result = BeginSendPacket(packet, asyncCallback, state);
             EndSendPacket(result);
@@ -134,7 +116,7 @@ namespace ProtocolClassic
         public IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, object state)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
             return _stream.BeginSendPacket(packet, asyncCallback, state);
         }
@@ -142,7 +124,7 @@ namespace ProtocolClassic
         public void EndSendPacket(IAsyncResult asyncResult)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
             _stream.EndSend(asyncResult);
         }
@@ -153,10 +135,10 @@ namespace ProtocolClassic
         public IAsyncResult BeginConnect(string ip, short port, AsyncCallback asyncCallback, object state)
         {
             if (Connected)
-                throw new ProtocolException("Connection error: Already connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Already connected to server.");
 
             // -- Connect to server.
-            _baseSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _baseSock = new TcpClient();
 
             var result = _baseSock.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, asyncCallback, state);
             EndConnect(result);
@@ -170,10 +152,10 @@ namespace ProtocolClassic
             _baseSock.EndConnect(asyncResult);
 
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
             // -- Create our Wrapped socket.
-            _stream = new MinecraftStream(new NetworkStream(_baseSock));
+            _stream = new ClassicStream(new NetworkStream(_baseSock.Client));
 
             // -- Begin data reading.
             _stream.BeginRead(new byte[0], 0, 0, PacketReceiverAsync, null);
@@ -183,24 +165,24 @@ namespace ProtocolClassic
         public IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
-            return _baseSock.BeginDisconnect(false, asyncCallback, state);
+            return _baseSock.Client.BeginDisconnect(false, asyncCallback, state);
         }
 
         public void EndDisconnect(IAsyncResult asyncResult)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
-            _baseSock.EndDisconnect(asyncResult);
+            _baseSock.Client.EndDisconnect(asyncResult);
         }
 
 
         public void SendPacket(IPacket packet)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
             _stream.SendPacket(packet);
 
@@ -211,14 +193,14 @@ namespace ProtocolClassic
         public void Connect()
         {
             if (Connected)
-                throw new ProtocolException("Connection error: Already connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Already connected to server.");
 
             // -- Connect to server.
-            _baseSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _baseSock = new TcpClient();
             _baseSock.Connect(_minecraft.ServerHost, _minecraft.ServerPort);
 
             // -- Create our Wrapped socket.
-            _stream = new MinecraftStream(new NetworkStream(_baseSock));
+            _stream = new ClassicStream(new NetworkStream(_baseSock.Client));
 
             // -- Begin data reading.
             _stream.BeginRead(new byte[0], 0, 0, PacketReceiverAsync, null);
@@ -227,9 +209,9 @@ namespace ProtocolClassic
         public void Disconnect()
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
-            _baseSock.Disconnect(false);
+            _baseSock.Client.Disconnect(false);
         }
 
         #endregion
@@ -238,7 +220,7 @@ namespace ProtocolClassic
         public void Dispose()
         {
             if (_baseSock != null)
-                _baseSock.Dispose();
+                _baseSock.Client.Dispose();
 
             if (_stream != null)
                 _stream.Dispose();

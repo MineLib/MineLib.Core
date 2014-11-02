@@ -7,9 +7,9 @@ namespace MineLib.Network.IO
     /// Object that reads VarInt (or Byte) and ByteArray for handling Data later 
     /// and writes any data from packet to user-defined object, that will interact with Minecraft Server.
     /// </summary>
-    public interface IMinecraftStream : IDisposable
+    public interface IProtocolStream : IDisposable
     {
-        void WriteString(string value);
+        void WriteString(string value, int length = 0);
 
         void WriteVarInt(int value);
 
@@ -59,6 +59,7 @@ namespace MineLib.Network.IO
         int EndRead(IAsyncResult asyncResult);
 
         void SendPacket(IPacket packet);
+        int Read(byte[] buffer, int offset, int count);
 
         void Purge();
     }

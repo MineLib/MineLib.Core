@@ -10,7 +10,7 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x03; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             AgeOfTheWorld = reader.ReadLong();
             TimeOfDay = reader.ReadLong();
@@ -18,7 +18,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteLong(AgeOfTheWorld);

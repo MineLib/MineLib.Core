@@ -29,7 +29,7 @@ namespace MineLib.Network.Data
             set { _entries.Insert(index, value); }
         }
 
-        public static StatisticsEntryList FromReader(IMinecraftDataReader reader)
+        public static StatisticsEntryList FromReader(IProtocolDataReader reader)
         {
             var count = reader.ReadVarInt();
 
@@ -47,7 +47,7 @@ namespace MineLib.Network.Data
             return value;
         }
 
-        public void ToStream(IMinecraftStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(Count);
 

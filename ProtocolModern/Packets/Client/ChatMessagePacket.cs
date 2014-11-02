@@ -9,13 +9,13 @@ namespace ProtocolModern.Packets.Client
 
         public byte ID { get { return 0x01; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Message = reader.ReadString();
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteString(Message);

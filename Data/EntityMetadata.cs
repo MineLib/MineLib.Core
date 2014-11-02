@@ -69,7 +69,7 @@ namespace MineLib.Network.Data
 
         #region Network
 
-        public static EntityMetadata FromReader(IMinecraftDataReader reader)
+        public static EntityMetadata FromReader(IProtocolDataReader reader)
         {
             var value = new EntityMetadata();
             while (true)
@@ -89,7 +89,7 @@ namespace MineLib.Network.Data
             return value;
         }
 
-        public void ToStream(IMinecraftStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             foreach (var entry in _entries)
                 entry.Value.ToStream(stream, entry.Key);

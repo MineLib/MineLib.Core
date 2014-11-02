@@ -8,8 +8,8 @@ namespace ProtocolModern.Packets.Server
 {
     public interface IPlayerList
     {
-        IPlayerList FromReader(IMinecraftDataReader reader);
-        void ToStream(ref IMinecraftStream stream);
+        IPlayerList FromReader(IProtocolDataReader reader);
+        void ToStream(ref IProtocolStream stream);
     }
 
     public struct Properties
@@ -40,7 +40,7 @@ namespace ProtocolModern.Packets.Server
             set { _entries.Insert(index, value); }
         }
 
-        public static PlayerListActionProperties FromReader(IMinecraftDataReader reader)
+        public static PlayerListActionProperties FromReader(IProtocolDataReader reader)
         {
             var count = reader.ReadVarInt();
 
@@ -62,7 +62,7 @@ namespace ProtocolModern.Packets.Server
             return value;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteVarInt(Count);
 
@@ -86,7 +86,7 @@ namespace ProtocolModern.Packets.Server
         public bool HasDisplayName;
         public string DisplayName;
 
-        public IPlayerList FromReader(IMinecraftDataReader reader)
+        public IPlayerList FromReader(IProtocolDataReader reader)
         {
             Name = reader.ReadString();
             Properties = PlayerListActionProperties.FromReader(reader);
@@ -100,7 +100,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteString(Name);
             Properties.ToStream(ref stream);
@@ -117,14 +117,14 @@ namespace ProtocolModern.Packets.Server
     {
         public int Gamemode;
 
-        public IPlayerList FromReader(IMinecraftDataReader reader)
+        public IPlayerList FromReader(IProtocolDataReader reader)
         {
             Gamemode = reader.ReadVarInt();
             
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteVarInt(Gamemode);
         }
@@ -134,14 +134,14 @@ namespace ProtocolModern.Packets.Server
     {
         public int Ping;
 
-        public IPlayerList FromReader(IMinecraftDataReader reader)
+        public IPlayerList FromReader(IProtocolDataReader reader)
         {
             Ping = reader.ReadVarInt();
 
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteVarInt(Ping);
         }
@@ -152,7 +152,7 @@ namespace ProtocolModern.Packets.Server
         public bool HasDisplayName;
         public string DisplayName;
 
-        public IPlayerList FromReader(IMinecraftDataReader reader)
+        public IPlayerList FromReader(IProtocolDataReader reader)
         {
             HasDisplayName = reader.ReadBoolean();
             DisplayName = reader.ReadString();
@@ -160,7 +160,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteBoolean(HasDisplayName);
             stream.WriteString(DisplayName);
@@ -169,12 +169,12 @@ namespace ProtocolModern.Packets.Server
 
     public struct PlayerListActionRemovePlayer : IPlayerList
     {
-        public IPlayerList FromReader(IMinecraftDataReader reader)
+        public IPlayerList FromReader(IProtocolDataReader reader)
         {
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
         }
     }
@@ -188,7 +188,7 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x38; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Action = (PlayerListAction) reader.ReadVarInt();
             Length = reader.ReadVarInt();
@@ -216,7 +216,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt((byte) Action);

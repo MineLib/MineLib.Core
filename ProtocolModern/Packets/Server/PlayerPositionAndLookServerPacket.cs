@@ -13,7 +13,7 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x08; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Vector3 = Vector3.FromReaderDouble(reader);
             Yaw = reader.ReadFloat();
@@ -23,7 +23,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             Vector3.ToStreamDouble(stream);

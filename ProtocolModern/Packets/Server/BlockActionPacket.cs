@@ -7,8 +7,8 @@ namespace ProtocolModern.Packets.Server
 {
     public interface IBlockAction
     {
-        IBlockAction FromReader(IMinecraftDataReader reader); // --- Is not used
-        void ToStream(IMinecraftStream stream);
+        IBlockAction FromReader(IProtocolDataReader reader); // --- Is not used
+        void ToStream(IProtocolStream stream);
     }
 
     public struct BlockActionNoteBlock : IBlockAction
@@ -25,12 +25,12 @@ namespace ProtocolModern.Packets.Server
             BlockType = blockType;
         }
 
-        public IBlockAction FromReader(IMinecraftDataReader reader)
+        public IBlockAction FromReader(IProtocolDataReader reader)
         {
             return null;
         }
 
-        public void ToStream(IMinecraftStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteByte((byte) NoteBlockType);
             stream.WriteByte((byte) Pitch);
@@ -52,12 +52,12 @@ namespace ProtocolModern.Packets.Server
             BlockType = blockType;
         }
 
-        public IBlockAction FromReader(IMinecraftDataReader reader)
+        public IBlockAction FromReader(IProtocolDataReader reader)
         {
             return null;
         }
 
-        public void ToStream(IMinecraftStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteByte((byte) PistonState);
             stream.WriteByte((byte) PistonDirection);
@@ -79,12 +79,12 @@ namespace ProtocolModern.Packets.Server
             BlockType = blockType;
         }
 
-        public IBlockAction FromReader(IMinecraftDataReader reader)
+        public IBlockAction FromReader(IProtocolDataReader reader)
         {
             return null;
         }
 
-        public void ToStream(IMinecraftStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteByte(Byte1);
             stream.WriteByte((byte) ChestState);
@@ -103,7 +103,7 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x24; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Location = Position.FromReaderLong(reader);
             Byte1 = reader.ReadByte();
@@ -132,7 +132,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             Location.ToStreamLong(stream);

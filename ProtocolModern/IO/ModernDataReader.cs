@@ -7,25 +7,25 @@ using Org.BouncyCastle.Math;
 namespace ProtocolModern.IO
 {
     // Reads only decrypted data
-    public sealed class MinecraftDataReader : IMinecraftDataReader
+    public sealed class ModernDataReader : IProtocolDataReader
     {
         private readonly Stream _stream;
 
-        public MinecraftDataReader(Stream stream)
+        public ModernDataReader(Stream stream)
         {
             _stream = stream;
         }
 
-        public MinecraftDataReader(byte[] data)
+        public ModernDataReader(byte[] data)
         {
             _stream = new MemoryStream(data);
         }
 
         // -- String
 
-        public string ReadString()
+        public string ReadString(int length = 0)
         {
-            var length = ReadVarInt();
+            length = ReadVarInt();
             var stringBytes = ReadByteArray(length);
 
             return Encoding.UTF8.GetString(stringBytes);

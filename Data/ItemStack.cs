@@ -88,7 +88,7 @@ namespace MineLib.Network.Data
 
         #region Network
 
-        public static ItemStack FromReader(IMinecraftDataReader reader)
+        public static ItemStack FromReader(IProtocolDataReader reader)
         {
             var itemStack = new ItemStack();
 
@@ -111,7 +111,7 @@ namespace MineLib.Network.Data
             return itemStack;
         }
 
-        public void ToStream(IMinecraftStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteShort(ID);
             stream.WriteShort(Damage);
@@ -217,7 +217,7 @@ namespace MineLib.Network.Data
 
         #region Network
 
-        public static ItemStackList FromReader(IMinecraftDataReader reader)
+        public static ItemStackList FromReader(IProtocolDataReader reader)
         {
             var value = new ItemStackList();
 
@@ -250,7 +250,7 @@ namespace MineLib.Network.Data
             return value;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             foreach (var itemStack in _entries)
             {

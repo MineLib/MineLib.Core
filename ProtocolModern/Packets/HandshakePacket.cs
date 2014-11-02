@@ -14,7 +14,7 @@ namespace ProtocolModern.Packets
         public const byte PacketID = 0x00;
         public byte ID { get { return PacketID; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             ProtocolVersion = reader.ReadVarInt();
             ServerAddress = reader.ReadString();
@@ -24,7 +24,7 @@ namespace ProtocolModern.Packets
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt(ProtocolVersion);

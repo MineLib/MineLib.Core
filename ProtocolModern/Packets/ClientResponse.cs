@@ -10,7 +10,7 @@ namespace ProtocolModern.Packets
         public delegate IPacket CreatePacketInstance();
 
         #region Login Response
-        public static readonly CreatePacketInstance[] Login =
+        public static readonly CreatePacketInstance[] JoiningServer =
         {
             () => new LoginStartPacket(),                   // 0x00
             () => new EncryptionResponsePacket()            // 0x01
@@ -18,7 +18,7 @@ namespace ProtocolModern.Packets
         #endregion
 
         #region Status Response
-        public static readonly CreatePacketInstance[] Status =
+        public static readonly CreatePacketInstance[] InfoRequest =
         {
             () => new RequestPacket(),                  // 0x00
             () => new PingPacket()                      // 0x01
@@ -26,7 +26,7 @@ namespace ProtocolModern.Packets
         #endregion
 
         #region Play Response
-        public static readonly CreatePacketInstance[] Play =
+        public static readonly CreatePacketInstance[] JoinedServer =
         {
             () => new KeepAlivePacket(),                    // 0x00
             () => new ChatMessagePacket(),                  // 0x01

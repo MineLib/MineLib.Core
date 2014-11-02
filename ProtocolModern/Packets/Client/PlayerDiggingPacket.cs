@@ -13,7 +13,7 @@ namespace ProtocolModern.Packets.Client
 
         public byte ID { get { return 0x07; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Status = (BlockStatus) reader.ReadByte();
             Location = Position.FromReaderLong(reader);
@@ -22,7 +22,7 @@ namespace ProtocolModern.Packets.Client
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteByte((byte) Status);

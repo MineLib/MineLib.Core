@@ -7,7 +7,7 @@ using Org.BouncyCastle.Math;
 namespace ProtocolPocketEdition.IO
 {
     // Reads only decrypted data
-    public sealed class MinecraftDataReader : IMinecraftDataReader
+    public sealed class MinecraftDataReader : IProtocolDataReader
     {
         private readonly Stream _stream;
 
@@ -23,9 +23,8 @@ namespace ProtocolPocketEdition.IO
 
         // -- String
 
-        public string ReadString()
+        public string ReadString(int length = 8)
         {
-            const int length = 8;
             var stringBytes = ReadByteArray(length);
 
             return Encoding.ASCII.GetString(stringBytes);

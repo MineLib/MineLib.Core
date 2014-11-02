@@ -10,14 +10,14 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x41; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Difficulty = (Difficulty) reader.ReadByte();
 
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteByte((byte) Difficulty);

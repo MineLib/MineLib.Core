@@ -6,8 +6,8 @@ namespace ProtocolModern.Packets.Server
 {
     public interface ITeam
     {
-        ITeam FromReader(IMinecraftDataReader reader);
-        void ToStream(ref IMinecraftStream stream);
+        ITeam FromReader(IProtocolDataReader reader);
+        void ToStream(ref IProtocolStream stream);
     }
 
     public struct TeamsCreateTeam : ITeam
@@ -20,7 +20,7 @@ namespace ProtocolModern.Packets.Server
         public byte Color;
         public string[] Players;
 
-        public ITeam FromReader(IMinecraftDataReader reader)
+        public ITeam FromReader(IProtocolDataReader reader)
         {
             TeamDisplayName = reader.ReadString();
             TeamPrefix = reader.ReadString();
@@ -39,7 +39,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteString(TeamDisplayName);
             stream.WriteString(TeamPrefix);
@@ -54,12 +54,12 @@ namespace ProtocolModern.Packets.Server
 
     public struct TeamsRemoveTeam : ITeam
     {
-        public ITeam FromReader(IMinecraftDataReader reader)
+        public ITeam FromReader(IProtocolDataReader reader)
         {
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
         }
     }
@@ -73,7 +73,7 @@ namespace ProtocolModern.Packets.Server
         public string NameTagVisibility;
         public byte Color;
 
-        public ITeam FromReader(IMinecraftDataReader reader)
+        public ITeam FromReader(IProtocolDataReader reader)
         {
             TeamDisplayName = reader.ReadString();
             TeamPrefix = reader.ReadString();
@@ -85,7 +85,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteString(TeamDisplayName);
             stream.WriteString(TeamPrefix);
@@ -100,7 +100,7 @@ namespace ProtocolModern.Packets.Server
     {
         public string[] Players;
 
-        public ITeam FromReader(IMinecraftDataReader reader)
+        public ITeam FromReader(IProtocolDataReader reader)
         {
             var count = reader.ReadVarInt();
             Players = new string[count];
@@ -112,7 +112,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteVarInt(Players.Length);
             stream.WriteStringArray(Players);
@@ -123,7 +123,7 @@ namespace ProtocolModern.Packets.Server
     {
         public string[] Players;
 
-        public ITeam FromReader(IMinecraftDataReader reader)
+        public ITeam FromReader(IProtocolDataReader reader)
         {
             var count = reader.ReadVarInt();
             Players = new string[count];
@@ -135,7 +135,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteVarInt(Players.Length);
             stream.WriteStringArray(Players);
@@ -150,7 +150,7 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x3E; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             TeamName = reader.ReadString();
             Action = (TeamAction) reader.ReadByte();
@@ -177,7 +177,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteString(TeamName);

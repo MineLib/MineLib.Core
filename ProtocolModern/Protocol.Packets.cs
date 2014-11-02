@@ -20,7 +20,7 @@ namespace ProtocolModern
             {
                 case ConnectionState.JoiningServer:
 
-                    #region Login
+                    #region JoiningServer
 
                     switch ((PacketsServer) id)
                     {
@@ -47,7 +47,7 @@ namespace ProtocolModern
 
                 case ConnectionState.JoinedServer:
 
-                    #region Play
+                    #region JoinedServer
 
                     switch ((PacketsServer) id)
                     {
@@ -264,6 +264,15 @@ namespace ProtocolModern
                     break;
 
                 case ConnectionState.InfoRequest: // -- We don't use that normally.
+
+                    #region InfoRequest
+
+                    switch ((PacketsServer) id)
+                    {
+                    }
+
+                    #endregion
+
                     break;
 
                 default:

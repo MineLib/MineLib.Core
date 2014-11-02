@@ -52,8 +52,11 @@
     <Compile Include="Packets\Client\StartGamePacket.cs" />
     <Compile Include="Packets\ServerResponse.cs" />
     <Compile Include="Packets\Server\LoginStatusPacket.cs" />
+    <Compile Include="Protocol.AsyncReceiver.cs" />
+    <Compile Include="Protocol.AsyncSender.cs" />
     <Compile Include="Protocol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol.Packets.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MineLib.Network.csproj">

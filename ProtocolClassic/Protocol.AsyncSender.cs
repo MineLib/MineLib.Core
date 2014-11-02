@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using MineLib.Network;
 using MineLib.Network.Data;
 using ProtocolClassic.Enum;
@@ -37,6 +36,7 @@ namespace ProtocolClassic
             return null;
         }
 
+        private byte _playerID_Slot = 255;
         public IAsyncResult BeginPlayerMoved(PlaverMovedData data, AsyncCallback asyncCallback, object state)
         {
             switch (data.Mode)
@@ -48,7 +48,7 @@ namespace ProtocolClassic
                                 Position = data.Vector3,
                                 Yaw = (byte) data.Yaw,
                                 Pitch = (byte) data.Pitch,
-                                PlayerID = 255
+                                PlayerID = _playerID_Slot
                             }, asyncCallback, state);
 
                 default:
@@ -81,6 +81,9 @@ namespace ProtocolClassic
 
         public IAsyncResult BeginPlayerHeldItem(short slot, AsyncCallback asyncCallback, object state)
         {
+            if (UsingExtensions)
+                _playerID_Slot = (byte) slot;
+
             return null;
         }
     }

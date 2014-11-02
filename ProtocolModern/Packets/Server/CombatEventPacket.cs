@@ -5,18 +5,18 @@ namespace ProtocolModern.Packets.Server
 {
     public interface ICombatEvent
     {
-        ICombatEvent FromReader(IMinecraftDataReader reader);
-        void ToStream(ref IMinecraftStream stream);
+        ICombatEvent FromReader(IProtocolDataReader reader);
+        void ToStream(ref IProtocolStream stream);
     }
 
     public struct CombatEventEnterCombat : ICombatEvent
     {
-        public ICombatEvent FromReader(IMinecraftDataReader reader)
+        public ICombatEvent FromReader(IProtocolDataReader reader)
         {
             return this; // Hope works TODO: Check this
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
         }
     }
@@ -26,7 +26,7 @@ namespace ProtocolModern.Packets.Server
         public int Duration;
         public int EntityID;
 
-        public ICombatEvent FromReader(IMinecraftDataReader reader)
+        public ICombatEvent FromReader(IProtocolDataReader reader)
         {
             Duration = reader.ReadVarInt();
             EntityID = reader.ReadInt();
@@ -34,7 +34,7 @@ namespace ProtocolModern.Packets.Server
             return this; // Hope works
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteVarInt(Duration);
             stream.WriteInt(EntityID);
@@ -47,7 +47,7 @@ namespace ProtocolModern.Packets.Server
         public int EntityID;
         public string Message;
 
-        public ICombatEvent FromReader(IMinecraftDataReader reader)
+        public ICombatEvent FromReader(IProtocolDataReader reader)
         {
             PlayerID = reader.ReadVarInt();
             EntityID = reader.ReadInt();
@@ -56,7 +56,7 @@ namespace ProtocolModern.Packets.Server
             return this; // Hope works
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteVarInt(PlayerID);
             stream.WriteInt(EntityID);
@@ -72,7 +72,7 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x42; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Event = reader.ReadVarInt();
 
@@ -95,7 +95,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt(Event);

@@ -9,14 +9,14 @@ namespace ProtocolModern.Packets.Server.Status
 
         public byte ID { get { return 0x01; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Time = reader.ReadLong();
 
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteLong(Time);

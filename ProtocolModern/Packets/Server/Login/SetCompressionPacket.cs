@@ -14,14 +14,14 @@ namespace ProtocolModern.Packets.Server.Login
 
         public byte ID { get { return 0x03; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Threshold = reader.ReadVarInt();
 
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt(Threshold);

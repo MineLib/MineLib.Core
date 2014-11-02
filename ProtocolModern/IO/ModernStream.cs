@@ -12,7 +12,7 @@ namespace ProtocolModern.IO
     // -- Credits to umby24 for encryption support, as taken from CWrapped.
     // -- Credits to SirCmpwn for encryption support, as taken from SMProxy.
     // -- All Write methods doesn't write to any stream. It writes to _buffer. Purge write _buffer to any stream.
-    public sealed class MinecraftStream : IMinecraftStream
+    public sealed class ModernStream : IProtocolStreamExtended
     {
         private delegate IAsyncResult PacketWrite(IPacket packet);
         private PacketWrite _packetWriteDelegate;
@@ -31,7 +31,7 @@ namespace ProtocolModern.IO
         private byte[] _buffer;
         private Encoding _encoding = Encoding.UTF8;
 
-        public MinecraftStream(Stream stream)
+        public ModernStream(Stream stream)
         {
             _stream = stream;
         }
@@ -57,13 +57,13 @@ namespace ProtocolModern.IO
 
         // -- String
 
-        public void WriteString(string value)
+        public void WriteString(string value, int length = 0)
         {
-            var length = GetVarIntBytes(value.Length);
-            var final = new byte[value.Length + length.Length];
+            var lengthBytes = GetVarIntBytes(value.Length);
+            var final = new byte[value.Length + lengthBytes.Length];
 
-            Buffer.BlockCopy(length, 0, final, 0, length.Length);
-            Buffer.BlockCopy(_encoding.GetBytes(value), 0, final, length.Length, value.Length);
+            Buffer.BlockCopy(lengthBytes, 0, final, 0, lengthBytes.Length);
+            Buffer.BlockCopy(_encoding.GetBytes(value), 0, final, lengthBytes.Length, value.Length);
 
             WriteByteArray(final);
         }
@@ -344,7 +344,7 @@ namespace ProtocolModern.IO
             int dataLength = 0; // UncompressedData.Length
 
             // -- data here is raw IPacket with Packet length.
-            using (var reader = new MinecraftDataReader(data))
+            using (var reader = new ModernDataReader(data))
             {
                 var packetLength = reader.ReadVarInt();
                 var packetLengthByteLength1 = GetVarIntBytes(packetLength).Length; // -- Getting size of Packet Length
@@ -387,7 +387,7 @@ namespace ProtocolModern.IO
         public void SendPacket(IPacket packet)
         {
             using (var ms = new MemoryStream())
-            using (var stream = new MinecraftStream(ms))
+            using (var stream = new ModernStream(ms))
             {
                 packet.WritePacket(stream);
                 var data = ms.ToArray();
@@ -417,7 +417,7 @@ namespace ProtocolModern.IO
             _packetWriteDelegate = packet1 =>
             {
                 using (var ms = new MemoryStream())
-                using (var stream = new MinecraftStream(ms))
+                using (var stream = new ModernStream(ms))
                 {
                     packet.WritePacket(stream);
                     var data = ms.ToArray();

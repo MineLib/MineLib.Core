@@ -15,7 +15,7 @@ namespace ProtocolModern.Packets.Client
 
         public byte ID { get { return 0x15; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Locale = reader.ReadString();
             ViewDistance = reader.ReadByte();
@@ -26,7 +26,7 @@ namespace ProtocolModern.Packets.Client
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteString(Locale);

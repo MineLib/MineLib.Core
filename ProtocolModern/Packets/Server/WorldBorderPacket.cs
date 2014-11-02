@@ -6,22 +6,22 @@ namespace ProtocolModern.Packets.Server
 {
     public interface IWorldBorder
     {
-        IWorldBorder FromReader(IMinecraftDataReader reader);
-        void ToStream(ref IMinecraftStream stream);
+        IWorldBorder FromReader(IProtocolDataReader reader);
+        void ToStream(ref IProtocolStream stream);
     }
 
     public struct WorldBorderSetSize : IWorldBorder
     {
         public double Radius;
         
-        public IWorldBorder FromReader(IMinecraftDataReader reader)
+        public IWorldBorder FromReader(IProtocolDataReader reader)
         {
             Radius = reader.ReadDouble();
 
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteDouble(Radius);
         }
@@ -33,7 +33,7 @@ namespace ProtocolModern.Packets.Server
         public double NewRadius;
         public long Speed;
 
-        public IWorldBorder FromReader(IMinecraftDataReader reader)
+        public IWorldBorder FromReader(IProtocolDataReader reader)
         {
             OldRadius = reader.ReadDouble();
             NewRadius = reader.ReadDouble();
@@ -42,7 +42,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteDouble(OldRadius);
             stream.WriteDouble(NewRadius);
@@ -54,7 +54,7 @@ namespace ProtocolModern.Packets.Server
     {
         public double X, Z;
 
-        public IWorldBorder FromReader(IMinecraftDataReader reader)
+        public IWorldBorder FromReader(IProtocolDataReader reader)
         {
             X = reader.ReadDouble();
             Z = reader.ReadDouble();
@@ -62,7 +62,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteDouble(X);
             stream.WriteDouble(Z);
@@ -79,7 +79,7 @@ namespace ProtocolModern.Packets.Server
         public int WarningTime;
         public int WarningBlocks;
 
-        public IWorldBorder FromReader(IMinecraftDataReader reader)
+        public IWorldBorder FromReader(IProtocolDataReader reader)
         {
             X = reader.ReadDouble();
             Z = reader.ReadDouble();
@@ -94,7 +94,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteDouble(X);
             stream.WriteDouble(Z);
@@ -112,14 +112,14 @@ namespace ProtocolModern.Packets.Server
     {
         public int WarningTime;
 
-        public IWorldBorder FromReader(IMinecraftDataReader reader)
+        public IWorldBorder FromReader(IProtocolDataReader reader)
         {
             WarningTime = reader.ReadVarInt();
 
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteVarInt(WarningTime);
         }
@@ -129,14 +129,14 @@ namespace ProtocolModern.Packets.Server
     {
         public int WarningBlocks;
 
-        public IWorldBorder FromReader(IMinecraftDataReader reader)
+        public IWorldBorder FromReader(IProtocolDataReader reader)
         {
             WarningBlocks = reader.ReadVarInt();
 
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteVarInt(WarningBlocks);
         }
@@ -150,7 +150,7 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x44; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Action = (WorldBorderAction) reader.ReadVarInt();
 
@@ -179,7 +179,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt((byte) Action);

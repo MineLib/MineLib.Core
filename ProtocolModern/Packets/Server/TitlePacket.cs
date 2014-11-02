@@ -6,22 +6,22 @@ namespace ProtocolModern.Packets.Server
 {
     public interface ITitle
     {
-        ITitle FromReader(IMinecraftDataReader reader);
-        void ToStream(ref IMinecraftStream stream);
+        ITitle FromReader(IProtocolDataReader reader);
+        void ToStream(ref IProtocolStream stream);
     }
 
     public struct TitleTitle : ITitle
     {
         public string Text;
 
-        public ITitle FromReader(IMinecraftDataReader reader)
+        public ITitle FromReader(IProtocolDataReader reader)
         {
             Text = reader.ReadString();
 
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteString(Text);
         }
@@ -31,14 +31,14 @@ namespace ProtocolModern.Packets.Server
     {
         public string Text;
 
-        public ITitle FromReader(IMinecraftDataReader reader)
+        public ITitle FromReader(IProtocolDataReader reader)
         {
             Text = reader.ReadString();
 
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteString(Text);
         }
@@ -50,7 +50,7 @@ namespace ProtocolModern.Packets.Server
         public int Stay;
         public int FadeOut;
 
-        public ITitle FromReader(IMinecraftDataReader reader)
+        public ITitle FromReader(IProtocolDataReader reader)
         {
             FadeIn = reader.ReadInt();
             Stay = reader.ReadInt();
@@ -59,7 +59,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
             stream.WriteInt(FadeIn);
             stream.WriteInt(Stay);
@@ -69,24 +69,24 @@ namespace ProtocolModern.Packets.Server
 
     public struct TitleClear : ITitle
     {
-        public ITitle FromReader(IMinecraftDataReader reader)
+        public ITitle FromReader(IProtocolDataReader reader)
         {
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
         }
     }
 
     public struct TitleReset : ITitle
     {
-        public ITitle FromReader(IMinecraftDataReader reader)
+        public ITitle FromReader(IProtocolDataReader reader)
         {
             return this;
         }
 
-        public void ToStream(ref IMinecraftStream stream)
+        public void ToStream(ref IProtocolStream stream)
         {
         }
     }
@@ -98,7 +98,7 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x45; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Action = (TitleAction) reader.ReadVarInt();
 
@@ -129,7 +129,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt((byte) Action);

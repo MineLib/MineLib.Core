@@ -10,7 +10,7 @@ namespace ProtocolModern.Packets.Client.Login
 
         public byte ID { get { return 0x01; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             var ssLength = reader.ReadVarInt();
             SharedSecret = reader.ReadByteArray(ssLength);
@@ -20,7 +20,7 @@ namespace ProtocolModern.Packets.Client.Login
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt(SharedSecret.Length);

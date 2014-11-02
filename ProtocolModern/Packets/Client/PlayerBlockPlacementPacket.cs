@@ -14,7 +14,7 @@ namespace ProtocolModern.Packets.Client
 
         public byte ID { get { return 0x08; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Location = Position.FromReaderLong(reader);
             Direction = (Direction) reader.ReadByte();
@@ -24,7 +24,7 @@ namespace ProtocolModern.Packets.Client
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             Location.ToStreamLong(stream);

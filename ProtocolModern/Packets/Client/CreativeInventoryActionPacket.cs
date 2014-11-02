@@ -11,7 +11,7 @@ namespace ProtocolModern.Packets.Client
 
         public byte ID { get { return 0x10; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Slot = reader.ReadShort();
             ClickedItem = ItemStack.FromReader(reader);
@@ -19,7 +19,7 @@ namespace ProtocolModern.Packets.Client
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             stream.WriteShort(Slot);

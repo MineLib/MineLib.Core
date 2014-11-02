@@ -4,39 +4,52 @@ using System.Text;
 using MineLib.Network.IO;
 using Org.BouncyCastle.Math;
 
-namespace ProtocolClassic.IO
+namespace ProtocolMinetest.IO
 {
     // Reads only decrypted data
-    public sealed class MinecraftDataReader : IMinecraftDataReader
+    public sealed class MinetestDataReader : IProtocolDataReader
     {
         private readonly Stream _stream;
 
-        public MinecraftDataReader(Stream stream)
+        public MinetestDataReader(Stream stream)
         {
             _stream = stream;
         }
 
-        public MinecraftDataReader(byte[] data)
+        public MinetestDataReader(byte[] data)
         {
             _stream = new MemoryStream(data);
         }
 
         // -- String
 
-        public string ReadString()
+        public string ReadString(int length = 0)
         {
-            const int length = 64;
             var stringBytes = ReadByteArray(length);
 
-            return Encoding.ASCII.GetString(stringBytes);
+            return Encoding.UTF8.GetString(stringBytes);
         }
-
 
         // -- VarInt
 
         public int ReadVarInt()
         {
-            throw new NotImplementedException();
+            var result = 0;
+            var length = 0;
+
+            while (true)
+            {
+                var current = ReadByte();
+                result |= (current & 0x7F) << length++ * 7;
+
+                if (length > 6)
+                    throw new InvalidDataException("Invalid varint: Too long.");
+
+                if ((current & 0x80) != 0x80)
+                    break;
+            }
+
+            return result;
         }
 
         // -- Boolean

@@ -58,8 +58,8 @@
     <Compile Include="Protocol.AsyncReceiver.cs" />
     <Compile Include="Protocol.AsyncSender.cs" />
     <Compile Include="Protocol.cs" />
-    <Compile Include="IO\MinecraftDataReader.cs" />
-    <Compile Include="IO\MinecraftStream.cs" />
+    <Compile Include="IO\ClassicDataReader.cs" />
+    <Compile Include="IO\ClassicStream.cs" />
     <Compile Include="Packets\Client\MessagePacket.cs" />
     <Compile Include="Packets\Client\PlayerIdentification.cs" />
     <Compile Include="Packets\Client\PositionAndOrientation.cs" />
@@ -105,6 +105,11 @@
       <Project>{e7c8320e-49a4-4187-afe3-15c814201e1e}</Project>
       <Name>MineLib.Network</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Libraries\BouncyCastle.Crypto.dll" />
+    <Content Include="Libraries\Newtonsoft.Json.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

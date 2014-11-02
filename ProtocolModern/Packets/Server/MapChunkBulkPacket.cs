@@ -10,14 +10,14 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x26; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             ChunkList = ChunkList.FromReader(reader);
 
             return this;
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
             ChunkList.ToStream(stream);

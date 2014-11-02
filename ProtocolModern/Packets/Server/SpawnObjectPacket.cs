@@ -18,7 +18,7 @@ namespace ProtocolModern.Packets.Server
 
         public byte ID { get { return 0x0E; } }
 
-        public IPacket ReadPacket(IMinecraftDataReader reader)
+        public IPacket ReadPacket(IProtocolDataReader reader)
         {
             EntityID = reader.ReadVarInt();
             Type = (Objects) reader.ReadByte();
@@ -37,7 +37,7 @@ namespace ProtocolModern.Packets.Server
         }
 
 
-        public IPacket WritePacket(IMinecraftStream stream) // TODO: Complete
+        public IPacket WritePacket(IProtocolStream stream) // TODO: Complete
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt(EntityID);

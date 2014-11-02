@@ -13,7 +13,7 @@ namespace ProtocolClassic.Packets.Extension.Server
         public byte ID { get { return 0x1C; } }
         public short Size { get { return 4; } }
 
-        public IPacketWithSize ReadPacket(IMinecraftDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
         {
             BlockType = stream.ReadByte();
             AllowPlacement = (AllowPlacement) stream.ReadByte();
@@ -22,12 +22,12 @@ namespace ProtocolClassic.Packets.Extension.Server
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IMinecraftDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
         {
             return ReadPacket(stream);
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteByte(ID);
             stream.WriteByte(BlockType);

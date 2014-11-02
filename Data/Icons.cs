@@ -68,7 +68,7 @@ namespace MineLib.Network.Data
             set { _entries.Insert(index, value); }
         }
 
-        public static IconList FromReader(IMinecraftDataReader reader)
+        public static IconList FromReader(IProtocolDataReader reader)
         {
             var value = new IconList();
 
@@ -90,7 +90,7 @@ namespace MineLib.Network.Data
             return value;
         }
 
-        public void ToStream(IMinecraftStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(Count);
 

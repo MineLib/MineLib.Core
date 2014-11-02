@@ -11,19 +11,19 @@ namespace ProtocolClassic.Packets.Server
         public byte ID { get { return 0x0F; } }
         public short Size { get { return 2; } }
 
-        public IPacketWithSize ReadPacket(IMinecraftDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
         {
             UserType = (UserType) stream.ReadByte();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IMinecraftDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
         {
             return ReadPacket(stream);
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteByte(ID);
             stream.WriteByte((byte) UserType);

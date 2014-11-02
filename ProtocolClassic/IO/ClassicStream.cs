@@ -10,7 +10,7 @@ namespace ProtocolClassic.IO
     // -- Credits to umby24 for encryption support, as taken from CWrapped.
     // -- Credits to SirCmpwn for encryption support, as taken from SMProxy.
     // -- All Write methods doesn't write to any stream. It writes to _buffer. Purge write _buffer to any stream.
-    public sealed class MinecraftStream : IMinecraftStream
+    public sealed class ClassicStream : IProtocolStream
     {
         private delegate IAsyncResult PacketWrite(IPacket packet);
         private PacketWrite _packetWriteDelegate;
@@ -19,14 +19,14 @@ namespace ProtocolClassic.IO
         private byte[] _buffer;
         private readonly Encoding _encoding = Encoding.ASCII;
 
-        public MinecraftStream(Stream stream)
+        public ClassicStream(Stream stream)
         {
             _stream = stream;
         }
 
         // -- String
 
-        public void WriteString(string value)
+        public void WriteString(string value, int length = 0)
         {
             var final = new byte[64];
             for (var i = 0; i < final.Length; i++)
@@ -268,7 +268,7 @@ namespace ProtocolClassic.IO
         public void SendPacket(IPacket packet)
         {
             using (var ms = new MemoryStream())
-            using (var stream = new MinecraftStream(ms))
+            using (var stream = new ClassicStream(ms))
             {
                 packet.WritePacket(stream);
                 var data = ms.ToArray();
@@ -288,7 +288,7 @@ namespace ProtocolClassic.IO
             _packetWriteDelegate = packet1 =>
             {
                 using (var ms = new MemoryStream())
-                using (var stream = new MinecraftStream(ms))
+                using (var stream = new ClassicStream(ms))
                 {
                     packet.WritePacket(stream);
                     var data = ms.ToArray();

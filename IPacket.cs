@@ -5,7 +5,7 @@ namespace MineLib.Network
     public interface IPacket
     {
         byte ID { get; }
-        IPacket ReadPacket(IMinecraftDataReader reader);
-        IPacket WritePacket(IMinecraftStream stream);
+        IPacket ReadPacket(IProtocolDataReader reader);
+        IPacket WritePacket(IProtocolStream stream);
     }
 }

@@ -5,6 +5,7 @@
         ProtocolModern,
         ProtocolClassic,
         ProtocolPocketEdition,
+        NativeModule,
         CustomModule
     }
 }

@@ -6,9 +6,9 @@ namespace MineLib.Network.IO
     /// <summary>
     /// Object that reads data from IPacket.
     /// </summary>
-    public interface IMinecraftDataReader : IDisposable
+    public interface IProtocolDataReader : IDisposable
     {
-        string ReadString();
+        string ReadString(int length = 0);
 
         int ReadVarInt();
 

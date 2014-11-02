@@ -7,7 +7,6 @@ using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using MineLib.Network;
 using MineLib.Network.Cryptography;
-using ProtocolModern.Enum;
 using ProtocolModern.IO;
 using ProtocolModern.Packets;
 using ProtocolModern.Packets.Client.Login;
@@ -23,7 +22,6 @@ namespace ProtocolModern
         public string Version { get { return "1.8"; } }
 
         public ConnectionState ConnectionState { get; set; }
-        public IProtocolAsyncReceiver PacketReceiver { get; set; }
 
         public bool Connected { get { return _baseSock != null && _baseSock.Connected; } }
 
@@ -48,8 +46,8 @@ namespace ProtocolModern
 
         private IMinecraftClient _minecraft;
 
-        private Socket _baseSock;
-        private MinecraftStream _stream;
+        private TcpClient _baseSock;
+        private IProtocolStreamExtended _stream;
 
         private bool CompressionEnabled { get { return _stream != null && _stream.ModernCompressionEnabled; } }
         private long CompressionThreshold { get { return _stream == null ? -1 : _stream.ModernCompressionThreshold; } }
@@ -112,7 +110,7 @@ namespace ProtocolModern
                     }
                     else // (dataLength > 0)
                     {
-                        var dataLengthBytes = MinecraftStream.GetVarIntBytes(dataLength).Length;
+                        var dataLengthBytes = ModernStream.GetVarIntBytes(dataLength).Length;
 
                         var tempBuff = _stream.ReadByteArray(packetLength - dataLengthBytes); // -- Compressed
 
@@ -124,7 +122,7 @@ namespace ProtocolModern
                             tempBuff = outputStream.ToArray(); // -- Decompressed
 
                             packetId = tempBuff[0]; // -- Only 255 packets available. ReadVarInt doesn't work.
-                            var packetIdBytes = MinecraftStream.GetVarIntBytes(packetId).Length;
+                            var packetIdBytes = ModernStream.GetVarIntBytes(packetId).Length;
 
                             data = new byte[tempBuff.Length - packetIdBytes];
                             Buffer.BlockCopy(tempBuff, packetIdBytes, data, 0, data.Length);
@@ -142,7 +140,6 @@ namespace ProtocolModern
             _stream.BeginRead(new byte[0], 0, 0, PacketReceiverAsync, null);
         }
 
-
         /// <summary>
         /// Packets are handled here. Compression and encryption are handled here too
         /// </summary>
@@ -150,7 +147,7 @@ namespace ProtocolModern
         /// <param name="data">Packet byte[] data</param>
         private void HandlePacket(int id, byte[] data)
         {
-            using (var reader = new MinecraftDataReader(data))
+            using (var reader = new ModernDataReader(data))
             {
                 IPacket packet = null;
 
@@ -159,10 +156,10 @@ namespace ProtocolModern
                     #region Status
 
                     case ConnectionState.InfoRequest:
-                        if (ServerResponse.Status[id] == null)
+                        if (ServerResponse.InfoRequest[id] == null)
                             throw new ProtocolException("Reading error: Wrong Status packet ID.");
 
-                        packet = ServerResponse.Status[id]().ReadPacket(reader);
+                        packet = ServerResponse.InfoRequest[id]().ReadPacket(reader);
 
                         RaisePacketHandled(id, packet, ConnectionState.InfoRequest);
                         break;
@@ -172,10 +169,10 @@ namespace ProtocolModern
                     #region Login
 
                     case ConnectionState.JoiningServer:
-                        if (ServerResponse.Login[id] == null)
+                        if (ServerResponse.JoiningServer[id] == null)
                             throw new ProtocolException("Reading error: Wrong Login packet ID.");
 
-                        packet = ServerResponse.Login[id]().ReadPacket(reader);
+                        packet = ServerResponse.JoiningServer[id]().ReadPacket(reader);
 
                         RaisePacketHandled(id, packet, ConnectionState.JoiningServer);
                         break;
@@ -185,21 +182,12 @@ namespace ProtocolModern
                     #region Play
 
                     case ConnectionState.JoinedServer:
-                        if (ServerResponse.Play[id] == null)
+                        if (ServerResponse.JoinedServer[id] == null)
                             throw new ProtocolException("Reading error: Wrong Play packet ID.");
 
-                        packet = ServerResponse.Play[id]().ReadPacket(reader);
+                        packet = ServerResponse.JoinedServer[id]().ReadPacket(reader);
 
                         RaisePacketHandled(id, packet, ConnectionState.JoinedServer);
-
-                        if (id == (int) PacketsServer.SetCompressionPlay)
-                            ModernSetCompression(packet); // -- Low-level compression handle
-
-                        // Connection lost
-                        if (id == (int) PacketsServer.Disconnect)
-                            Disconnect();
-                        
-
                         break;
 
                     #endregion Play
@@ -209,6 +197,7 @@ namespace ProtocolModern
                     PacketsReceived.Add(packet);
             }
         }
+
 
         /// <summary>
         /// Enabling encryption
@@ -271,7 +260,7 @@ namespace ProtocolModern
         public IAsyncResult BeginSendPacketHandled(IPacket packet, AsyncCallback asyncCallback, object state)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
             
             IAsyncResult result = BeginSendPacket(packet, asyncCallback, state);
             EndSendPacket(result);
@@ -285,7 +274,7 @@ namespace ProtocolModern
         public IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, object state)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
             return _stream.BeginSendPacket(packet, asyncCallback, state);
         }
@@ -293,7 +282,7 @@ namespace ProtocolModern
         public void EndSendPacket(IAsyncResult asyncResult)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
             _stream.EndSend(asyncResult);
         }
@@ -304,10 +293,10 @@ namespace ProtocolModern
         public IAsyncResult BeginConnect(string ip, short port, AsyncCallback asyncCallback, object state)
         {
             if (Connected)
-                throw new ProtocolException("Connection error: Already connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Already connected to server.");
 
             // -- Connect to server.
-            _baseSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _baseSock = new TcpClient();
 
             var result = _baseSock.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, asyncCallback, state);
             EndConnect(result);
@@ -321,10 +310,10 @@ namespace ProtocolModern
             _baseSock.EndConnect(asyncResult);
 
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
             // -- Create our Wrapped socket.
-            _stream = new MinecraftStream(new NetworkStream(_baseSock));
+            _stream = new ModernStream(new NetworkStream(_baseSock.Client));
 
             // -- Begin data reading.
             _stream.BeginRead(new byte[0], 0, 0, PacketReceiverAsync, null);
@@ -334,24 +323,24 @@ namespace ProtocolModern
         public IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
-            return _baseSock.BeginDisconnect(false, asyncCallback, state);
+            return _baseSock.Client.BeginDisconnect(false, asyncCallback, state);
         }
 
         public void EndDisconnect(IAsyncResult asyncResult)
         {
             if (!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
-            _baseSock.EndDisconnect(asyncResult);
+            _baseSock.Client.EndDisconnect(asyncResult);
         }
 
 
         public void SendPacket(IPacket packet)
         {
             if(!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
             _stream.SendPacket(packet);
 
@@ -362,14 +351,14 @@ namespace ProtocolModern
         public void Connect()
         {
             if (Connected)
-                throw new ProtocolException("Connection error: Already connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Already connected to server.");
 
             // -- Connect to server.
-            _baseSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _baseSock = new TcpClient();
             _baseSock.Connect(_minecraft.ServerHost, _minecraft.ServerPort);
 
             // -- Create our Wrapped socket.
-            _stream = new MinecraftStream(new NetworkStream(_baseSock));
+            _stream = new ModernStream(new NetworkStream(_baseSock.Client));
 
             // -- Begin data reading.
             _stream.BeginRead(new byte[0], 0, 0, PacketReceiverAsync, null);
@@ -378,9 +367,9 @@ namespace ProtocolModern
         public void Disconnect()
         {
             if(!Connected)
-                throw new ProtocolException("Connection error: Not connected to a Minecraft Server.");
+                throw new ProtocolException("Connection error: Not connected to server.");
 
-            _baseSock.Disconnect(false);
+            _baseSock.Client.Disconnect(false);
         }
 
         #endregion
@@ -389,7 +378,7 @@ namespace ProtocolModern
         public void Dispose()
         {
             if(_baseSock != null)
-                _baseSock.Dispose();
+                _baseSock.Client.Dispose();
 
             if(_stream != null)
                 _stream.Dispose();

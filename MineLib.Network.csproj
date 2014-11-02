@@ -78,8 +78,8 @@
     <Compile Include="Module\IModule.cs" />
     <Compile Include="INetworkHandler.cs" />
     <Compile Include="IO\IAesStream.cs" />
-    <Compile Include="IO\IMinecraftDataReader.cs" />
-    <Compile Include="IO\IMinecraftStream.cs" />
+    <Compile Include="IO\IProtocolDataReader.cs" />
+    <Compile Include="IO\IProtocolStream.cs" />
     <Compile Include="IO\NativeAesStream.cs" />
     <Compile Include="IProtocol.cs" />
     <Compile Include="IMinecraftClient.cs" />

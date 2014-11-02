@@ -10,7 +10,7 @@ namespace ProtocolPocketEdition.IO
     // -- Credits to umby24 for encryption support, as taken from CWrapped.
     // -- Credits to SirCmpwn for encryption support, as taken from SMProxy.
     // -- All Write methods doesn't write to any stream. It writes to _buffer. Purge write _buffer to any stream.
-    public sealed class MinecraftStream : IMinecraftStream
+    public sealed class MinecraftStream : IProtocolStream
     {
         private delegate IAsyncResult PacketWrite(IPacket packet);
         private PacketWrite _packetWriteDelegate;
@@ -26,7 +26,7 @@ namespace ProtocolPocketEdition.IO
 
         // -- String
 
-        public void WriteString(string value)
+        public void WriteString(string value, int length = 0)
         {
             var final = new byte[8];
             for (var i = 0; i < final.Length; i++)
@@ -264,19 +264,8 @@ namespace ProtocolPocketEdition.IO
             return result;
         }
 
-        
-        #region BeginWrite and BeginRead
 
-        public IAsyncResult BeginWritePacket(IPacket packet, AsyncCallback callback, object state)
-        {
-            _packetWriteDelegate = WriteFunction;
-
-            return _packetWriteDelegate.BeginInvoke(packet, callback, state);
-        }
-
-        #region BeginWrite
-
-        private IAsyncResult WriteFunction(IPacket packet)
+        public void SendPacket(IPacket packet)
         {
             using (var ms = new MemoryStream())
             using (var stream = new MinecraftStream(ms))
@@ -284,18 +273,39 @@ namespace ProtocolPocketEdition.IO
                 packet.WritePacket(stream);
                 var data = ms.ToArray();
 
-                return BeginWritePocketEdition(data, null, null);
+                _stream.Write(data, 0, data.Length);
             }
         }
 
-        private IAsyncResult BeginWritePocketEdition(byte[] data, AsyncCallback callback, object state)
+        public int Read(byte[] buffer, int offset, int count)
+        {
+            return _stream.Read(buffer, offset, count);
+        }
+
+
+        public IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback callback, object state)
+        {
+            _packetWriteDelegate = packet1 =>
+            {
+                using (var ms = new MemoryStream())
+                using (var stream = new MinecraftStream(ms))
+                {
+                    packet.WritePacket(stream);
+                    var data = ms.ToArray();
+
+                    return BeginSend(data, null, null);
+                }
+            };
+
+            return _packetWriteDelegate.BeginInvoke(packet, callback, state);
+        }
+
+        public IAsyncResult BeginSend(byte[] data, AsyncCallback callback, object state)
         {
             return _stream.BeginWrite(data, 0, data.Length, callback, state);
         }
 
-        #endregion
-
-        public void EndWrite(IAsyncResult asyncResult)
+        public void EndSend(IAsyncResult asyncResult)
         {
 
             try { _packetWriteDelegate.EndInvoke(asyncResult); }
@@ -312,8 +322,6 @@ namespace ProtocolPocketEdition.IO
         {
             return _stream.EndRead(asyncResult);
         }
-
-        #endregion
 
 
         public void Purge()

@@ -14,7 +14,7 @@ namespace ProtocolClassic.Packets.Server
         public byte ID { get { return 0x00; } }
         public short Size { get { return 131; } }
 
-        public IPacketWithSize ReadPacket(IMinecraftDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
         {
             ProtocolVersion = stream.ReadByte();
             ServerName = stream.ReadString();
@@ -24,12 +24,12 @@ namespace ProtocolClassic.Packets.Server
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IMinecraftDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
         {
             return ReadPacket(stream);
         }
 
-        public IPacket WritePacket(IMinecraftStream stream)
+        public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteByte(ID);
             stream.WriteByte(ProtocolVersion);
