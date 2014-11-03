@@ -15,7 +15,7 @@ namespace ProtocolClassic
         public string Name { get { return "Classic"; } }
         public string Version { get { return "0.30"; } }
 
-        public ConnectionState ConnectionState { get; set; }
+        public ConnectionState State { get; set; }
 
         public bool Connected { get { return _baseSock != null && _baseSock.Connected; } }
 

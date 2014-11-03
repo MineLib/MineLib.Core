@@ -15,7 +15,7 @@ namespace ProtocolMinetest
         public string Name { get { return "Minetest"; } }
         public string Version { get { return "None"; } }
 
-        public ConnectionState ConnectionState { get; set; }
+        public ConnectionState State { get; set; }
 
         public bool Connected { get { return _baseSock != null && _baseSock.Client.Connected; } }
 
@@ -78,7 +78,7 @@ namespace ProtocolMinetest
             {
                 IPacket packet = null;
 
-                switch (ConnectionState)
+                switch (State)
                 {
                     #region Status
 

@@ -84,7 +84,6 @@
     <Compile Include="IProtocol.cs" />
     <Compile Include="IMinecraftClient.cs" />
     <Compile Include="Module\ModuleLoader.cs" />
-    <Compile Include="NetworkHandler.Extern.cs" />
     <Compile Include="NetworkMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IPacket.cs" />

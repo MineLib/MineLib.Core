@@ -8,7 +8,7 @@ namespace ProtocolPocketEdition
     {
         public IAsyncResult BeginConnectToServer(AsyncCallback asyncCallback, object state)
         {
-            ConnectionState = ConnectionState.JoiningServer;
+            State = ConnectionState.JoiningServer;
 
             return null;
         }

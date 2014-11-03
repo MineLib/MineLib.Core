@@ -16,7 +16,7 @@ namespace ProtocolPocketEdition
         public string Name { get { return "Pocket Edition"; } }
         public string Version { get { return "0.9.0"; } }
 
-        public ConnectionState ConnectionState { get; set; }
+        public ConnectionState State { get; set; }
 
         public bool Connected { get { return _baseSock != null && _baseSock.Client.Connected; } }
 

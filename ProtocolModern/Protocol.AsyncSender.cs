@@ -13,7 +13,7 @@ namespace ProtocolModern
     {
         public IAsyncResult BeginConnectToServer(AsyncCallback asyncCallback, object state)
         {
-            ConnectionState = ConnectionState.JoiningServer;
+            State = ConnectionState.JoiningServer;
 
             BeginSendPacketHandled(new HandshakePacket
             {

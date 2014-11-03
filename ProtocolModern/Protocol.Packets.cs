@@ -33,7 +33,7 @@ namespace ProtocolModern
                             break;
 
                         case PacketsServer.LoginSuccess:
-                            ConnectionState = ConnectionState.JoinedServer;
+                            State = ConnectionState.JoinedServer;
                             break;
 
                         case PacketsServer.SetCompressionLogin:

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using MineLib.Network.Data;
 using MineLib.Network.Module;
 
@@ -10,7 +11,7 @@ namespace MineLib.Network
     /// </summary>
     public interface IProtocol : IModule, IProtocolDebug, IProtocolAsyncConnection, IProtocolAsyncSender, IProtocolAsyncReceiver, IDisposable
     {
-        ConnectionState ConnectionState { get; set; }
+        ConnectionState State { get; set; }
         bool Connected { get; }
 
         IProtocol Create(IMinecraftClient client, bool debugPackets = true);
@@ -71,6 +72,14 @@ namespace MineLib.Network
 
         //event EventHandler PlayerPositionFix;
 
+    }
+
+    public class ProtocolAsyncResult : IAsyncResult
+    {
+        public bool IsCompleted { get; private set; }
+        public WaitHandle AsyncWaitHandle { get; private set; }
+        public object AsyncState { get; private set; }
+        public bool CompletedSynchronously { get; private set; }
     }
 
     public class ProtocolAsyncReceiverEventArgs : EventArgs

@@ -10,7 +10,7 @@ namespace ProtocolClassic
     {
         public IAsyncResult BeginConnectToServer(AsyncCallback asyncCallback, object state)
         {
-            ConnectionState = ConnectionState.JoiningServer;
+            State = ConnectionState.JoiningServer;
 
             return BeginSendPacketHandled(new PlayerIdentificationPacket
             {

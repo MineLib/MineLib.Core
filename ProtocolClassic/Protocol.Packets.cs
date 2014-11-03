@@ -16,7 +16,7 @@ namespace ProtocolClassic
             switch ((PacketsServer)id)
             {
                 case PacketsServer.ServerIdentification:
-                    ConnectionState = ConnectionState.JoinedServer;
+                    State = ConnectionState.JoinedServer;
                     break;
 
                 case PacketsServer.Ping:

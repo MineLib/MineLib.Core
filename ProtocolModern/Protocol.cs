@@ -21,7 +21,7 @@ namespace ProtocolModern
         public string Name { get { return "Modern"; } }
         public string Version { get { return "1.8"; } }
 
-        public ConnectionState ConnectionState { get; set; }
+        public ConnectionState State { get; set; }
 
         public bool Connected { get { return _baseSock != null && _baseSock.Connected; } }
 
@@ -151,7 +151,7 @@ namespace ProtocolModern
             {
                 IPacket packet = null;
 
-                switch (ConnectionState)
+                switch (State)
                 {
                     #region Status
 
