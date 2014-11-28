@@ -51,6 +51,7 @@
     <Compile Include="Protocol.AsyncReceiver.cs" />
     <Compile Include="Protocol.AsyncSender.cs" />
     <Compile Include="Protocol.cs" />
+    <Compile Include="Protocol.Login.cs" />
     <Compile Include="Protocol.Packets.cs" />
     <Compile Include="Packets\PacketsServer.cs" />
   </ItemGroup>

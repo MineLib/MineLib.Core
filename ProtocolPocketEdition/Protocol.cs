@@ -120,7 +120,7 @@ namespace ProtocolPocketEdition
             _stream.EndSend(asyncResult);
         }
 
-        public IAsyncResult BeginConnect(string ip, short port, AsyncCallback asyncCallback, object state)
+        public IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state)
         {
             if (Connected)
                 throw new ProtocolException("Connection error: Already connected to server.");

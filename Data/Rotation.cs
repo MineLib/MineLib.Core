@@ -7,9 +7,9 @@ namespace MineLib.Network.Data
     /// </summary>
     public struct Rotation : IEquatable<Rotation>
     {
-        public float Pitch;
-        public float Yaw;
-        public float Roll;
+        public readonly float Pitch;
+        public readonly float Yaw;
+        public readonly float Roll;
 
         public Rotation(float pitch, float yaw, float roll)
         {

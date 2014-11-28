@@ -1,6 +1,6 @@
 ﻿using MineLib.Network;
 using MineLib.Network.IO;
-using ProtocolClassic.Enum;
+using ProtocolClassic.Enums;
 
 namespace ProtocolClassic.Packets.Extension.Server
 {

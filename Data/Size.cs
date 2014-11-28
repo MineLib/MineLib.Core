@@ -5,9 +5,9 @@
     /// </summary>
     public struct Size
     {
-        public double Width;
-        public double Height;
-        public double Depth;
+        public readonly double Width;
+        public readonly double Height;
+        public readonly double Depth;
 
         public Size(double width, double height, double depth)
         {

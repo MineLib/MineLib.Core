@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using MineLib.Network.Data;
+using MineLib.Network.Data.Structs;
 
 namespace MineLib.Network
 {

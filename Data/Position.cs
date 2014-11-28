@@ -8,9 +8,9 @@ namespace MineLib.Network.Data
     /// </summary>
     public struct Position : IEquatable<Position>
     {
-        public int X;
-        public int Y;
-        public int Z;
+        public readonly int X;
+        public readonly int Y;
+        public readonly int Z;
 
         public Position(int value)
         {
@@ -34,11 +34,11 @@ namespace MineLib.Network.Data
         public static Position FromLong(long value)
         {
             return new Position
-            {
-                X = (int) (value >> 38),
-                Y = (int) (value >> 26) & 0xFFF,
-                Z = (int) value << 38 >> 38
-            };
+            (
+                (int) (value >> 38),
+                (int) (value >> 26) & 0xFFF,
+                (int) value << 38 >> 38
+            );
         }
 
         public long ToLong()
@@ -51,33 +51,43 @@ namespace MineLib.Network.Data
         public static Position FromReaderVarInt(IProtocolDataReader reader)
         {
             return new Position
-            {
-                X = reader.ReadVarInt(),
-                Y = reader.ReadVarInt(),
-                Z = reader.ReadVarInt()
-            };
+            (
+                reader.ReadVarInt(),
+                reader.ReadVarInt(),
+                reader.ReadVarInt()
+            );
         }
 
         public static Position FromReaderByte(IProtocolDataReader reader)
         {
             return new Position
-            {
-                X = reader.ReadByte(),
-                Y = reader.ReadByte(),
-                Z = reader.ReadByte()
-            };
+            (
+                reader.ReadByte(),
+                reader.ReadByte(),
+                reader.ReadByte()
+            );
+        }
+
+        public static Position FromReaderShort(IProtocolDataReader reader)
+        {
+            return new Position
+            (
+                reader.ReadShort(),
+                reader.ReadShort(),
+                reader.ReadShort()
+            );
         }
 
         public static Position FromReaderInt(IProtocolDataReader reader)
         {
             return new Position
-            {
-                X = reader.ReadInt(),
-                Y = reader.ReadInt(),
-                Z = reader.ReadInt()
-            };
+            (
+                reader.ReadInt(),
+                reader.ReadInt(),
+                reader.ReadInt()
+            );
         }
-
+        
         public static Position FromReaderLong(IProtocolDataReader reader)
         {
             return FromLong(reader.ReadLong());
@@ -93,9 +103,16 @@ namespace MineLib.Network.Data
 
         public void ToStreamByte(IProtocolStream stream)
         {
-            stream.WriteByte((byte)X);
-            stream.WriteByte((byte)Y);
-            stream.WriteByte((byte)Z);
+            stream.WriteByte((byte) X);
+            stream.WriteByte((byte) Y);
+            stream.WriteByte((byte) Z);
+        }
+
+        public void ToStreamShort(IProtocolStream stream)
+        {
+            stream.WriteShort((short) X);
+            stream.WriteShort((short) Y);
+            stream.WriteShort((short) Z);
         }
 
         public void ToStreamInt(IProtocolStream stream)

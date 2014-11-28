@@ -8,7 +8,7 @@ namespace ProtocolModern.Packets
     {
         public int ProtocolVersion;
         public string ServerAddress;
-        public short ServerPort;
+        public ushort ServerPort;
         public NextState NextState;
 
         public const byte PacketID = 0x00;
@@ -18,7 +18,7 @@ namespace ProtocolModern.Packets
         {
             ProtocolVersion = reader.ReadVarInt();
             ServerAddress = reader.ReadString();
-            ServerPort = reader.ReadShort();
+            ServerPort = reader.ReadUShort();
             NextState = (NextState) reader.ReadVarInt();
 
             return this;
@@ -29,7 +29,7 @@ namespace ProtocolModern.Packets
             stream.WriteVarInt(ID);
             stream.WriteVarInt(ProtocolVersion);
             stream.WriteString(ServerAddress);
-            stream.WriteShort(ServerPort);
+            stream.WriteUShort(ServerPort);
             stream.WriteVarInt((byte) NextState);
             stream.Purge();
 

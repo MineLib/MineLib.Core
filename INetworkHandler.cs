@@ -1,5 +1,6 @@
 ﻿using System;
-using MineLib.Network.Data;
+using System.Runtime.Serialization;
+using MineLib.Network.Data.Structs;
 
 namespace MineLib.Network
 {
@@ -9,6 +10,8 @@ namespace MineLib.Network
 
         NetworkMode NetworkMode { get; }
         ConnectionState ConnectionState { get; }
+
+        bool UseLogin { get; }
         
         bool SavePackets { get; }
 
@@ -18,7 +21,7 @@ namespace MineLib.Network
 
         INetworkHandler Create(IMinecraftClient client, bool debugPackets = true);
 
-        IAsyncResult BeginConnect(string ip, short port, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state);
         void EndConnect(IAsyncResult asyncResult);
         IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state);
         void EndDisconnect(IAsyncResult asyncResult);
@@ -36,6 +39,7 @@ namespace MineLib.Network
         IAsyncResult BeginPlayerHeldItem(short slot, AsyncCallback asyncCallback, object state);
     }
 
+    [Serializable]
     public class NetworkHandlerException : Exception
     {
         public NetworkHandlerException()
@@ -52,5 +56,8 @@ namespace MineLib.Network
 
         public NetworkHandlerException(string format, Exception innerException, params object[] args)
             : base(string.Format(format, args), innerException) { }
+
+        protected NetworkHandlerException(SerializationInfo info, StreamingContext context) 
+            : base(info, context) { }
     }
 }

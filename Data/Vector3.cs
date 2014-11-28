@@ -10,18 +10,27 @@ namespace MineLib.Network.Data
     /// </summary>
     public struct Vector3 : IEquatable<Vector3>
     {
-        public double X, Y, Z;
+        public readonly float X;
+        public readonly float Y;
+        public readonly float Z;
 
-        public Vector3(double value)
+        public Vector3(float value)
         {
             X = Y = Z = value;
         }
 
-        public Vector3(double x, double y, double z)
+        public Vector3(float x, float y, float z)
         {
             X = x;
             Y = y;
             Z = z;
+        }
+
+        public Vector3(double x, double y, double z)
+        {
+            X = (float) x;
+            Y = (float) y;
+            Z = (float) z;
         }
 
         public Vector3(Vector3 v)
@@ -33,62 +42,75 @@ namespace MineLib.Network.Data
 
         public static Vector3 FromFixedPoint(int x, int y, int z)
         {
-            return new Vector3
-            {
-                X = x / 32.0,
-                Y = y / 32.0,
-                Z = z / 32.0
-            };
+            return new Vector3(
+                x / 32.0f, 
+                y / 32.0f, 
+                z / 32.0f
+            );
         }
 
         #region Network
 
         public static Vector3 FromReaderByte(IProtocolDataReader reader)
         {
-            return new Vector3
-            {
-                X = reader.ReadByte(),
-                Y = reader.ReadByte(),
-                Z = reader.ReadByte()
-            };
+            return new Vector3(
+                reader.ReadByte(),
+                reader.ReadByte(),
+                reader.ReadByte()
+            );
+        }
+
+        public static Vector3 FromReaderShort(IProtocolDataReader reader)
+        {
+            return new Vector3(
+                reader.ReadShort(),
+                reader.ReadShort(),
+                reader.ReadShort()
+            );
         }
 
         public static Vector3 FromReaderDouble(IProtocolDataReader reader)
         {
-            return new Vector3
-            {
-                X = reader.ReadDouble(),
-                Y = reader.ReadDouble(),
-                Z = reader.ReadDouble()
-            };
+            return new Vector3(
+                reader.ReadDouble(),
+                reader.ReadDouble(),
+                reader.ReadDouble()
+            );
         }
 
         public static Vector3 FromReaderSByteFixedPoint(IProtocolDataReader reader)
         {
             return new Vector3
-            {
-                X = reader.ReadSByte() / 32.0,
-                Y = reader.ReadSByte() / 32.0,
-                Z = reader.ReadSByte() / 32.0
-            };
+            (
+                reader.ReadSByte() / 32.0f,
+                reader.ReadSByte() / 32.0f,
+                reader.ReadSByte() / 32.0f
+            );
         }
 
         public static Vector3 FromReaderIntFixedPoint(IProtocolDataReader reader)
         {
             return new Vector3
-            {
-                X = reader.ReadInt() / 32.0,
-                Y = reader.ReadInt() / 32.0,
-                Z = reader.ReadInt() / 32.0
-            };
+            (
+                reader.ReadInt() / 32.0f,
+                reader.ReadInt() / 32.0f,
+                reader.ReadInt() / 32.0f
+            );
         }
 
 
         public void ToStreamByte(IProtocolStream stream)
         {
-            stream.WriteByte((byte)X);
-            stream.WriteByte((byte)Y);
-            stream.WriteByte((byte)Z);
+            stream.WriteByte((byte) X);
+            stream.WriteByte((byte) Y);
+            stream.WriteByte((byte) Z);
+        }
+
+        public void ToStreamShort(IProtocolStream stream)
+        {
+            stream.WriteShort((short) X);
+            stream.WriteShort((short) Y);
+            stream.WriteShort((short) Z);
         }
 
         public void ToStreamDouble(IProtocolStream stream)

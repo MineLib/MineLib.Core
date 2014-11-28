@@ -1,7 +1,7 @@
 ﻿using System;
 using MineLib.Network;
-using MineLib.Network.Data;
-using ProtocolClassic.Enum;
+using MineLib.Network.Data.Structs;
+using ProtocolClassic.Enums;
 using ProtocolClassic.Packets.Client;
 
 namespace ProtocolClassic

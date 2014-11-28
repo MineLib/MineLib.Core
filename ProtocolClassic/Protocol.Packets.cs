@@ -1,6 +1,6 @@
 ﻿using System;
 using MineLib.Network;
-using ProtocolClassic.Enum;
+using ProtocolClassic.Enums;
 
 namespace ProtocolClassic
 {

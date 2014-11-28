@@ -145,9 +145,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProtocolCLIWrapper.h" />
+    <ClInclude Include="Stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProtocolCLIWrapper.cpp" />
+    <ClCompile Include="ProtocolCLIWrapper.Login.cpp" />
+    <ClCompile Include="Stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MineLib.Network.csproj">

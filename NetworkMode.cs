@@ -1,5 +1,8 @@
 ﻿namespace MineLib.Network
 {
+    /// <summary>
+    /// Which protocol type we will use
+    /// </summary>
     public enum NetworkMode
     {
         /// <summary>

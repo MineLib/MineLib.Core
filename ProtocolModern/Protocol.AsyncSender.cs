@@ -2,6 +2,7 @@
 using System.Text;
 using MineLib.Network;
 using MineLib.Network.Data;
+using MineLib.Network.Data.Structs;
 using ProtocolModern.Enum;
 using ProtocolModern.Packets;
 using ProtocolModern.Packets.Client;

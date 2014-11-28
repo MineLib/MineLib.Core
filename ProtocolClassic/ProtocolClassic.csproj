@@ -40,30 +40,36 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enum\AllowDeletion.cs" />
-    <Compile Include="Enum\AllowPlacement.cs" />
-    <Compile Include="Enum\Block.cs" />
-    <Compile Include="Enum\EnvironmentalVariable.cs" />
-    <Compile Include="Enum\Flying.cs" />
-    <Compile Include="Enum\KeyMods.cs" />
-    <Compile Include="Enum\NoClip.cs" />
-    <Compile Include="Enum\PacketsEnums.cs" />
-    <Compile Include="Enum\PreventChange.cs" />
-    <Compile Include="Enum\SetBlockMode.cs" />
-    <Compile Include="Enum\SpawnControl.cs" />
-    <Compile Include="Enum\Speeding.cs" />
-    <Compile Include="Enum\ThirdPersonView.cs" />
-    <Compile Include="Enum\UserType.cs" />
-    <Compile Include="Enum\WeatherType.cs" />
+    <Compile Include="Data\Map.cs" />
+    <Compile Include="Enums\Action.cs" />
+    <Compile Include="Enums\AllowDeletion.cs" />
+    <Compile Include="Enums\AllowPlacement.cs" />
+    <Compile Include="Enums\Block.cs" />
+    <Compile Include="Enums\Button.cs" />
+    <Compile Include="Enums\EnvironmentalVariable.cs" />
+    <Compile Include="Enums\Flying.cs" />
+    <Compile Include="Enums\KeyMods.cs" />
+    <Compile Include="Enums\NoClip.cs" />
+    <Compile Include="Enums\PacketsEnums.cs" />
+    <Compile Include="Enums\PreventChange.cs" />
+    <Compile Include="Enums\SetBlockMode.cs" />
+    <Compile Include="Enums\SpawnControl.cs" />
+    <Compile Include="Enums\Speeding.cs" />
+    <Compile Include="Enums\TargetBlockFace.cs" />
+    <Compile Include="Enums\ThirdPersonView.cs" />
+    <Compile Include="Enums\UserType.cs" />
+    <Compile Include="Enums\WeatherType.cs" />
+    <Compile Include="Packets\ClientResponse.cs" />
+    <Compile Include="Packets\Extension\Client\PlayerClickedPacket.cs" />
     <Compile Include="Protocol.AsyncReceiver.cs" />
     <Compile Include="Protocol.AsyncSender.cs" />
     <Compile Include="Protocol.cs" />
     <Compile Include="IO\ClassicDataReader.cs" />
     <Compile Include="IO\ClassicStream.cs" />
     <Compile Include="Packets\Client\MessagePacket.cs" />
-    <Compile Include="Packets\Client\PlayerIdentification.cs" />
-    <Compile Include="Packets\Client\PositionAndOrientation.cs" />
-    <Compile Include="Packets\Client\SetBlock.cs" />
+    <Compile Include="Packets\Client\PlayerIdentificationPacket.cs" />
+    <Compile Include="Packets\Client\PositionAndOrientationPacket.cs" />
+    <Compile Include="Packets\Client\SetBlockPacket.cs" />
     <Compile Include="Packets\Extension\Client\ExtEntryPacket.cs" />
     <Compile Include="Packets\Extension\Client\ExtInfoPacket.cs" />
     <Compile Include="Packets\Extension\Server\ChangeModelPacket.cs" />
@@ -98,6 +104,7 @@
     <Compile Include="Packets\Server\SpawnPlayer.cs" />
     <Compile Include="Packets\Server\UpdateUserType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol.Login.cs" />
     <Compile Include="Protocol.Packets.cs" />
   </ItemGroup>
   <ItemGroup>

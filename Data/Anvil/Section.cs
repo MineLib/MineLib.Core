@@ -127,11 +127,11 @@ namespace MineLib.Network.Data.Anvil
         public static Position GetSectionPositionByIndex(int index)
         {
             return new Position
-            {
-                X = index % 16,
-                Y = index / (16 * 16),
-                Z = (index / 16) % 16
-            };
+            (
+                index % 16,
+                index / (16 * 16),
+                (index / 16) % 16
+            );
         }
 
         public Position GetGlobalPositionByArrayIndex(Position pos)
@@ -149,11 +149,11 @@ namespace MineLib.Network.Data.Anvil
             var sectionPos = GetSectionPositionByIndex(index);
 
             return new Position
-            {
-                X = Width * Position.X + sectionPos.Y,
-                Y = Height * Position.Y + sectionPos.Y,
-                Z = Depth * Position.Z + sectionPos.Z
-            };
+            (
+                Width * Position.X + sectionPos.Y,
+                Height * Position.Y + sectionPos.Y,
+                Depth * Position.Z + sectionPos.Z
+            );
         }
 
         private static byte[] ToBytePerBlock(IList<byte> halfByteData)

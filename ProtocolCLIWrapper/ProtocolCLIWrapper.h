@@ -5,7 +5,7 @@
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace MineLib::Network;
-using namespace MineLib::Network::Data;
+using namespace MineLib::Network::Data::Structs;
 
 namespace ProtocolCLIWrapper {
 
@@ -49,7 +49,7 @@ public:
     virtual IAsyncResult^ BeginSendPacket(IPacket^ packet, AsyncCallback^ asyncCallback, Object^ state);
     virtual void EndSendPacket(IAsyncResult^ asyncResult);
 
-	virtual IAsyncResult^ BeginConnect(String^ ip, short port, AsyncCallback^ asyncCallback, Object^ state);
+	virtual IAsyncResult^ BeginConnect(String^ ip, unsigned short port, AsyncCallback^ asyncCallback, Object^ state);
     virtual void EndConnect(IAsyncResult^ asyncResult);
 
     virtual IAsyncResult^ BeginDisconnect(AsyncCallback^ asyncCallback, Object^ state);
@@ -64,6 +64,9 @@ public:
     virtual IAsyncResult^ BeginPlayerSetRemoveBlock(PlayerSetRemoveBlockData data, AsyncCallback^ asyncCallback, Object^ state);
     virtual IAsyncResult^ BeginSendMessage(String^ message, AsyncCallback^ asyncCallback, Object^ state);
     virtual IAsyncResult^ BeginPlayerHeldItem(short slot, AsyncCallback^ asyncCallback, Object^ state);
+
+	virtual bool Login(String^ login, String^ password);
+	virtual bool Logout();
 
 	virtual event EventHandler^ ChatMessage;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using MineLib.Network;
 using MineLib.Network.Data;
+using MineLib.Network.Data.Structs;
 using ProtocolMinetest.Packets.Client;
 
 namespace ProtocolMinetest

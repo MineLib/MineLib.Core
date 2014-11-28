@@ -1,5 +1,6 @@
 using MineLib.Network;
 using MineLib.Network.Data;
+using MineLib.Network.Data.Structs;
 using MineLib.Network.IO;
 
 namespace ProtocolModern.Packets.Server
@@ -13,8 +14,7 @@ namespace ProtocolModern.Packets.Server
 
         public IPacket ReadPacket(IProtocolDataReader reader)
         {
-            Coordinates.X = reader.ReadInt();
-            Coordinates.Z = reader.ReadInt();
+            Coordinates = Coordinates2D.FromReaderInt(reader);
             RecordList = RecordList.FromReader(reader);
 
             return this;
@@ -23,8 +23,7 @@ namespace ProtocolModern.Packets.Server
         public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
-            stream.WriteInt(Coordinates.X);
-            stream.WriteInt(Coordinates.Z);
+            Coordinates.ToStreamInt(stream);
             RecordList.ToStream(stream);
             stream.Purge();
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using MineLib.Network.Module;
@@ -11,6 +12,8 @@ namespace MineLib.Network
 
         public NetworkMode NetworkMode { get { return _minecraft.Mode; } }
         public ConnectionState ConnectionState { get { return _protocol.State; } }
+
+        public bool UseLogin { get { return _minecraft.UseLogin; }}
 
         public bool SavePackets { get { return _protocol.SavePackets; } }
 
@@ -31,16 +34,19 @@ namespace MineLib.Network
 
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
-            _protocol = ModuleLoader.CreateModule<IProtocol>(string.Format(path + "\\{0}.dll", NetworkMode));
+            _protocol = ModuleLoader.CreateModule<IProtocol>(string.Format(CultureInfo.InvariantCulture,  path + "\\{0}.dll", NetworkMode)).Create(_minecraft, debugPackets);
             if (_protocol == null)
-                throw new NetworkHandlerException( string.Format("Module loading error: {0}.dll was not found or corrupted.", NetworkMode));
-            
-            _protocol.Create(_minecraft, debugPackets);
+                throw new NetworkHandlerException(string.Format("Module loading error: {0}.dll was not found or corrupted.", NetworkMode));
+
+            // -- Make async
+            if (UseLogin)
+                _protocol.Login(_minecraft.ClientLogin, _minecraft.ClientPassword);
 
             return this;
         }
 
-        public IAsyncResult BeginConnect(string ip, short port, AsyncCallback asyncCallback, object state)
+
+        public IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state)
         {
             return _protocol.BeginConnect(ip, port, asyncCallback, state);
         }

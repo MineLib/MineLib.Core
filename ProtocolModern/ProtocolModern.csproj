@@ -45,7 +45,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asn1.cs" />
     <Compile Include="DebugHelpers.cs" />
+    <Compile Include="IO\BouncyCastleAesStream.cs" />
+    <Compile Include="IO\IAesStream.cs" />
     <Compile Include="IO\IProtocolStreamExtended.cs" />
     <Compile Include="IO\ModernDataReader.cs" />
     <Compile Include="IO\ModernStream.cs" />
@@ -82,6 +85,8 @@
     <Compile Include="Enum\UpdateBlockEntityAction.cs" />
     <Compile Include="Enum\UseEntity.cs" />
     <Compile Include="Enum\WorldBorderAction.cs" />
+    <Compile Include="IO\NativeAesStream.cs" />
+    <Compile Include="Protocol.Login.cs" />
     <Compile Include="Protocol.Packets.cs" />
     <Compile Include="Protocol.cs" />
     <Compile Include="Packets\ClientResponse.cs" />
@@ -200,6 +205,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol.AsyncSender.cs" />
     <Compile Include="Protocol.AsyncReceiver.cs" />
+    <Compile Include="Yggdrasil.cs" />
+    <Compile Include="Yggdrasil.Json.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MineLib.Network.csproj">

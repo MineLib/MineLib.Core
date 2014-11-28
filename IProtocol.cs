@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using MineLib.Network.Data;
+using MineLib.Network.Data.Structs;
 using MineLib.Network.Module;
 
 namespace MineLib.Network
@@ -21,7 +21,8 @@ namespace MineLib.Network
         void Connect();
         void Disconnect();
 
-        //void Login(string login, string password);
+        bool Login(string login, string password);
+        bool Logout();
     }
 
     public interface IProtocolDebug
@@ -39,7 +40,7 @@ namespace MineLib.Network
         IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, object state);
         void EndSendPacket(IAsyncResult asyncResult);
 
-        IAsyncResult BeginConnect(string ip, short port, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state);
         void EndConnect(IAsyncResult asyncResult);
 
         IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state);

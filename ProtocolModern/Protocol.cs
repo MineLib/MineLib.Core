@@ -205,34 +205,17 @@ namespace ProtocolModern
         /// <param name="packet">EncryptionRequestPacket</param>
         private void ModernEnableEncryption(IPacket packet)
         {
-            // From libMC.NET
             var request = (EncryptionRequestPacket)packet;
 
-            var hashlist = new List<byte>();
-            hashlist.AddRange(Encoding.ASCII.GetBytes(request.ServerId));
-            hashlist.AddRange(request.SharedKey);
-            hashlist.AddRange(request.PublicKey);
-
-            var hashData = hashlist.ToArray();
-
-            var hash = JavaHelper.JavaHexDigest(hashData);
+            var hash = Asn1.GetServerIDHash(request.PublicKey, request.SharedKey, request.ServerId);
 
             if (!Yggdrasil.ClientAuth(_minecraft.AccessToken, _minecraft.SelectedProfile, hash))
                 throw new ProtocolException("Yggdrasil error: Not authenticated.");
 
-            // -- You pass it the key data and ask it to parse, and it will 
-            // -- Extract the server's public key, then parse that into RSA for us.
-            var keyParser = new AsnKeyParser(request.PublicKey);
-            var deKey = keyParser.ParseRSAPublicKey();
+            var rsaParameter = Asn1.GetRsaParameters(request.PublicKey);
 
-            // -- Now we create an encrypter, and encrypt the token sent to us by the server
-            // -- as well as our newly made shared key (Which can then only be decrypted with the server's private key)
-            // -- and we send it to the server.
-            var cryptoService = new RSACryptoServiceProvider();
-            cryptoService.ImportParameters(deKey);
-
-            var encryptedSecret = cryptoService.Encrypt(request.SharedKey, false);
-            var encryptedVerify = cryptoService.Encrypt(request.VerificationToken, false);
+            var encryptedSecret = Asn1.EncryptData(rsaParameter, request.SharedKey);
+            var encryptedVerify = Asn1.EncryptData(rsaParameter, request.VerificationToken);
 
             BeginSendPacketHandled(new EncryptionResponsePacket
             {
@@ -290,7 +273,7 @@ namespace ProtocolModern
         /// <summary>
         /// If connected, don't call EndConnect.
         /// </summary>
-        public IAsyncResult BeginConnect(string ip, short port, AsyncCallback asyncCallback, object state)
+        public IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state)
         {
             if (Connected)
                 throw new ProtocolException("Connection error: Already connected to server.");

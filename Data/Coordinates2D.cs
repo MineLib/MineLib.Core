@@ -1,4 +1,5 @@
 ﻿using System;
+using MineLib.Network.IO;
 
 namespace MineLib.Network.Data
 {
@@ -7,7 +8,8 @@ namespace MineLib.Network.Data
     /// </summary>
     public struct Coordinates2D : IEquatable<Coordinates2D>
     {
-        public int X, Z;
+        public readonly int X;
+        public readonly int Z;
 
         public Coordinates2D(int value)
         {
@@ -25,6 +27,71 @@ namespace MineLib.Network.Data
             X = v.X;
             Z = v.Z;
         }
+
+        #region Network
+
+        public static Coordinates2D FromReaderVarInt(IProtocolDataReader reader)
+        {
+            return new Coordinates2D
+            (
+                reader.ReadVarInt(),
+                reader.ReadVarInt()
+            );
+        }
+
+        public static Coordinates2D FromReaderByte(IProtocolDataReader reader)
+        {
+            return new Coordinates2D
+            (
+                reader.ReadByte(),
+                reader.ReadByte()
+            );
+        }
+
+        public static Coordinates2D FromReaderShort(IProtocolDataReader reader)
+        {
+            return new Coordinates2D
+            (
+                reader.ReadShort(),
+                reader.ReadShort()
+            );
+        }
+
+        public static Coordinates2D FromReaderInt(IProtocolDataReader reader)
+        {
+            return new Coordinates2D
+            (
+                reader.ReadInt(),
+                reader.ReadInt()
+            );
+        }
+
+
+        public void ToStreamVarInt(IProtocolStream stream)
+        {
+            stream.WriteVarInt(X);
+            stream.WriteVarInt(Z);
+        }
+
+        public void ToStreamByte(IProtocolStream stream)
+        {
+            stream.WriteByte((byte) X);
+            stream.WriteByte((byte) Z);
+        }
+
+        public void ToStreamShort(IProtocolStream stream)
+        {
+            stream.WriteShort((short) X);
+            stream.WriteShort((short) Z);
+        }
+
+        public void ToStreamInt(IProtocolStream stream)
+        {
+            stream.WriteInt(X);
+            stream.WriteInt(Z);
+        }
+
+        #endregion
 
         /// <summary>
         /// Converts this Coordinates2D to a string.
