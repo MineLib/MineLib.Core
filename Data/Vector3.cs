@@ -80,8 +80,7 @@ namespace MineLib.Network.Data
 
         public static Vector3 FromReaderSByteFixedPoint(IProtocolDataReader reader)
         {
-            return new Vector3
-            (
+            return new Vector3(
                 reader.ReadSByte() / 32.0f,
                 reader.ReadSByte() / 32.0f,
                 reader.ReadSByte() / 32.0f
@@ -90,8 +89,7 @@ namespace MineLib.Network.Data
 
         public static Vector3 FromReaderIntFixedPoint(IProtocolDataReader reader)
         {
-            return new Vector3
-            (
+            return new Vector3(
                 reader.ReadInt() / 32.0f,
                 reader.ReadInt() / 32.0f,
                 reader.ReadInt() / 32.0f

@@ -4,7 +4,6 @@ using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using MineLib.Network;
-using MineLib.Network.IO;
 using Org.BouncyCastle.Math;
 
 namespace ProtocolModern.IO

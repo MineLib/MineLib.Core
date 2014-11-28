@@ -14,16 +14,16 @@ namespace MineLib.Network.Module
 
             if (File.Exists(file))
             {
-                Assembly asm = Assembly.LoadFile(file);
+                var asm = Assembly.LoadFile(file);
 
                 if (asm != null)
                 {
                     for (int i = 0; i < asm.GetTypes().Length; i++)
                     {
-                        Type type = (Type)asm.GetTypes().GetValue(i);
+                        var type = (Type) asm.GetTypes().GetValue(i);
 
                         if (IsImplementationOf(type, typeof(IModule)))
-                            plugin = (T)Activator.CreateInstance(type);
+                            plugin = (T) Activator.CreateInstance(type);
                         
                     }
                 }
@@ -34,11 +34,11 @@ namespace MineLib.Network.Module
 
         private static bool IsImplementationOf(Type type, Type @interface)
         {
-            Type[] interfaces = type.GetInterfaces();
+            var interfaces = type.GetInterfaces();
 
             for (int index = 0; index < interfaces.Length; index++)
             {
-                Type current = interfaces[index];
+                var current = interfaces[index];
                 if (IsSubtypeOf(ref current, @interface)) 
                     return true;
             }
@@ -51,7 +51,6 @@ namespace MineLib.Network.Module
             if (a == b)
                 return true;
             
-
             if (a.IsGenericType)
             {
                 a = a.GetGenericTypeDefinition();

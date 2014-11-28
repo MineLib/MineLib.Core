@@ -49,8 +49,7 @@ namespace MineLib.Network.Data.Structs
                     Coordinates = new Coordinates2D(reader.ReadInt(), reader.ReadInt()),
                     PrimaryBitMap = reader.ReadUShort()
                 };
-
-
+            
             return value;
         }
 

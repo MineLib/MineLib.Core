@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
-using System.Security.Cryptography;
-using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using MineLib.Network;
-using MineLib.Network.Cryptography;
 using ProtocolModern.IO;
 using ProtocolModern.Packets;
 using ProtocolModern.Packets.Client.Login;

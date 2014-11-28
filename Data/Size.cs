@@ -5,15 +5,22 @@
     /// </summary>
     public struct Size
     {
-        public readonly double Width;
-        public readonly double Height;
-        public readonly double Depth;
+        public readonly float Width;
+        public readonly float Height;
+        public readonly float Depth;
 
-        public Size(double width, double height, double depth)
+        public Size(float width, float height, float depth)
         {
             Width = width;
             Height = height;
             Depth = depth;
+        }
+
+        public Size(double width, double height, double depth)
+        {
+            Width = (float) width;
+            Height = (float) height;
+            Depth = (float) depth;
         }
 
         public Size(Size s)
@@ -33,17 +40,21 @@
         }
         
         // TODO: More operators
-        public static Size operator /(Size a, double b)
+        public static Size operator /(Size a, float b)
         {
-            return new Size(a.Width/b, a.Height/b, a.Depth/b);
+            return new Size(
+                a.Width / b, 
+                a.Height / b,
+                a.Depth / b
+            );
         }
 
-        public static bool operator ==(Size a, double b)
+        public static bool operator ==(Size a, float b)
         {
             return a.Width == b && a.Height == b && a.Depth == b;
         }
 
-        public static bool operator !=(Size a, double b)
+        public static bool operator !=(Size a, float b)
         {
             return a.Width!= b && a.Height != b && a.Depth != b;
         }

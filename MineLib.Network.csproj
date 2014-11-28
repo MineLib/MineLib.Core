@@ -48,7 +48,6 @@
     <Compile Include="Data\Anvil\Block.cs" />
     <Compile Include="Data\Anvil\Chunk.cs" />
     <Compile Include="Data\Anvil\Section.cs" />
-    <Compile Include="Data\Classic\Map.cs" />
     <Compile Include="Data\Coordinates2D.cs" />
     <Compile Include="Data\EntityMetadata\EntityMetadataByte.cs" />
     <Compile Include="Data\EntityMetadata\EntityMetadataEntry.cs" />
@@ -86,8 +85,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IPacket.cs" />
     <Compile Include="NetworkHandler.cs" />
-    <Compile Include="Yggdrasil.cs" />
-    <Compile Include="Yggdrasil.Json.cs" />
     <Compile Include="IPacketWithSize.cs" />
   </ItemGroup>
   <ItemGroup>

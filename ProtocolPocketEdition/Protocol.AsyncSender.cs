@@ -1,6 +1,5 @@
 ﻿using System;
 using MineLib.Network;
-using MineLib.Network.Data;
 using MineLib.Network.Data.Structs;
 
 namespace ProtocolPocketEdition

@@ -40,7 +40,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Map.cs" />
     <Compile Include="Enums\Action.cs" />
     <Compile Include="Enums\AllowDeletion.cs" />
     <Compile Include="Enums\AllowPlacement.cs" />
