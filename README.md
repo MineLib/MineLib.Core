@@ -16,6 +16,7 @@ Interface based. All methods and event (for Minecraft Modern, Classic, etc.) are
 Supported:
 * Minecraft Modern
 * Minecraft Classic (without Online mode yet)
+
 TODO:
 * Minecraft PocketEdition
 * Minetest (lol)
