@@ -58,6 +58,16 @@ namespace MineLib.Network.Data
             );
         }
 
+        public static Position FromReaderSByte(IProtocolDataReader reader)
+        {
+            return new Position
+            (
+                reader.ReadSByte(),
+                reader.ReadSByte(),
+                reader.ReadSByte()
+            );
+        }
+
         public static Position FromReaderByte(IProtocolDataReader reader)
         {
             return new Position
@@ -99,6 +109,13 @@ namespace MineLib.Network.Data
             stream.WriteVarInt(X);
             stream.WriteVarInt(Y);
             stream.WriteVarInt(Z);
+        }
+
+        public void ToStreamSByte(IProtocolStream stream)
+        {
+            stream.WriteSByte((sbyte) X);
+            stream.WriteSByte((sbyte) Y);
+            stream.WriteSByte((sbyte) Z);
         }
 
         public void ToStreamByte(IProtocolStream stream)

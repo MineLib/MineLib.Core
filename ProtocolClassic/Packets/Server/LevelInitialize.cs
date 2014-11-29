@@ -8,14 +8,14 @@ namespace ProtocolClassic.Packets.Server
         public byte ID { get { return 0x02; } }
         public short Size { get { return 1; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

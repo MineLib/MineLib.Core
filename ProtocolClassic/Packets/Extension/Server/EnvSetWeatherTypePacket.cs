@@ -11,16 +11,16 @@ namespace ProtocolClassic.Packets.Extension.Server
         public byte ID { get { return 0x1F; } }
         public short Size { get { return 2; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            WeatherType = (WeatherType) stream.ReadByte();
+            WeatherType = (WeatherType) reader.ReadByte();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

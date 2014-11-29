@@ -1,4 +1,5 @@
 ﻿using MineLib.Network;
+using MineLib.Network.Data;
 using MineLib.Network.IO;
 
 namespace ProtocolClassic.Packets.Server
@@ -6,35 +7,29 @@ namespace ProtocolClassic.Packets.Server
     public struct PositionUpdatePacket : IPacketWithSize
     {
         public sbyte PlayerID;
-        public sbyte ChangeX;
-        public sbyte ChangeY;
-        public sbyte ChangeZ;
+        public Position ChangeLocation;
 
         public byte ID { get { return 0x0A; } }
         public short Size { get { return 5; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            PlayerID = stream.ReadSByte();
-            ChangeX = stream.ReadSByte();
-            ChangeY = stream.ReadSByte();
-            ChangeZ = stream.ReadSByte();
+            PlayerID = reader.ReadSByte();
+            ChangeLocation = Position.FromReaderSByte(reader);
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteByte(ID);
             stream.WriteSByte(PlayerID);
-            stream.WriteSByte(ChangeX);
-            stream.WriteSByte(ChangeY);
-            stream.WriteSByte(ChangeZ);
+            ChangeLocation.ToStreamSByte(stream);
             stream.Purge();
 
             return this;

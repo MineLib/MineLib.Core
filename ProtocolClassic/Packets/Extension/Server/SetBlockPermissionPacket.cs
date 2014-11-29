@@ -13,18 +13,18 @@ namespace ProtocolClassic.Packets.Extension.Server
         public byte ID { get { return 0x1C; } }
         public short Size { get { return 4; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            BlockType = stream.ReadByte();
-            AllowPlacement = (AllowPlacement) stream.ReadByte();
-            AllowDeletion = (AllowDeletion) stream.ReadByte();;
+            BlockType = reader.ReadByte();
+            AllowPlacement = (AllowPlacement) reader.ReadByte();
+            AllowDeletion = (AllowDeletion) reader.ReadByte();;
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

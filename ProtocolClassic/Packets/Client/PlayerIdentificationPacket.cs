@@ -13,19 +13,19 @@ namespace ProtocolClassic.Packets.Client
         public byte ID { get { return 0x00; } }
         public short Size { get { return 131; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            ProtocolVersion = stream.ReadByte();
-            Username = stream.ReadString();
-            VerificationKey = stream.ReadString();
-            UnUsed = stream.ReadByte();
+            ProtocolVersion = reader.ReadByte();
+            Username = reader.ReadString();
+            VerificationKey = reader.ReadString();
+            UnUsed = reader.ReadByte();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

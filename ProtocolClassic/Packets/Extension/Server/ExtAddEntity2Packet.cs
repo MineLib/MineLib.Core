@@ -1,4 +1,5 @@
 ﻿using MineLib.Network;
+using MineLib.Network.Data;
 using MineLib.Network.IO;
 
 namespace ProtocolClassic.Packets.Extension.Server
@@ -8,32 +9,28 @@ namespace ProtocolClassic.Packets.Extension.Server
         public byte EntityID;
         public string InGameName;
         public string SkinName;
-        public short SpawnX;
-        public short SpawnY;
-        public short SpawnZ;
+        public Position Spawn;
         public byte SpawnYaw;
         public byte SpawnPitch;
 
         public byte ID { get { return 0x21; } }
         public short Size { get { return 138; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            EntityID = stream.ReadByte();
-            InGameName = stream.ReadString();
-            SkinName = stream.ReadString();
-            SpawnX = stream.ReadShort();
-            SpawnY = stream.ReadShort();
-            SpawnZ = stream.ReadShort();
-            SpawnYaw = stream.ReadByte();
-            SpawnPitch = stream.ReadByte();
+            EntityID = reader.ReadByte();
+            InGameName = reader.ReadString();
+            SkinName = reader.ReadString();
+            Spawn = Position.FromReaderShort(reader);
+            SpawnYaw = reader.ReadByte();
+            SpawnPitch = reader.ReadByte();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)
@@ -42,9 +39,7 @@ namespace ProtocolClassic.Packets.Extension.Server
             stream.WriteByte(EntityID);
             stream.WriteString(InGameName);
             stream.WriteString(SkinName);
-            stream.WriteShort(SpawnX);
-            stream.WriteShort(SpawnY);
-            stream.WriteShort(SpawnZ);
+            Spawn.ToStreamShort(stream);
             stream.WriteByte(SpawnYaw);
             stream.WriteByte(SpawnPitch);
             stream.Purge();

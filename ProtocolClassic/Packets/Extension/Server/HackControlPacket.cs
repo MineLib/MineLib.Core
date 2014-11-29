@@ -16,21 +16,21 @@ namespace ProtocolClassic.Packets.Extension.Server
         public byte ID { get { return 0x20; } }
         public short Size { get { return 8; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            Flying = (Flying) stream.ReadByte();
-            NoClip = (NoClip) stream.ReadByte();
-            Speeding = (Speeding) stream.ReadByte();
-            SpawnControl = (SpawnControl) stream.ReadByte();
-            ThirdPersonView = (ThirdPersonView) stream.ReadByte();
-            JumpHeight = stream.ReadShort();
+            Flying = (Flying) reader.ReadByte();
+            NoClip = (NoClip) reader.ReadByte();
+            Speeding = (Speeding) reader.ReadByte();
+            SpawnControl = (SpawnControl) reader.ReadByte();
+            ThirdPersonView = (ThirdPersonView) reader.ReadByte();
+            JumpHeight = reader.ReadShort();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

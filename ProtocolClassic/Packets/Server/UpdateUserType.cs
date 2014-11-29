@@ -11,16 +11,16 @@ namespace ProtocolClassic.Packets.Server
         public byte ID { get { return 0x0F; } }
         public short Size { get { return 2; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            UserType = (UserType) stream.ReadByte();
+            UserType = (UserType) reader.ReadByte();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

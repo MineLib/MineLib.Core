@@ -10,16 +10,16 @@ namespace ProtocolClassic.Packets.Extension.Server
         public byte ID { get { return 0x12; } }
         public short Size { get { return 3; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            Distance = stream.ReadShort();
+            Distance = reader.ReadShort();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

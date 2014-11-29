@@ -1,4 +1,5 @@
 ﻿using System;
+using MineLib.Network.IO;
 
 namespace MineLib.Network.Data
 {
@@ -24,6 +25,29 @@ namespace MineLib.Network.Data
             Yaw = v.Yaw;
             Roll = v.Roll;
         }
+
+
+        #region Network
+
+        public Rotation FromReaderFloat(IProtocolDataReader reader)
+        {
+            return new Rotation(
+                reader.ReadFloat(),
+                reader.ReadFloat(),
+                reader.ReadFloat()
+            );
+        }
+
+
+        public void ToStreamFloat(IProtocolStream stream)
+        {
+            stream.WriteFloat(Pitch);
+            stream.WriteFloat(Yaw);
+            stream.WriteFloat(Roll);
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Converts this Rotation to a string.

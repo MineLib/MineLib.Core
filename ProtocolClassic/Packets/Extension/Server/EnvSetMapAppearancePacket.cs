@@ -13,19 +13,19 @@ namespace ProtocolClassic.Packets.Extension.Server
         public byte ID { get { return 0x1E; } }
         public short Size { get { return 69; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            TextureURL = stream.ReadString();
-            SideBlock = stream.ReadByte();
-            EdgeBlock = stream.ReadByte();
-            SideLevel = stream.ReadShort();
+            TextureURL = reader.ReadString();
+            SideBlock = reader.ReadByte();
+            EdgeBlock = reader.ReadByte();
+            SideLevel = reader.ReadShort();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

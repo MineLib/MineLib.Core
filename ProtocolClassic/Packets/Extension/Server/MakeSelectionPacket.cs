@@ -1,4 +1,5 @@
 ﻿using MineLib.Network;
+using MineLib.Network.Data;
 using MineLib.Network.IO;
 
 namespace ProtocolClassic.Packets.Extension.Server
@@ -7,12 +8,8 @@ namespace ProtocolClassic.Packets.Extension.Server
     {
         public byte SelectionID;
         public string Label;
-        public short StartX;
-        public short StartY;
-        public short StartZ;
-        public short EndX;
-        public short EndY;
-        public short EndZ;
+        public Position StartLocation;
+        public Position EndLocation;
         public short Red;
         public short Green;
         public short Blue;
@@ -21,27 +18,23 @@ namespace ProtocolClassic.Packets.Extension.Server
         public byte ID { get { return 0x1A; } }
         public short Size { get { return 86; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            SelectionID = stream.ReadByte();
-            Label = stream.ReadString();
-            StartX = stream.ReadShort();
-            StartY = stream.ReadShort();
-            StartZ = stream.ReadShort();
-            EndX = stream.ReadShort();
-            EndY = stream.ReadShort();
-            EndZ = stream.ReadShort();
-            Red = stream.ReadShort();
-            Green = stream.ReadShort();
-            Blue = stream.ReadShort();
-            Opacity = stream.ReadShort();
+            SelectionID = reader.ReadByte();
+            Label = reader.ReadString();
+            StartLocation = Position.FromReaderShort(reader);
+            EndLocation = Position.FromReaderShort(reader);
+            Red = reader.ReadShort();
+            Green = reader.ReadShort();
+            Blue = reader.ReadShort();
+            Opacity = reader.ReadShort();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)
@@ -49,12 +42,8 @@ namespace ProtocolClassic.Packets.Extension.Server
             stream.WriteByte(ID);
             stream.WriteByte(SelectionID);
             stream.WriteString(Label);
-            stream.WriteShort(StartX);
-            stream.WriteShort(StartY);
-            stream.WriteShort(StartZ);
-            stream.WriteShort(EndX);
-            stream.WriteShort(EndY);
-            stream.WriteShort(EndZ);
+            StartLocation.ToStreamShort(stream);
+            EndLocation.ToStreamShort(stream);
             stream.WriteShort(Red);
             stream.WriteShort(Green);
             stream.WriteShort(Blue);

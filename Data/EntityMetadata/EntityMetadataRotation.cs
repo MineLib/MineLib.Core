@@ -29,18 +29,13 @@ namespace MineLib.Network.Data.EntityMetadata
 
         public override void FromReader(IProtocolDataReader reader)
         {
-            Rotation = new Rotation(
-                reader.ReadFloat(), 
-                reader.ReadFloat(), 
-                reader.ReadFloat());
+            Rotation = Rotation.FromReaderFloat(reader);
         }
 
         public override void ToStream(IProtocolStream stream, byte index)
         {
             stream.WriteByte(GetKey(index));
-            stream.WriteFloat(Rotation.Pitch);
-            stream.WriteFloat(Rotation.Yaw);
-            stream.WriteFloat(Rotation.Roll);
+            Rotation.ToStreamFloat(stream);
         }
     }
 }

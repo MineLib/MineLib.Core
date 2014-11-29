@@ -14,19 +14,19 @@ namespace ProtocolClassic.Packets.Extension.Server
         public byte ID { get { return 0x15; } }
         public short Size { get { return 134; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            Label = stream.ReadString();
-            Action = stream.ReadString();
-            KeyCode = stream.ReadInt();
-            KeyMods = (KeyMods) stream.ReadByte();
+            Label = reader.ReadString();
+            Action = reader.ReadString();
+            KeyCode = reader.ReadInt();
+            KeyMods = (KeyMods) reader.ReadByte();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

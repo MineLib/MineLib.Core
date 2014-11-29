@@ -11,17 +11,17 @@ namespace ProtocolClassic.Packets.Extension.Client
         public byte ID { get { return 0x11; } }
         public short Size { get { return 69; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            ExtName = stream.ReadString();
-            Version = stream.ReadInt();
+            ExtName = reader.ReadString();
+            Version = reader.ReadInt();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

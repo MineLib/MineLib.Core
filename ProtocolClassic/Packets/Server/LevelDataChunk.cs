@@ -12,18 +12,18 @@ namespace ProtocolClassic.Packets.Server
         public byte ID { get { return 0x03; } }
         public short Size { get { return 1028; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            ChunkLength = stream.ReadShort();
-            ChunkData = stream.ReadByteArray(1024);
-            PercentComplete = stream.ReadByte();
+            ChunkLength = reader.ReadShort();
+            ChunkData = reader.ReadByteArray(1024);
+            PercentComplete = reader.ReadByte();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)

@@ -12,18 +12,18 @@ namespace ProtocolClassic.Packets.Server
         public byte ID { get { return 0x0B; } }
         public short Size { get { return 4; } }
 
-        public IPacketWithSize ReadPacket(IProtocolDataReader stream)
+        public IPacketWithSize ReadPacket(IProtocolDataReader reader)
         {
-            PlayerID = stream.ReadSByte();
-            Yaw = stream.ReadByte();
-            Pitch = stream.ReadByte();
+            PlayerID = reader.ReadSByte();
+            Yaw = reader.ReadByte();
+            Pitch = reader.ReadByte();
 
             return this;
         }
 
-        IPacket IPacket.ReadPacket(IProtocolDataReader stream)
+        IPacket IPacket.ReadPacket(IProtocolDataReader reader)
         {
-            return ReadPacket(stream);
+            return ReadPacket(reader);
         }
 
         public IPacket WritePacket(IProtocolStream stream)
