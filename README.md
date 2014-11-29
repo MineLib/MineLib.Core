@@ -2,27 +2,30 @@
 ------------ | -------------
 [![Build Status](https://travis-ci.org/Aragas/MineLib.Network.Modular.svg)](https://travis-ci.org/Aragas/MineLib.Network) | [![Build status](https://ci.appveyor.com/api/projects/status/7hahx2d3jkvxj4w0?svg=true)](https://ci.appveyor.com/project/Aragas/minelib-network-modular)
 
-MineLib.Network
+MineLib.Network.Modular
 ===============
 
-Library for handling network connection with Minecraft server.
+Library for handling network connection with any voxel-based server.
 
-My implementation of How-it-should-be.
+My implementation of How-it-should-be. Now with modules.
 
-Supported Main(1.8) and Classic(Without Online mode yet) protocols.
+Not all server and clients packets for Modern 1.8 are fully supported yet (Reading or sending could be a bit wrong). Few have some problems. Compression and encryption is fully supported. 
 
-Not all server and clients packets for 1.8 are fully supported yet. Few have some problems. Compression is fully supported.
-
-You can use Events based packet handling (use RaisePacketHandledUnUsed() in NetworkHandler.Packets.cs) or handle dat stuff manually (use OnPacketHandled for that).
+Interface based. All methods and event (for Minecraft Modern, Classic, etc.) are same. Still have some problems to unite dat stuff, but this is possible.
 
 Supported:
-* Yggdrasil
-* Online && Pirate mode
-* Nah, i think all basic stuff is supported
+* Minecraft Modern
+* Minecraft Classic (without Online mode yet)
+TODO:
+* Minecraft PocketEdition
+* Minetest (lol)
 
+You can also create your own protocol implementation on C# or C++/CLI. Yea, would be cool.
 
-Documentation will come soon.
-See https://github.com/Aragas/MineLib.ClientWrapper for "How use dat shiet"
+Right now you cant do anything with it, because i haven't done yet this so called "united methods & event stuff", so, use MineLib.Network. Yea, life is pain.
+
+Documentation will come soon (nope).
+See https://github.com/Aragas/MineLib.ClientWrapper for "How use dat shiet".
 
 Used repos:
 * https://github.com/umby24/libMC.NET
