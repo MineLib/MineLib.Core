@@ -1,6 +1,6 @@
 **Mono 3.10.0:** | **Windows .NET 4.0:**
 ------------ | -------------
-[![Build Status](https://travis-ci.org/Aragas/MineLib.Network.svg)](https://travis-ci.org/Aragas/MineLib.Network) | [![Build status](https://ci.appveyor.com/api/projects/status/26t4lc01vh3qxfle)](https://ci.appveyor.com/project/Aragas/minelib-network)
+[![Build Status](https://travis-ci.org/Aragas/MineLib.Network.Modular.svg)](https://travis-ci.org/Aragas/MineLib.Network) | [![Build status](https://ci.appveyor.com/api/projects/status/7hahx2d3jkvxj4w0?svg=true)](https://ci.appveyor.com/project/Aragas/minelib-network-modular)
 
 MineLib.Network
 ===============
