@@ -19,7 +19,11 @@ namespace ProtocolClassic
 
         public bool Connected { get { return _baseSock != null && _baseSock.Connected; } }
 
+        public bool UseLogin { get; private set; }
+
         // -- Debugging
+        public bool SavePackets { get; private set; }
+
         public List<IPacket> PacketsReceived { get; private set; }
         public List<IPacket> PacketsSended { get; private set; }
 
@@ -32,8 +36,6 @@ namespace ProtocolClassic
             }
         }
         public IPacket LastPacket { get { return PacketsReceived[PacketsReceived.Count - 1]; } }
-
-        public bool SavePackets { get; private set; }
         // -- Debugging
 
         #endregion
@@ -54,6 +56,9 @@ namespace ProtocolClassic
             PacketsReceived = new List<IPacket>();
             PacketsSended = new List<IPacket>();
 
+            AsyncSendingHandlers = new Dictionary<Type, Func<IAsyncSendingParameters, IAsyncResult>>();
+            RegisterSupportedAsyncSendings();
+
             return this;
         }
 
@@ -61,21 +66,27 @@ namespace ProtocolClassic
         private void PacketReceiverAsync(IAsyncResult ar)
         {
             if (!Connected)
-                return;
+                return; // -- Terminate cycle
 
-            var packetId = _stream.ReadByte();
+            if (_baseSock.Available > 0)
+            {
+                var packetId = _stream.ReadByte();
 
-            // Connection lost
-            if (packetId == 255)
-                Disconnect();
+                // Connection lost
+                if (packetId == 255)
+                {
+                    Disconnect();
+                    return;
+                }
 
-            var length = ServerResponseClassic.ServerResponse[packetId]().Size;
-            var data = _stream.ReadByteArray(length - 1);
+                var length = ServerResponseClassic.ServerResponse[packetId]().Size;
+                var data = _stream.ReadByteArray(length - 1);
 
-            HandlePacket(packetId, data);
+                HandlePacket(packetId, data);
+            }
 
-            _baseSock.Client.EndReceive(ar);
-            _baseSock.Client.BeginReceive(new byte[0], 0, 0, SocketFlags.None, PacketReceiverAsync, null);
+            _stream.EndRead(ar);
+            _stream.BeginRead(new byte[0], 0, 0, PacketReceiverAsync, null);
         }
 
         /// <summary>
@@ -92,7 +103,10 @@ namespace ProtocolClassic
 
                 var packet = ServerResponseClassic.ServerResponse[id]().ReadPacket(reader);
 
-                RaisePacketHandledClassic(id, packet, null);
+                OnPacketHandled(id, packet, null);
+
+                if (SavePackets)
+                    PacketsReceived.Add(packet);
             }
         }
 
@@ -140,14 +154,13 @@ namespace ProtocolClassic
             // -- Connect to server.
             _baseSock = new TcpClient();
 
-            var result = _baseSock.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, asyncCallback, state);
+            var result = _baseSock.BeginConnect(ip, port, asyncCallback, state);
             EndConnect(result);
-
 
             return result;
         }
 
-        public void EndConnect(IAsyncResult asyncResult)
+        private void EndConnect(IAsyncResult asyncResult)
         {
             _baseSock.EndConnect(asyncResult);
 
@@ -190,14 +203,14 @@ namespace ProtocolClassic
                 PacketsSended.Add(packet);
         }
 
-        public void Connect()
+        public void Connect(string ip, ushort port)
         {
             if (Connected)
                 throw new ProtocolException("Connection error: Already connected to server.");
 
             // -- Connect to server.
             _baseSock = new TcpClient();
-            _baseSock.Connect(_minecraft.ServerHost, _minecraft.ServerPort);
+            _baseSock.Connect(ip, port);
 
             // -- Create our Wrapped socket.
             _stream = new ClassicStream(new NetworkStream(_baseSock.Client));

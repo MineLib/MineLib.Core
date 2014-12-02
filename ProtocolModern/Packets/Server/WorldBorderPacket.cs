@@ -7,7 +7,7 @@ namespace ProtocolModern.Packets.Server
     public interface IWorldBorder
     {
         IWorldBorder FromReader(IProtocolDataReader reader);
-        void ToStream(ref IProtocolStream stream);
+        void ToStream(IProtocolStream stream);
     }
 
     public struct WorldBorderSetSize : IWorldBorder
@@ -21,7 +21,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteDouble(Radius);
         }
@@ -42,7 +42,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteDouble(OldRadius);
             stream.WriteDouble(NewRadius);
@@ -62,7 +62,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteDouble(X);
             stream.WriteDouble(Z);
@@ -94,7 +94,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteDouble(X);
             stream.WriteDouble(Z);
@@ -119,7 +119,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(WarningTime);
         }
@@ -136,7 +136,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(WarningBlocks);
         }
@@ -183,7 +183,7 @@ namespace ProtocolModern.Packets.Server
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt((byte) Action);
-            WorldBorder.ToStream(ref stream);
+            WorldBorder.ToStream(stream);
             stream.Purge();
 
             return this;

@@ -24,7 +24,7 @@ namespace ProtocolModern.Packets.Server
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt(EntityID);
-            EntityProperties.ToStream(ref stream);
+            EntityProperties.ToStream(stream);
             stream.Purge();
 
             return this;

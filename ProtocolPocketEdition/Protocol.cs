@@ -14,13 +14,17 @@ namespace ProtocolPocketEdition
         #region Properties
 
         public string Name { get { return "Pocket Edition"; } }
-        public string Version { get { return "0.9.0"; } }
+        public string Version { get { return "None"; } }
 
         public ConnectionState State { get; set; }
 
         public bool Connected { get { return _baseSock != null && _baseSock.Client.Connected; } }
 
+        public bool UseLogin { get; private set; }
+
         // -- Debugging
+        public bool SavePackets { get; private set; }
+
         public List<IPacket> PacketsReceived { get; private set; }
         public List<IPacket> PacketsSended { get; private set; }
 
@@ -33,8 +37,6 @@ namespace ProtocolPocketEdition
             }
         }
         public IPacket LastPacket { get { return PacketsReceived[PacketsReceived.Count - 1]; } }
-
-        public bool SavePackets { get; private set; }
         // -- Debugging
 
         #endregion
@@ -52,6 +54,9 @@ namespace ProtocolPocketEdition
 
             PacketsReceived = new List<IPacket>();
             PacketsSended = new List<IPacket>();
+
+            AsyncSendingHandlers = new Dictionary<Type, Func<IAsyncSendingParameters, IAsyncResult>>();
+            RegisterSupportedAsyncSendings();
 
             return this;
         }
@@ -83,7 +88,7 @@ namespace ProtocolPocketEdition
 
                 var packet = ServerResponsePocketEdition.ServerResponse[id]().ReadPacket(reader);
 
-                RaisePacketHandled(id, packet, null);
+                OnPacketHandled(id, packet, null);
             }
         }
 
@@ -128,14 +133,14 @@ namespace ProtocolPocketEdition
             // -- Connect to server.
             _baseSock = new UdpClient();
 
-            var result = _baseSock.Client.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, asyncCallback, state);
+            var result = _baseSock.Client.BeginConnect(ip, port, asyncCallback, state);
             EndConnect(result);
 
 
             return result;
         }
 
-        public void EndConnect(IAsyncResult asyncResult)
+        private void EndConnect(IAsyncResult asyncResult)
         {
             _baseSock.Client.EndConnect(asyncResult);
 
@@ -178,14 +183,14 @@ namespace ProtocolPocketEdition
                 PacketsSended.Add(packet);
         }
 
-        public void Connect()
+        public void Connect(string ip, ushort port)
         {
             if (Connected)
                 throw new ProtocolException("Connection error: Already connected to server.");
 
             // -- Connect to server.
             _baseSock = new UdpClient();
-            _baseSock.Connect(_minecraft.ServerHost, _minecraft.ServerPort);
+            _baseSock.Connect(ip, port);
 
             // -- Create our Wrapped socket.
             _stream = new MinecraftStream(new NetworkStream(_baseSock.Client));

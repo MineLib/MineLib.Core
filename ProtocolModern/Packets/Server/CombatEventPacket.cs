@@ -6,7 +6,7 @@ namespace ProtocolModern.Packets.Server
     public interface ICombatEvent
     {
         ICombatEvent FromReader(IProtocolDataReader reader);
-        void ToStream(ref IProtocolStream stream);
+        void ToStream(IProtocolStream stream);
     }
 
     public struct CombatEventEnterCombat : ICombatEvent
@@ -16,7 +16,7 @@ namespace ProtocolModern.Packets.Server
             return this; // Hope works TODO: Check this
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
         }
     }
@@ -34,7 +34,7 @@ namespace ProtocolModern.Packets.Server
             return this; // Hope works
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(Duration);
             stream.WriteInt(EntityID);
@@ -56,7 +56,7 @@ namespace ProtocolModern.Packets.Server
             return this; // Hope works
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(PlayerID);
             stream.WriteInt(EntityID);
@@ -99,7 +99,7 @@ namespace ProtocolModern.Packets.Server
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt(Event);
-            CombatEvent.ToStream(ref stream);
+            CombatEvent.ToStream(stream);
             stream.Purge();
 
             return this;

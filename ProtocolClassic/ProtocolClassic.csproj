@@ -60,8 +60,8 @@
     <Compile Include="Enums\WeatherType.cs" />
     <Compile Include="Packets\ClientResponse.cs" />
     <Compile Include="Packets\Extension\Client\PlayerClickedPacket.cs" />
-    <Compile Include="Protocol.AsyncReceiver.cs" />
-    <Compile Include="Protocol.AsyncSender.cs" />
+    <Compile Include="Protocol.AsyncReceive.cs" />
+    <Compile Include="Protocol.AsyncSending.cs" />
     <Compile Include="Protocol.cs" />
     <Compile Include="IO\ClassicDataReader.cs" />
     <Compile Include="IO\ClassicStream.cs" />

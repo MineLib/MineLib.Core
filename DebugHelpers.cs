@@ -2,12 +2,12 @@
 {
     public static class Converter
     {
-        public static int[] ConvertUShort(ushort _ushort)
+        public static int[] ConvertUShort(ushort value)
         {
             var intArray = new int[15];
             for (var i = 0; i < 15; i++)
             {
-                if ((_ushort & (1 << i)) > 0)
+                if ((value & (1 << i)) > 0)
                     intArray[i] = 1;
                 else
                     intArray[i] = 0;

@@ -1,3 +1,4 @@
+using System;
 using MineLib.Network;
 using MineLib.Network.Data;
 using MineLib.Network.IO;
@@ -7,7 +8,8 @@ namespace ProtocolModern.Packets.Server
 {
     public struct PlayerPositionAndLookPacket : IPacket
     {
-        public Vector3 Vector3;
+        public Vector3 Position;
+        public Vector3 Look;
         public float Yaw, Pitch;
         public PlayerPositionAndLookFlags Flags;
 
@@ -15,10 +17,12 @@ namespace ProtocolModern.Packets.Server
 
         public IPacket ReadPacket(IProtocolDataReader reader)
         {
-            Vector3 = Vector3.FromReaderDouble(reader);
+            Position = Vector3.FromReaderDouble(reader);
             Yaw = reader.ReadFloat();
             Pitch = reader.ReadFloat();
             Flags = (PlayerPositionAndLookFlags) reader.ReadSByte();
+
+            Look = new Vector3(-Math.Cos(Pitch) * Math.Sin(Yaw), -Math.Sin(Pitch), Math.Cos(Pitch) * Math.Cos(Yaw));
 
             return this;
         }
@@ -26,7 +30,7 @@ namespace ProtocolModern.Packets.Server
         public IPacket WritePacket(IProtocolStream stream)
         {
             stream.WriteVarInt(ID);
-            Vector3.ToStreamDouble(stream);
+            Position.ToStreamDouble(stream);
             stream.WriteFloat(Yaw);
             stream.WriteFloat(Pitch);
             stream.WriteSByte((sbyte) Flags);

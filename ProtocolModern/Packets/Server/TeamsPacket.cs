@@ -7,7 +7,7 @@ namespace ProtocolModern.Packets.Server
     public interface ITeam
     {
         ITeam FromReader(IProtocolDataReader reader);
-        void ToStream(ref IProtocolStream stream);
+        void ToStream(IProtocolStream stream);
     }
 
     public struct TeamsCreateTeam : ITeam
@@ -39,7 +39,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteString(TeamDisplayName);
             stream.WriteString(TeamPrefix);
@@ -59,7 +59,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
         }
     }
@@ -85,7 +85,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteString(TeamDisplayName);
             stream.WriteString(TeamPrefix);
@@ -112,7 +112,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(Players.Length);
             stream.WriteStringArray(Players);
@@ -135,7 +135,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(Players.Length);
             stream.WriteStringArray(Players);
@@ -182,7 +182,7 @@ namespace ProtocolModern.Packets.Server
             stream.WriteVarInt(ID);
             stream.WriteString(TeamName);
             stream.WriteByte((byte) Action);
-            Team.ToStream(ref stream);
+            Team.ToStream(stream);
             stream.Purge();
 
             return this;

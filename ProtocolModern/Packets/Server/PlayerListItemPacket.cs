@@ -9,7 +9,7 @@ namespace ProtocolModern.Packets.Server
     public interface IPlayerList
     {
         IPlayerList FromReader(IProtocolDataReader reader);
-        void ToStream(ref IProtocolStream stream);
+        void ToStream(IProtocolStream stream);
     }
 
     public struct Properties
@@ -62,7 +62,7 @@ namespace ProtocolModern.Packets.Server
             return value;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(Count);
 
@@ -100,10 +100,10 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteString(Name);
-            Properties.ToStream(ref stream);
+            Properties.ToStream(stream);
             stream.WriteVarInt(Gamemode);
             stream.WriteVarInt(Ping);
             stream.WriteBoolean(HasDisplayName);
@@ -124,7 +124,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(Gamemode);
         }
@@ -141,7 +141,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteVarInt(Ping);
         }
@@ -160,7 +160,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteBoolean(HasDisplayName);
             stream.WriteString(DisplayName);
@@ -174,7 +174,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
         }
     }
@@ -222,7 +222,7 @@ namespace ProtocolModern.Packets.Server
             stream.WriteVarInt((byte) Action);
             stream.WriteVarInt(Length);
             stream.WriteBigInteger(UUID);
-            PlayerList.ToStream(ref stream);
+            PlayerList.ToStream(stream);
             stream.Purge();
 
             return this;

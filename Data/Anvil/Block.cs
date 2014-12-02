@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace MineLib.Network.Data.Anvil
 {
+    // -- Full  - 3 bytes.
+    // -- Empty - 3 bytes.
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Block : IEquatable<Block>
     {
-        public readonly short IDMeta;   // 2 byte
-        public byte SkyAndBlockLight;   // 1 byte
-                                        // 3 byte
+        public readonly short IDMeta;
+        public byte SkyAndBlockLight;
 
         public Block(short id)
         {

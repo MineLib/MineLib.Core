@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
 using MineLib.Network;
 using ProtocolModern.Enum;
+using ProtocolModern.Packets;
 using ProtocolModern.Packets.Server;
 
 namespace ProtocolModern
 {
     public partial class Protocol
     {
-        private void RaisePacketHandled(int id, IPacket packet, ConnectionState? state)
+        private void OnPacketHandled(int id, IPacket packet, ConnectionState? state)
         {
             if(!Connected)
                 return;
@@ -15,6 +19,7 @@ namespace ProtocolModern
             // -- Debugging
             Console.WriteLine("Main ID: 0x" + String.Format("{0:X}", id));
             Console.WriteLine(" ");
+            // -- Debugging
 
             switch (state)
             {
@@ -53,16 +58,16 @@ namespace ProtocolModern
                     {
                         case PacketsServer.KeepAlive:
                             var keepAlivePacket = (KeepAlivePacket) packet;
-                            BeginKeepAlive(keepAlivePacket.KeepAlive, null, null);
+                            BeginKeepAlive(new BeginKeepAliveParameters(keepAlivePacket.KeepAlive, null, null));
                             break;
 
                         case PacketsServer.JoinGame:
                             break;
 
                         case PacketsServer.ChatMessage:
-                            var ChatMessagePacket = (ChatMessagePacket) packet;
+                            var chatMessagePacket = (ChatMessagePacket) packet;
 
-                            //PacketReceiver.ChatMessage(packet, new PacketReceiverEventArgs(ChatMessagePacket.Message));
+                            OnChatMessage(chatMessagePacket.Message);
                             break;
 
                         case PacketsServer.TimeUpdate:
@@ -81,6 +86,10 @@ namespace ProtocolModern
                             break;
 
                         case PacketsServer.PlayerPositionAndLook:
+                            var playerPositionAndLookPacket = (PlayerPositionAndLookPacket) packet;
+
+                            OnPlayerPosition(playerPositionAndLookPacket.Position);
+                            OnPlayerLook(playerPositionAndLookPacket.Look);
                             break;
 
                         case PacketsServer.HeldItemChange:
@@ -156,6 +165,9 @@ namespace ProtocolModern
                             break;
 
                         case PacketsServer.ChunkData:
+                            var chunkDataPacket = (ChunkDataPacket) packet;
+
+                            OnChunk(chunkDataPacket.Chunk);
                             break;
 
                         case PacketsServer.MultiBlockChange:
@@ -171,6 +183,9 @@ namespace ProtocolModern
                             break;
 
                         case PacketsServer.MapChunkBulk:
+                            var mapChunkBulkPacket = (MapChunkBulkPacket) packet;
+
+                            OnChunkList(mapChunkBulkPacket.ChunkList);
                             break;
 
                         case PacketsServer.Explosion:

@@ -1,12 +1,7 @@
-﻿using MineLib.Network;
-
-namespace ProtocolModern
+﻿namespace ProtocolModern
 {
-    public partial class Protocol : IProtocol
+    public partial class Protocol
     {
-        public bool UseLogin { get { return _minecraft.UseLogin; } }
-
-
         public bool Login(string login, string password)
         {
             var result = Yggdrasil.Login(login, password);

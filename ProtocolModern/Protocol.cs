@@ -16,13 +16,17 @@ namespace ProtocolModern
         #region Properties
 
         public string Name { get { return "Modern"; } }
-        public string Version { get { return "1.8"; } }
+        public string Version { get { return "1.8.1"; } }
 
         public ConnectionState State { get; set; }
 
         public bool Connected { get { return _baseSock != null && _baseSock.Connected; } }
 
+        public bool UseLogin { get { return _minecraft.UseLogin; } }
+
         // -- Debugging
+        public bool SavePackets { get; private set; }
+
         public List<IPacket> PacketsReceived { get; private set; }
         public List<IPacket> PacketsSended { get; private set; }
 
@@ -35,8 +39,6 @@ namespace ProtocolModern
             }
         }
         public IPacket LastPacket { get { return PacketsReceived[PacketsReceived.Count - 1]; } }
-
-        public bool SavePackets { get; private set; }
         // -- Debugging
 
         #endregion
@@ -57,6 +59,9 @@ namespace ProtocolModern
 
             PacketsReceived = new List<IPacket>();
             PacketsSended = new List<IPacket>();
+
+            AsyncSendingHandlers = new Dictionary<Type, Func<IAsyncSendingParameters, IAsyncResult>>();
+            RegisterSupportedAsyncSendings();
 
             return this;
         }
@@ -158,7 +163,7 @@ namespace ProtocolModern
 
                         packet = ServerResponse.InfoRequest[id]().ReadPacket(reader);
 
-                        RaisePacketHandled(id, packet, ConnectionState.InfoRequest);
+                        OnPacketHandled(id, packet, ConnectionState.InfoRequest);
                         break;
 
                     #endregion Status
@@ -171,7 +176,7 @@ namespace ProtocolModern
 
                         packet = ServerResponse.JoiningServer[id]().ReadPacket(reader);
 
-                        RaisePacketHandled(id, packet, ConnectionState.JoiningServer);
+                        OnPacketHandled(id, packet, ConnectionState.JoiningServer);
                         break;
 
                     #endregion Login
@@ -184,7 +189,7 @@ namespace ProtocolModern
 
                         packet = ServerResponse.JoinedServer[id]().ReadPacket(reader);
 
-                        RaisePacketHandled(id, packet, ConnectionState.JoinedServer);
+                        OnPacketHandled(id, packet, ConnectionState.JoinedServer);
                         break;
 
                     #endregion Play
@@ -278,14 +283,14 @@ namespace ProtocolModern
             // -- Connect to server.
             _baseSock = new TcpClient();
 
-            var result = _baseSock.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, asyncCallback, state);
+            var result = _baseSock.BeginConnect(ip, port, asyncCallback, state);
             EndConnect(result);
 
 
             return result;
         }
 
-        public void EndConnect(IAsyncResult asyncResult)
+        private void EndConnect(IAsyncResult asyncResult)
         {
             _baseSock.EndConnect(asyncResult);
 
@@ -328,14 +333,14 @@ namespace ProtocolModern
                 PacketsSended.Add(packet);
         }
 
-        public void Connect()
+        public void Connect(string ip, ushort port)
         {
             if (Connected)
                 throw new ProtocolException("Connection error: Already connected to server.");
 
             // -- Connect to server.
             _baseSock = new TcpClient();
-            _baseSock.Connect(_minecraft.ServerHost, _minecraft.ServerPort);
+            _baseSock.Connect(ip, port);
 
             // -- Create our Wrapped socket.
             _stream = new ModernStream(new NetworkStream(_baseSock.Client));

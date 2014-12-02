@@ -69,7 +69,7 @@
     <Compile Include="Enum\EntityStatus.cs" />
     <Compile Include="Enum\Face.cs" />
     <Compile Include="Enum\GameMode.cs" />
-    <Compile Include="Enum\GameState.cs" />
+    <Compile Include="Enum\GameStateReason.cs" />
     <Compile Include="Enum\Mobs.cs" />
     <Compile Include="Enum\NextState.cs" />
     <Compile Include="Enum\Objects.cs" />
@@ -203,8 +203,8 @@
     <Compile Include="Packets\Server\WindowPropertyPacket.cs" />
     <Compile Include="Packets\Server\WorldBorderPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Protocol.AsyncSender.cs" />
-    <Compile Include="Protocol.AsyncReceiver.cs" />
+    <Compile Include="Protocol.AsyncSending.cs" />
+    <Compile Include="Protocol.AsyncReceive.cs" />
     <Compile Include="Yggdrasil.cs" />
     <Compile Include="Yggdrasil.Json.cs" />
   </ItemGroup>

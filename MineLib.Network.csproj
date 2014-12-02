@@ -44,6 +44,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IAsyncSending.cs" />
     <Compile Include="Cryptography.cs" />
     <Compile Include="Data\Anvil\Block.cs" />
     <Compile Include="Data\Anvil\Chunk.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Data\Vector3.cs" />
     <Compile Include="ConnectionState.cs" />
     <Compile Include="DebugHelpers.cs" />
+    <Compile Include="IAsyncReceive.cs" />
     <Compile Include="Module\IModule.cs" />
     <Compile Include="INetworkHandler.cs" />
     <Compile Include="IO\IProtocolDataReader.cs" />
@@ -90,9 +92,6 @@
   <ItemGroup>
     <Content Include="Libraries\BouncyCastle.Crypto.dll" />
     <Content Include="Libraries\Newtonsoft.Json.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="NetworkHandler.Sending.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

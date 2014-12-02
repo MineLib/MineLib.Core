@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using MineLib.Network.Data.Structs;
 using MineLib.Network.Module;
 
 namespace MineLib.Network
@@ -9,7 +8,7 @@ namespace MineLib.Network
     /// <summary>
     /// Any Minecraft protocol can be implemented by using this. Really, any.
     /// </summary>
-    public interface IProtocol : IModule, IProtocolDebug, IProtocolAsyncConnection, IProtocolAsyncSender, IProtocolAsyncReceiver, IDisposable
+    public interface IProtocol : IModule, IProtocolDebug, IProtocolAsyncConnection, IDisposable
     {
         ConnectionState State { get; set; }
         bool Connected { get; }
@@ -18,9 +17,10 @@ namespace MineLib.Network
 
         void SendPacket(IPacket packet);
 
-        void Connect();
+        void Connect(string ip, ushort port);
         void Disconnect();
 
+        bool UseLogin { get; }
         bool Login(string login, string password);
         bool Logout();
     }
@@ -41,38 +41,13 @@ namespace MineLib.Network
         void EndSendPacket(IAsyncResult asyncResult);
 
         IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state);
-        void EndConnect(IAsyncResult asyncResult);
+        //void EndConnect(IAsyncResult asyncResult);
 
         IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state);
         void EndDisconnect(IAsyncResult asyncResult);
-    }
 
-    public interface IProtocolAsyncSender
-    {
-        IAsyncResult BeginConnectToServer(AsyncCallback asyncCallback, object state);
-
-        IAsyncResult BeginKeepAlive(int value, AsyncCallback asyncCallback, object state);
-
-        IAsyncResult BeginSendClientInfo(AsyncCallback asyncCallback, object state);
-
-        IAsyncResult BeginRespawn(AsyncCallback asyncCallback, object state);
-
-        IAsyncResult BeginPlayerMoved(PlaverMovedData data, AsyncCallback asyncCallback, object state);
-
-        IAsyncResult BeginPlayerSetRemoveBlock(PlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state);
-
-        IAsyncResult BeginSendMessage(string message, AsyncCallback asyncCallback, object state);
-
-        IAsyncResult BeginPlayerHeldItem(short slot, AsyncCallback asyncCallback, object state);
-
-    }
-
-    public interface IProtocolAsyncReceiver
-    {
-        event EventHandler ChatMessage;
-
-        //event EventHandler PlayerPositionFix;
-
+        void RegisterAsyncSending(Type asyncSendingType, Func<IAsyncSendingParameters, IAsyncResult> method);
+        IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingParameters parameters);
     }
 
     public class ProtocolAsyncResult : IAsyncResult

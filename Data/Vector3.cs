@@ -1,6 +1,7 @@
 ﻿// From https://github.com/SirCmpwn/Craft.Net
 
 using System;
+using System.Runtime.InteropServices;
 using MineLib.Network.IO;
 
 namespace MineLib.Network.Data
@@ -8,6 +9,7 @@ namespace MineLib.Network.Data
     /// <summary>
     /// Represents the location of an object in 3D space (double).
     /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Vector3 : IEquatable<Vector3>
     {
         public readonly float X;

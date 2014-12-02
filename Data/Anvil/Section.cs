@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace MineLib.Network.Data.Anvil
 {
+    // -- Full  - 12304 bytes.
+    // -- Empty - 20    bytes.
     public struct Section : IEquatable<Section>
     {
         public const int Width = 16;

@@ -73,7 +73,7 @@ namespace MineLib.Network.Data.Structs
             return value;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteInt(Count);
 

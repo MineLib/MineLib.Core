@@ -15,7 +15,7 @@ bool Protocol::Logout() {
 void Protocol::SendPacket(IPacket^ packet) {
 	return;
 }
-void Protocol::Connect() {
+void Protocol::Connect(String^ ip, unsigned short port) {
 	return;
 }
 void Protocol::Disconnect(){

@@ -28,6 +28,9 @@ namespace ProtocolClassic.IO
 
         public void WriteString(string value, int length = 0)
         {
+            if (string.IsNullOrWhiteSpace(value))
+                value = "";
+
             var final = new byte[64];
             for (var i = 0; i < final.Length; i++)
                 final[i] = 0x20;

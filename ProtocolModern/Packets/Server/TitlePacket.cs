@@ -7,7 +7,7 @@ namespace ProtocolModern.Packets.Server
     public interface ITitle
     {
         ITitle FromReader(IProtocolDataReader reader);
-        void ToStream(ref IProtocolStream stream);
+        void ToStream(IProtocolStream stream);
     }
 
     public struct TitleTitle : ITitle
@@ -21,7 +21,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteString(Text);
         }
@@ -38,7 +38,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteString(Text);
         }
@@ -59,7 +59,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             stream.WriteInt(FadeIn);
             stream.WriteInt(Stay);
@@ -74,7 +74,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
         }
     }
@@ -86,7 +86,7 @@ namespace ProtocolModern.Packets.Server
             return this;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
         }
     }
@@ -133,7 +133,7 @@ namespace ProtocolModern.Packets.Server
         {
             stream.WriteVarInt(ID);
             stream.WriteVarInt((byte) Action);
-            Title.ToStream(ref  stream);
+            Title.ToStream(stream);
             stream.Purge();
 
             return this;

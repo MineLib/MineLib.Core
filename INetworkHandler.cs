@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using MineLib.Network.Data.Structs;
 
 namespace MineLib.Network
 {
-    public interface INetworkHandler : IDisposable
+    public interface INetworkHandler : IDisposable 
     {
         #region Properties
 
@@ -22,21 +21,14 @@ namespace MineLib.Network
         INetworkHandler Create(IMinecraftClient client, bool debugPackets = true);
 
         IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state);
-        void EndConnect(IAsyncResult asyncResult);
+        //void EndConnect(IAsyncResult asyncResult);
         IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state);
         void EndDisconnect(IAsyncResult asyncResult);
 
-        void Connect();
-        void Disconnect();
+        IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingParameters parameters);
 
-        IAsyncResult BeginConnectToServer(AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginKeepAlive(int value, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginSendClientInfo(AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginRespawn(AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginPlayerMoved(PlaverMovedData data, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginPlayerSetRemoveBlock(PlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginSendMessage(string message, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginPlayerHeldItem(short slot, AsyncCallback asyncCallback, object state);
+        void Connect(string ip, ushort port);
+        void Disconnect();
     }
 
     [Serializable]

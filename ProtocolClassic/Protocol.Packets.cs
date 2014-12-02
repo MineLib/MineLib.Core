@@ -1,19 +1,23 @@
 ﻿using System;
 using MineLib.Network;
 using ProtocolClassic.Enums;
+using ProtocolClassic.Packets.Server;
 
 namespace ProtocolClassic
 {
     public partial class Protocol
     {
-        private void RaisePacketHandledClassic(int id, IPacket packet, ConnectionState? state)
+        private void OnPacketHandled(int id, IPacketWithSize packet, ConnectionState? state)
         {
+            if (!Connected)
+                return;
+
             // -- Debugging
             Console.WriteLine("Classic ID: 0x" + String.Format("{0:X}", id));
             Console.WriteLine(" ");
             // -- Debugging
 
-            switch ((PacketsServer)id)
+            switch ((PacketsServer) id)
             {
                 case PacketsServer.ServerIdentification:
                     State = ConnectionState.JoinedServer;
@@ -26,12 +30,18 @@ namespace ProtocolClassic
                     break;
 
                 case PacketsServer.LevelDataChunk:
+                    var levelDataChunkPacket = (LevelDataChunkPacket) packet;
+
+                    //OnChunk();
                     break;
 
                 case PacketsServer.LevelFinalize:
                     break;
 
                 case PacketsServer.SetBlock:
+                    var setBlockPacket = (SetBlockPacket) packet;
+
+                    OnBlockChange(setBlockPacket.Coordinates, setBlockPacket.BlockType);
                     break;
 
                 case PacketsServer.SpawnPlayer:
@@ -53,6 +63,9 @@ namespace ProtocolClassic
                     break;
 
                 case PacketsServer.Message:
+                    var messagePacket = (MessagePacket) packet;
+
+                    OnChatMessage(messagePacket.Message);
                     break;
 
                 case PacketsServer.DisconnectPlayer:
@@ -111,6 +124,9 @@ namespace ProtocolClassic
 
                 case PacketsServer.ExtAddEntity2:
                     break;
+
+                default:
+                    throw new ProtocolException("Connection error: Incorrect data.");
             }
         }
     }

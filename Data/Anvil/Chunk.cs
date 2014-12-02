@@ -5,6 +5,9 @@ using MineLib.Network.IO;
 
 namespace MineLib.Network.Data.Anvil
 {
+    // -- Full  (12304 bytes Section) - 197138 bytes.
+    // -- Empty (20    bytes Section) - 594    bytes.
+    // -- Empty (empty       Section) - 26     bytes.
     public class Chunk : IEquatable<Chunk>
     {
         public const short Width = 16;

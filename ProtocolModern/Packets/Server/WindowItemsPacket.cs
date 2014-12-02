@@ -24,7 +24,7 @@ namespace ProtocolModern.Packets.Server
         {
             stream.WriteVarInt(ID);
             stream.WriteByte(WindowID);
-            ItemStackList.ToStream(ref stream);
+            ItemStackList.ToStream(stream);
             stream.Purge();
 
             return this;

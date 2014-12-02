@@ -1,8 +1,8 @@
 ﻿using System;
-using MineLib.Network.Data.Structs;
 
 namespace MineLib.Network
 {
+    // TODO: Clean this shit.
     public interface IMinecraftClient : IDisposable
     {
         NetworkMode Mode { get; }
@@ -30,20 +30,16 @@ namespace MineLib.Network
         IMinecraftClient Create(string login, string password, NetworkMode mode, bool nameVerification = false, string serverSalt = null);
 
         IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state);
-        void EndConnect(IAsyncResult asyncResult);
+        //void EndConnect(IAsyncResult asyncResult);
         IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state);
         void EndDisconnect(IAsyncResult asyncResult);
 
         void Connect(string ip, ushort port);
         void Disconnect();
 
-        IAsyncResult BeginConnectToServer(AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginKeepAlive(int value, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginSendClientInfo(AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginRespawn(AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginPlayerMoved(PlaverMovedData data, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginPlayerSetRemoveBlock(PlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginSendMessage(string message, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginPlayerHeldItem(short slot, AsyncCallback asyncCallback, object state);
+        void RegisterReceiveEvent(Type receiveEventType, Action<IAsyncReceive> method);
+        void DoReceiveEvent(Type receiveEventType, IAsyncReceive data);
+
+        //IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingParameters parameters);
     }
 }

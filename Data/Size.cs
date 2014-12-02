@@ -1,8 +1,11 @@
-﻿namespace MineLib.Network.Data
+﻿using System.Runtime.InteropServices;
+
+namespace MineLib.Network.Data
 {
     /// <summary>
     /// Represents the size of an object in 3D space.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Size
     {
         public readonly float Width;

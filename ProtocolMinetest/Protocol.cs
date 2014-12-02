@@ -19,7 +19,11 @@ namespace ProtocolMinetest
 
         public bool Connected { get { return _baseSock != null && _baseSock.Client.Connected; } }
 
+        public bool UseLogin { get; private set; }
+
         // -- Debugging
+        public bool SavePackets { get; private set; }
+
         public List<IPacket> PacketsReceived { get; private set; }
         public List<IPacket> PacketsSended { get; private set; }
 
@@ -32,8 +36,6 @@ namespace ProtocolMinetest
             }
         }
         public IPacket LastPacket { get { return PacketsReceived[PacketsReceived.Count - 1]; } }
-
-        public bool SavePackets { get; private set; }
         // -- Debugging
 
         #endregion
@@ -88,7 +90,7 @@ namespace ProtocolMinetest
 
                         //packet = ServerResponse.Status[id]().ReadPacket(reader);
 
-                        RaisePacketHandled(id, packet, ConnectionState.InfoRequest);
+                        OnPacketHandled(id, packet, ConnectionState.InfoRequest);
                         break;
 
                     #endregion Status
@@ -101,7 +103,7 @@ namespace ProtocolMinetest
 
                         //packet = ServerResponse.Login[id]().ReadPacket(reader);
 
-                        RaisePacketHandled(id, packet, ConnectionState.JoiningServer);
+                        OnPacketHandled(id, packet, ConnectionState.JoiningServer);
                         break;
 
                     #endregion Login
@@ -114,7 +116,7 @@ namespace ProtocolMinetest
 
                         //packet = ServerResponse.Play[id]().ReadPacket(reader);
 
-                        RaisePacketHandled(id, packet, ConnectionState.JoinedServer);                   
+                        OnPacketHandled(id, packet, ConnectionState.JoinedServer);                   
                         break;
 
                     #endregion Play
@@ -167,7 +169,7 @@ namespace ProtocolMinetest
             // -- Connect to server.
             _baseSock = new UdpClient();
 
-            var result = _baseSock.Client.BeginConnect(_minecraft.ServerHost, _minecraft.ServerPort, asyncCallback, state);
+            var result = _baseSock.Client.BeginConnect(ip, port, asyncCallback, state);
             EndConnect(result);
 
 
@@ -213,14 +215,14 @@ namespace ProtocolMinetest
                 PacketsSended.Add(packet);
         }
 
-        public void Connect()
+        public void Connect(string ip, ushort port)
         {
             if (Connected)
                 throw new ProtocolException("Connection error: Already connected to server.");
 
             // -- Connect to server.
             _baseSock = new UdpClient();
-            _baseSock.Connect(_minecraft.ServerHost, _minecraft.ServerPort);
+            _baseSock.Connect(ip, port);
 
             _baseSock.BeginReceive(PacketReceiverAsync, null);
         }

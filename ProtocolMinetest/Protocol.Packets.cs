@@ -6,7 +6,7 @@ namespace ProtocolMinetest
 {
     public partial class Protocol
     {
-        private void RaisePacketHandled(int id, IPacket packet, ConnectionState? state)
+        private void OnPacketHandled(int id, IPacket packet, ConnectionState? state)
         {
             if(!Connected)
                 return;

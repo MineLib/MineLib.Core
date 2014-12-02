@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ProtocolCLIWrapper.h"
 
 using namespace System;
@@ -17,15 +18,8 @@ void Protocol::EndConnect(IAsyncResult^ asyncResult){}
 IAsyncResult^ Protocol::BeginDisconnect(AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
 void Protocol::EndDisconnect(IAsyncResult^ asyncResult){}
 
-
-IAsyncResult^ Protocol::BeginConnectToServer(AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
-IAsyncResult^ Protocol::BeginKeepAlive(int value, AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
-IAsyncResult^ Protocol::BeginSendClientInfo(AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
-IAsyncResult^ Protocol::BeginRespawn(AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
-IAsyncResult^ Protocol::BeginPlayerMoved(PlaverMovedData data, AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
-IAsyncResult^ Protocol::BeginPlayerSetRemoveBlock(PlayerSetRemoveBlockData data, AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
-IAsyncResult^ Protocol::BeginSendMessage(String^ message, AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
-IAsyncResult^ Protocol::BeginPlayerHeldItem(short slot, AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
+void Protocol::RegisterAsyncSending(Type^ asyncSendingType, Func<IAsyncSendingParameters^, IAsyncResult^>^ method) {}
+IAsyncResult^ Protocol::DoAsyncSending(Type^ asyncSendingType, IAsyncSendingParameters^ parameters){ return gcnew ProtocolAsyncResult();}
 
 Protocol::~Protocol() {}
 }

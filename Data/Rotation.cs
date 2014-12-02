@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using MineLib.Network.IO;
 
 namespace MineLib.Network.Data
@@ -6,6 +7,7 @@ namespace MineLib.Network.Data
     /// <summary>
     /// Represents mostly head location of an entity
     /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Rotation : IEquatable<Rotation>
     {
         public readonly float Pitch;

@@ -1,5 +1,3 @@
-// MineLib.Network.CLI.Wrapper.h
-
 #pragma once
 
 using namespace System;
@@ -12,16 +10,6 @@ namespace ProtocolCLIWrapper {
 public ref class Protocol : public MineLib::Network::IProtocol
 {
 private:
-	String^ name;
-	String^ version;
-
-	ConnectionState state;
-	bool connected;
-
-	List<IPacket ^> ^packetsReceived;
-	List<IPacket ^> ^packetsSended;
-	List<IPacket ^> ^lastPackets;
-
 
 public:
 	virtual property String^ Name;
@@ -34,7 +22,7 @@ public:
 
 	virtual void SendPacket(IPacket^ packet);
 
-	virtual void Connect();
+	virtual void Connect(String^ ip, unsigned short port);
 	virtual void Disconnect();
 
 
@@ -56,15 +44,10 @@ public:
     virtual void EndDisconnect(IAsyncResult^ asyncResult);
 
 
-	virtual IAsyncResult^ BeginConnectToServer(AsyncCallback^ asyncCallback, Object^ state);
-	virtual IAsyncResult^ BeginKeepAlive(int value, AsyncCallback^ asyncCallback, Object^ state);
-    virtual IAsyncResult^ BeginSendClientInfo(AsyncCallback^ asyncCallback, Object^ state);
-    virtual IAsyncResult^ BeginRespawn(AsyncCallback^ asyncCallback, Object^ state);
-    virtual IAsyncResult^ BeginPlayerMoved(PlaverMovedData data, AsyncCallback^ asyncCallback, Object^ state);
-    virtual IAsyncResult^ BeginPlayerSetRemoveBlock(PlayerSetRemoveBlockData data, AsyncCallback^ asyncCallback, Object^ state);
-    virtual IAsyncResult^ BeginSendMessage(String^ message, AsyncCallback^ asyncCallback, Object^ state);
-    virtual IAsyncResult^ BeginPlayerHeldItem(short slot, AsyncCallback^ asyncCallback, Object^ state);
+	virtual void RegisterAsyncSending(Type^ asyncSendingType, Func<IAsyncSendingParameters^, IAsyncResult^>^ method);
+	virtual IAsyncResult^ DoAsyncSending(Type^ asyncSendingType, IAsyncSendingParameters^ parameters);
 
+	virtual property bool UseLogin;
 	virtual bool Login(String^ login, String^ password);
 	virtual bool Logout();
 

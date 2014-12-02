@@ -3,15 +3,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using MineLib.Network.IO;
 
 namespace MineLib.Network.Data.Structs
 {
     // TODO: Uses more memory than class
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct ItemStack  : ICloneable, IEquatable<ItemStack>
     {
         public readonly short ID;
-        public  sbyte Count;
+        public sbyte Count;
         public short Damage; // Level
         public byte[] NBTData;
 
@@ -247,7 +249,7 @@ namespace MineLib.Network.Data.Structs
             return value;
         }
 
-        public void ToStream(ref IProtocolStream stream)
+        public void ToStream(IProtocolStream stream)
         {
             foreach (var itemStack in _entries)
             {
