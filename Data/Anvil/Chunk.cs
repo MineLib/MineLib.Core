@@ -10,9 +10,9 @@ namespace MineLib.Network.Data.Anvil
     // -- Empty (empty       Section) - 26     bytes.
     public class Chunk : IEquatable<Chunk>
     {
-        public const short Width = 16;
-        public const short Height = 256;
-        public const short Depth = 16;
+        public const ushort Width = 16;
+        public const ushort Height = 256;
+        public const ushort Depth = 16;
 
         public const int OneByteData = Section.Width * Section.Depth * Section.Height;
         public const int HalfByteData = OneByteData / 2;

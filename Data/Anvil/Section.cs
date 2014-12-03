@@ -52,12 +52,12 @@ namespace MineLib.Network.Data.Anvil
 
             for (int i = 0, j = 0; i < Width * Height * Depth; i++)
             {
-                var idMetadata = (short)(rawBlocks[j] + rawBlocks[j + 1]);
+                var idMetadata = (ushort)(rawBlocks[j] + rawBlocks[j + 1]);
                 j++;
                 j++;
 
                 // TODO: Add auto Coordinate calculator
-                var id = (short)(idMetadata >> 4);
+                var id = (ushort)(idMetadata >> 4);
                 var meta = (byte)(idMetadata & 15);
 
                 var sectionPos = GetSectionPositionByIndex(i);

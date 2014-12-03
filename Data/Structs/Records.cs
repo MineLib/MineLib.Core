@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MineLib.Network.IO;
 
 namespace MineLib.Network.Data.Structs
 {
     public struct Record
     {
-        public int BlockIDMeta;
+        public ushort BlockIDMeta;
         public Position Coordinates;
     }
 
@@ -45,7 +46,8 @@ namespace MineLib.Network.Data.Structs
                 var z = (coordinates >> 8) & 0xf; 
                 var x = (coordinates >> 12) & 0xf;
 
-                record.BlockIDMeta = reader.ReadVarInt();
+                int blockIDMeta = reader.ReadVarInt();
+                record.BlockIDMeta = Convert.ToUInt16(blockIDMeta);
                 record.Coordinates = new Position(x, y, z);
 
                 value[i] = record;

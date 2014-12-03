@@ -8,46 +8,46 @@ namespace MineLib.Network.Data.Anvil
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Block : IEquatable<Block>
     {
-        public readonly short IDMeta;
+        public readonly ushort IDMeta;
         public byte SkyAndBlockLight;
 
-        public Block(short id)
+        public Block(ushort id)
         {
-            IDMeta = (short) ((id & 0xFFF0) | 0);
+            IDMeta = (ushort) (id << 4 & 0xFFF0 | 0 & 0x000F);
             SkyAndBlockLight = 0;
         }
 
-        public Block(short id, byte meta)
+        public Block(ushort id, byte meta)
         {
-            IDMeta = (short) ((id & 0xFFF0) | meta);
+            IDMeta = (ushort) (id << 4 & 0xFFF0 | meta & 0x000F);
             SkyAndBlockLight = 0;
         }
 
-        public Block(short id, byte meta, byte light)
+        public Block(ushort id, byte meta, byte light)
         {
-            IDMeta = (short) ((id & 0xFFF0) | meta);
-            SkyAndBlockLight = (byte) ((0 & 0xF) | (light >> 0xF));
+            IDMeta = (ushort) (id << 4 & 0xFFF0 | meta & 0x000F);
+            SkyAndBlockLight = (byte) (0 << 4 & 0xF0 | light & 0x0F);
         }
 
-        public Block(short id, byte meta, byte light, byte skyLight)
+        public Block(ushort id, byte meta, byte light, byte skyLight)
         {
-            IDMeta = (short) ((id & 0xFFF0) | meta);
-            SkyAndBlockLight = (byte) ((skyLight & 0xF) | (light >> 0xF));
+            IDMeta = (ushort) (id << 4 & 0xFFF0 | meta & 0x000F);
+            SkyAndBlockLight = (byte) (skyLight << 4 & 0xF0 | light & 0x0F);
         }
 
         public override string ToString()
         {
-            return String.Format("ID: {0}, Meta: {1}", GetID(), GetMeta());
+            return String.Format("ID: {0}, Meta: {1}, Light: {2}, SkyLight: {3}", GetID(), GetMeta(), GetLight(), GetSkyLight());
         }
 
-        public short GetID()
+        public ushort GetID()
         {
-            return (short) (IDMeta >> 4);
+            return (ushort) (IDMeta >> 4);
         }
 
         public byte GetMeta()
         {
-            return (byte) (IDMeta & 0xF);
+            return (byte) (IDMeta & 0x000F);
         }
 
         public byte GetSkyLight()
@@ -62,14 +62,14 @@ namespace MineLib.Network.Data.Anvil
 
         public void SetSkyLight(byte skyLight)
         {
-            var bLight = GetLight();
-            SkyAndBlockLight = (byte) ((skyLight & 0xF) | (bLight >> 0xF));
+            var light = GetLight();
+            SkyAndBlockLight = (byte) (skyLight << 4 & 0xF0 | light & 0x0F);
         }
 
-        public void SetLight(byte blockLight)
+        public void SetLight(byte light)
         {
             var skyLight = GetSkyLight();
-            SkyAndBlockLight = (byte) ((skyLight & 0xF) | (blockLight >> 0xF));
+            SkyAndBlockLight = (byte) (skyLight << 4 & 0xF0 | light & 0x0F);
         }
 
 

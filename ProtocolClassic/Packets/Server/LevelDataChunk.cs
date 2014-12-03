@@ -1,5 +1,6 @@
 ﻿using MineLib.Network;
 using MineLib.Network.IO;
+using ProtocolClassic.Data;
 
 namespace ProtocolClassic.Packets.Server
 {
@@ -17,6 +18,8 @@ namespace ProtocolClassic.Packets.Server
             ChunkLength = reader.ReadShort();
             ChunkData = reader.ReadByteArray(1024);
             PercentComplete = reader.ReadByte();
+
+            var level = Level.ReadFromArray(ChunkData);
 
             return this;
         }

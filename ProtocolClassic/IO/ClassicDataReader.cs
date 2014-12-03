@@ -82,6 +82,13 @@ namespace ProtocolClassic.IO
             return BitConverter.ToInt32(bytes, 0);
         }
 
+        public int ReadIntBigEndian()
+        {
+            var bytes = ReadByteArray(4);
+
+            return BitConverter.ToInt32(bytes, 0);
+        }
+
         public uint ReadUInt()
         {
             return (uint)(
