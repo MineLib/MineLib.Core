@@ -19,8 +19,6 @@ namespace ProtocolClassic.Packets.Server
             ChunkData = reader.ReadByteArray(1024);
             PercentComplete = reader.ReadByte();
 
-            var level = Level.ReadFromArray(ChunkData);
-
             return this;
         }
 

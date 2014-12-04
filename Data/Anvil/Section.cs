@@ -40,19 +40,19 @@ namespace MineLib.Network.Data.Anvil
             IsFilled = true;
         }
 
-        public void BuildFromRawData(byte[] rawBlocks, byte[] rawBlockLight, byte[] rawSkyLight)
+        public void BuildFromNibbleData(byte[] blocks, byte[] blockLights, byte[] blockSkyLights)
         {
             if(IsFilled) 
                 return;
 
             Blocks = new Block[Width, Height, Depth];
 
-            var blockLight = ToBytePerBlock(rawBlockLight);
-            var skyLight = ToBytePerBlock(rawSkyLight);
+            var blockLight = ToBytePerBlock(blockLights);
+            var skyLight = ToBytePerBlock(blockSkyLights);
 
             for (int i = 0, j = 0; i < Width * Height * Depth; i++)
             {
-                var idMetadata = (ushort)(rawBlocks[j] + rawBlocks[j + 1]);
+                var idMetadata = (ushort)(blocks[j] + blocks[j + 1]);
                 j++;
                 j++;
 
@@ -66,6 +66,16 @@ namespace MineLib.Network.Data.Anvil
                 else
                     Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z] = new Block(0);
             }
+
+            IsFilled = true;
+        }
+
+        public void BuildFromBlocks(Block[, ,] blocks)
+        {
+            if (IsFilled)
+                return;
+
+            Blocks = blocks;
 
             IsFilled = true;
         }

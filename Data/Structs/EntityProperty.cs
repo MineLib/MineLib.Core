@@ -36,7 +36,7 @@ namespace MineLib.Network.Data.Structs
         public EntityProperty this[int index]
         {
             get { return _entries[index]; }
-            set { _entries.Insert(index, value); }
+            set { _entries[index] = value; }
         }
 
         #region Network

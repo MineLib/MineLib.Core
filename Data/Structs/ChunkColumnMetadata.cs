@@ -30,7 +30,7 @@ namespace MineLib.Network.Data.Structs
         public ChunkColumnMetadata this[int index]
         {
             get { return _entries[index]; }
-            set { _entries.Insert(index, value); }
+            set { _entries[index] = value; }
         }
 
         public IEnumerable<ChunkColumnMetadata> GetMetadata()

@@ -1,5 +1,6 @@
 ﻿using System;
 using MineLib.Network;
+using ProtocolClassic.Data;
 using ProtocolClassic.Enums;
 using ProtocolClassic.Packets.Server;
 
@@ -32,10 +33,14 @@ namespace ProtocolClassic
                 case PacketsServer.LevelDataChunk:
                     var levelDataChunkPacket = (LevelDataChunkPacket) packet;
 
-                    //OnChunk();
+                    Level.ReadFromSteam(levelDataChunkPacket.ChunkData);
                     break;
 
                 case PacketsServer.LevelFinalize:
+                    var levelFinalizePacket = (LevelFinalizePacket)packet;
+
+                    var chunkList = Level.ReadFromArray(levelFinalizePacket.Coordinates);
+                    OnChunkList(chunkList);
                     break;
 
                 case PacketsServer.SetBlock:

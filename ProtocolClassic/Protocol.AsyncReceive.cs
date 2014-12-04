@@ -18,9 +18,14 @@ namespace ProtocolClassic
             _minecraft.DoReceiveEvent(typeof(OnChunk), new OnChunk(chunk));
         }
 
+        private void OnChunkList(ChunkList chunks)
+        {
+            _minecraft.DoReceiveEvent(typeof(OnChunkList), new OnChunkList(chunks));
+        }
+
         private void OnBlockChange(Position location, int block)
         {
-            _minecraft.DoReceiveEvent(typeof(OnBlockChange), new OnBlockChange(location, block));
+        //    _minecraft.DoReceiveEvent(typeof(OnBlockChange), new OnBlockChange(location, block)); // TODO: Implement chunk coords2D
         }
 
         #endregion

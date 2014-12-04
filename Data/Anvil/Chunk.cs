@@ -108,7 +108,7 @@ namespace MineLib.Network.Data.Anvil
                     if (value.OverWorld)
                         Array.Copy(chunkRawSkylight, i * rawSkyLight.Length, rawSkyLight, 0, rawSkyLight.Length);
 
-                    value.Sections[i].BuildFromRawData(rawBlocks, rawBlockLight, rawSkyLight);
+                    value.Sections[i].BuildFromNibbleData(rawBlocks, rawBlockLight, rawSkyLight);
                     i++;
                 }
             }
@@ -365,6 +365,11 @@ namespace MineLib.Network.Data.Anvil
             _entries = new List<Chunk>();
         }
 
+        public ChunkList(List<Chunk> chunks)
+        {
+            _entries = chunks;
+        }
+
         public int Count
         {
             get { return _entries.Count; }
@@ -373,7 +378,7 @@ namespace MineLib.Network.Data.Anvil
         public Chunk this[int index]
         {
             get { return _entries[index]; }
-            set { _entries.Insert(index, value); }
+            set { _entries[index] = value; }
         }
 
         public IEnumerable<Chunk> GetChunk()
@@ -436,7 +441,7 @@ namespace MineLib.Network.Data.Anvil
                         if (chunk.OverWorld)
                             Array.Copy(chunkRawSkylight, i * rawSkyLight.Length, rawSkyLight, 0, rawSkyLight.Length);
 
-                        chunk.Sections[i].BuildFromRawData(rawBlocks, rawBlockLight, rawSkyLight);
+                        chunk.Sections[i].BuildFromNibbleData(rawBlocks, rawBlockLight, rawSkyLight);
                         i++;
                     }
                 }

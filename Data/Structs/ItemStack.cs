@@ -213,7 +213,7 @@ namespace MineLib.Network.Data.Structs
         public ItemStack this[int index]
         {
             get { return _entries[index]; }
-            set { _entries.Insert(index, value); }
+            set { _entries[index] = value; }
         }
 
         #region Network
