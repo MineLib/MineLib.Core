@@ -26,7 +26,13 @@ namespace MineLib.Network.Data.Structs
         public StatisticsEntry this[int index]
         {
             get { return _entries[index]; }
-            set { _entries[index] = value; }
+            set
+            {
+                if (_entries.Count - 1 < index)
+                    _entries.Add(value);
+                else
+                    _entries[index] = value;
+            }
         }
 
         public static StatisticsEntryList FromReader(IProtocolDataReader reader)

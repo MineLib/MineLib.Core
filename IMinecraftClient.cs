@@ -8,33 +8,33 @@ namespace MineLib.Network
         NetworkMode Mode { get; }
         ConnectionState ConnectionState { get; }
 
-        string ClientLogin { get; }
-        string ClientUsername { get; set; }
-        string ClientPassword { get; }
-        bool UseLogin { get; }
+        String ClientLogin { get; }
+        String ClientUsername { get; set; }
+        String ClientPassword { get; }
+        Boolean UseLogin { get; }
 
-        string ClientBrand { get; set; }
-        string ServerBrand { get; }
+        String ClientBrand { get; set; }
+        String ServerBrand { get; }
 
-        string ServerHost { get; }
-        ushort ServerPort { get; }
+        String ServerHost { get; }
+        UInt16 ServerPort { get; }
 
-        bool Connected { get; }
+        Boolean Connected { get; }
 
         // -- Modern
-        string AccessToken { get; set; }
-        string SelectedProfile { get; set; }
-        string ClientToken { get; set; }
+        String AccessToken { get; set; }
+        String SelectedProfile { get; set; }
+        String ClientToken { get; set; }
         // -- Modern
 
-        IMinecraftClient Create(string login, string password, NetworkMode mode, bool nameVerification = false, string serverSalt = null);
+        IMinecraftClient Create(String login, String password, NetworkMode mode, Boolean nameVerification = false, String serverSalt = null);
 
-        IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback asyncCallback, Object state);
         //void EndConnect(IAsyncResult asyncResult);
-        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, Object state);
         void EndDisconnect(IAsyncResult asyncResult);
 
-        void Connect(string ip, ushort port);
+        void Connect(String ip, UInt16 port);
         void Disconnect();
 
         void RegisterReceiveEvent(Type receiveEventType, Action<IAsyncReceive> method);

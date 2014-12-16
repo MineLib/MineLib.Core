@@ -11,11 +11,12 @@ namespace MineLib.Network.Data.Anvil
         public const int Height = 16;
         public const int Depth = 16;
 
+        public Position Position;
+
         public Block[,,] Blocks;
 
         public bool IsFilled;
 
-        public Position Position;
 
         public Section(Position position)
         {
@@ -138,8 +139,7 @@ namespace MineLib.Network.Data.Anvil
 
         public static Position GetSectionPositionByIndex(int index)
         {
-            return new Position
-            (
+            return new Position(
                 index % 16,
                 index / (16 * 16),
                 (index / 16) % 16
@@ -160,8 +160,7 @@ namespace MineLib.Network.Data.Anvil
         {
             var sectionPos = GetSectionPositionByIndex(index);
 
-            return new Position
-            (
+            return new Position(
                 Width * Position.X + sectionPos.Y,
                 Height * Position.Y + sectionPos.Y,
                 Depth * Position.Z + sectionPos.Z
@@ -177,8 +176,9 @@ namespace MineLib.Network.Data.Anvil
 
             for (var i = 0; i < halfByteData.Count; i++)
             {
-                var block2 = (byte)((halfByteData[i] >> 4) & 15);
-                var block1 = (byte)(halfByteData[i] & 15);
+                var data = halfByteData[i];
+                var block2 = (byte)((data >> 4) & 15);
+                var block1 = (byte)(data & 15);
 
                 newMeta[(i * 2)] = block1;
                 newMeta[(i * 2) + 1] = block2;

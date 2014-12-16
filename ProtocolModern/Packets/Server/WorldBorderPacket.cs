@@ -152,7 +152,7 @@ namespace ProtocolModern.Packets.Server
 
         public IPacket ReadPacket(IProtocolDataReader reader)
         {
-            Action = (WorldBorderAction) reader.ReadVarInt();
+            Action = (WorldBorderAction) (int) reader.ReadVarInt();
 
             switch (Action)
             {

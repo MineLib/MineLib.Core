@@ -27,11 +27,11 @@ namespace MineLib.Network.Cryptography
         ///     Converts the given n-bit little-endian unsigned number into
         ///     lowercase hexadecimal form.
         /// </summary>
-        private static string GetHexString(byte[] p)
+        private static string GetHexString(byte[] data)
         {
             var result = "";
-            for (var i = 0; i < p.Length; i++)
-                result += p[i].ToString("x2", CultureInfo.InvariantCulture);
+            for (var i = 0; i < data.Length; i++)
+                result += data[i].ToString("x2", CultureInfo.InvariantCulture);
             return result;
         }
 
@@ -39,19 +39,19 @@ namespace MineLib.Network.Cryptography
         ///     Given an array that represents an n-bit little-endian signed number,
         ///     the two's compliment (negation) is produced.
         /// </summary>
-        private static byte[] TwosCompliment(byte[] p)
+        private static byte[] TwosCompliment(byte[] data)
         {
             var carry = true;
-            for (var i = p.Length - 1; i >= 0; i--)
+            for (var i = data.Length - 1; i >= 0; i--)
             {
-                p[i] = (byte) ~p[i];
+                data[i] = (byte) ~data[i];
                 if (carry)
                 {
-                    carry = p[i] == 0xFF;
-                    p[i]++;
+                    carry = data[i] == 0xFF;
+                    data[i]++;
                 }
             }
-            return p;
+            return data;
         }
     }
 }

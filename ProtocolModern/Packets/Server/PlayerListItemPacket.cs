@@ -190,7 +190,7 @@ namespace ProtocolModern.Packets.Server
 
         public IPacket ReadPacket(IProtocolDataReader reader)
         {
-            Action = (PlayerListAction) reader.ReadVarInt();
+            Action = (PlayerListAction) (int) reader.ReadVarInt();
             Length = reader.ReadVarInt();
             UUID = reader.ReadBigInteger();
 

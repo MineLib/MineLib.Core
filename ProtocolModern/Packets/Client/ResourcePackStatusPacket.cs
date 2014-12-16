@@ -14,7 +14,7 @@ namespace ProtocolModern.Packets.Client
         public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Hash = reader.ReadString();
-            Result = (ResourcePackStatus) reader.ReadVarInt();
+            Result = (ResourcePackStatus) (int) reader.ReadVarInt();
 
             return this;
         }

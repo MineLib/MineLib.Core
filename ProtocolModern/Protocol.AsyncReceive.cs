@@ -76,6 +76,11 @@ namespace ProtocolModern
             _minecraft.DoReceiveEvent(typeof(OnRespawn), new OnRespawn(gameInfo));
         }
 
+        private void OnAction(int entityID, int action)
+        {
+            _minecraft.DoReceiveEvent(typeof(OnAction), new OnAction(entityID, action));
+        }
+
         private void OnSetExperience(float experienceBar, int level, int totalExperience)
         {
             _minecraft.DoReceiveEvent(typeof(OnSetExperience), new OnSetExperience(experienceBar, level, totalExperience));

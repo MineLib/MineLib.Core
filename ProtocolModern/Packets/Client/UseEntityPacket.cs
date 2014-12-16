@@ -15,7 +15,7 @@ namespace ProtocolModern.Packets.Client
         public IPacket ReadPacket(IProtocolDataReader reader)
         {
             Target = reader.ReadVarInt();
-            Type = (UseEntity) reader.ReadVarInt();
+            Type = (UseEntity) (int) reader.ReadVarInt();
 
             if (Type == UseEntity.INTERACT_AT)
             {

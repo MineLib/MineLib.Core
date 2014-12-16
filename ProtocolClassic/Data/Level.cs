@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -11,68 +12,50 @@ namespace ProtocolClassic.Data
     {
         private static List<byte> ChunkData = new List<byte>();
 
-        public static void ReadFromSteam(byte[] chunkData)
+        public static void ReadFromSteam(IEnumerable<byte> chunkData)
         {
             ChunkData.AddRange(chunkData);
         }
 
-        public static byte[] Decompress(byte[] data)
-        {
-            using (var stream = new GZipStream(new MemoryStream(data), CompressionMode.Decompress))
-            {
-                const int size = 1024;
-                var buffer = new byte[size];
-                using (var memory = new MemoryStream())
-                {
-                    int count = 0;
-                    do
-                    {
-                        count = stream.Read(buffer, 0, size);
-
-                        if (count > 0)
-                            memory.Write(buffer, 0, count);
-                    }
-                    while (count > 0);
-
-                    return memory.ToArray();
-                }
-            }
-        }
-
         public static ChunkList ReadFromArray(Position coordinates)
         {
-            var Width = coordinates.X;
-            var Height = coordinates.Y;
-            var Depth = coordinates.Z;
+            var width = coordinates.X;
+            var height = coordinates.Y;
+            var depth = coordinates.Z;
 
-            var chunkCount = (Width / Chunk.Width / 2) + (Depth / Chunk.Depth / 2);
+            //var blockers = new int[width * depth];
+            //for (int i = 0; i < blockers.Length; i++)
+            //    blockers[i] = height;
+            //
+            //CalcLightDepths(blockers, 0, 0, width, depth, width, height);
+
+            var chunkCount = (width / Chunk.Width / 2) + (depth / Chunk.Depth / 2);
             var chunks = new List<Chunk>();
 
             using (var reader = new ClassicDataReader(Decompress(ChunkData.ToArray())))
             {
-                var length = reader.ReadInt();                          // -- Block count.
+                ChunkData.Clear();
 
-                var blocksClassic = new Block[length];                  // -- Classic block format.
-                var blocks = new Block[Width, Height, Depth];           // -- Anvil block format.
-
+                var length = reader.ReadInt();                              // -- Block count.
+                var blocksClassic = new Block[length];                      // -- Classic block format.
                 for (int i = 0; i < length; i++)
-                    blocksClassic[i] = new Block(reader.ReadByte());    // -- Read all blocks.
+                    blocksClassic[i] = new Block(reader.ReadByte());        // -- Read all blocks.
 
-                blocks = ToAnvil(blocksClassic, Width, Depth, Height);  // -- Converting to Anvil [,,].
+                var blocks = ClassicToAnvil(blocksClassic, width, depth, height);  // -- Anvil block format.
 
                 // -- foreach Chunk.
                 int yOffset = 0, xOffset = 0, zOffset = 0;
                 for (int i = 0; i < chunkCount; i++)
                 {
-                    if(xOffset >= Width || zOffset >= Depth)
-                        break;
+                    if(xOffset >= width || zOffset >= depth)
+                        throw new Exception("Block count doesn't match Width and Depth info.");
 
                     chunks.Add(new Chunk(new Coordinates2D(0, 0))); // TODO: Implement coordinates
 
                     var blocksInEachSection = new Block[chunks[i].Sections.Length][, ,];
 
                     // -- foreach Section.
-                    for (int j = 0; j < (Height / Section.Height); j++)
+                    for (int j = 0; j < (height / Section.Height); j++)
                     {
                         blocksInEachSection[j] = new Block[Section.Width, Section.Height, Section.Depth];
 
@@ -102,7 +85,7 @@ namespace ProtocolClassic.Data
             return new ChunkList(chunks);
         }
 
-        public static Block[,,] ToAnvil(Block[] blocks, int width, int depth, int height)
+        public static Block[,,] ClassicToAnvil(Block[] blocks, int width, int depth, int height)
         {
             var converted = new Block[width, height, depth];
 
@@ -112,7 +95,7 @@ namespace ProtocolClassic.Data
                 {
                     for (int z = 0; z < depth; z++)
                     {
-                        converted[x, y, z] = blocks[GetIndex(x, y, z, width, depth)];
+                        converted[x, y, z] = blocks[GetIndexClassic(x, y, z, width, depth)];
 
                     }
                 }
@@ -121,9 +104,32 @@ namespace ProtocolClassic.Data
             return converted;
         }
 
-        public static int GetIndex(int x, int y, int z, int width, int depth)
+        public static int GetIndexClassic(int x, int y, int z, int width, int depth)
         {
             return (y * depth + z) * width + x;
+        }
+
+        private static byte[] Decompress(byte[] data)
+        {
+            using (var stream = new GZipStream(new MemoryStream(data), CompressionMode.Decompress))
+            {
+                const int size = 1024;
+                var buffer = new byte[size];
+                using (var memory = new MemoryStream())
+                {
+                    int count;
+                    do
+                    {
+                        count = stream.Read(buffer, 0, size);
+
+                        if (count > 0)
+                            memory.Write(buffer, 0, count);
+                    }
+                    while (count > 0);
+
+                    return memory.ToArray();
+                }
+            }
         }
     }
 }

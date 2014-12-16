@@ -8,10 +8,10 @@ namespace MineLib.Network
     public interface IAsyncSendingParameters
     {
         AsyncCallback AsyncCallback { get; set; } 
-        object State { get; set; }
+        Object State { get; set; }
     }
 
-    public class BeginConnectToServer : IAsyncSending { }
+    public struct BeginConnectToServer : IAsyncSending { }
     public struct BeginConnectToServerParameters : IAsyncSendingParameters 
     {
         public AsyncCallback AsyncCallback { get; set; }
@@ -24,7 +24,7 @@ namespace MineLib.Network
         }
     }
 
-    public class BeginKeepAlive : IAsyncSending { }
+    public struct BeginKeepAlive : IAsyncSending { }
     public struct BeginKeepAliveParameters : IAsyncSendingParameters
     {
         public int KeepAlive { get; set; }
@@ -41,7 +41,7 @@ namespace MineLib.Network
         }
     }
 
-    public class BeginSendClientInfo : IAsyncSending { }
+    public struct BeginSendClientInfo : IAsyncSending { }
     public struct BeginSendClientInfoParameters : IAsyncSendingParameters
     {
         public AsyncCallback AsyncCallback { get; set; }
@@ -54,7 +54,7 @@ namespace MineLib.Network
         }
     }
 
-    public class BeginRespawn : IAsyncSending { }
+    public struct BeginRespawn : IAsyncSending { }
     public struct BeginRespawnParameters : IAsyncSendingParameters
     {
         public AsyncCallback AsyncCallback { get; set; }
@@ -67,41 +67,105 @@ namespace MineLib.Network
         }
     }
 
-    public class BeginPlayerMoved : IAsyncSending { }
+    public struct BeginPlayerMoved : IAsyncSending { }
     public struct BeginPlayerMovedParameters : IAsyncSendingParameters
     {
-        public PlaverMovedData PlaverMovedData { get; set; }
-
         public AsyncCallback AsyncCallback { get; set; }
         public object State { get; set; }
 
-        public BeginPlayerMovedParameters(PlaverMovedData data, AsyncCallback asyncCallback, object state) : this()
+        public PlaverMovedMode Mode { get; set; }
+        public IPlaverMovedData Data { get; set; }
+
+        public BeginPlayerMovedParameters(IPlaverMovedData data, AsyncCallback asyncCallback, object state) : this()
         {
-            PlaverMovedData = data;
+            {
+                var type = data as PlaverMovedDataOnGround;
+                if (type != null)
+                    Mode = PlaverMovedMode.OnGround;
+            }
+
+            {
+                var type = data as PlaverMovedDataVector3;
+                if (type != null)
+                    Mode = PlaverMovedMode.Vector3;
+            }
+
+            {
+                var type = data as PlaverMovedDataYawPitch;
+                if (type != null)
+                    Mode = PlaverMovedMode.YawPitch;
+            }
+
+            {
+                var type = data as PlaverMovedDataAll;
+                if (type != null)
+                    Mode = PlaverMovedMode.All;
+            }
+
+            Data = data;
+
+            AsyncCallback = asyncCallback;
+            State = state;
+        }
+
+        public BeginPlayerMovedParameters(PlaverMovedMode mode, IPlaverMovedData data, AsyncCallback asyncCallback, object state): this()
+        {
+            Mode = mode;
+
+            Data = data;
 
             AsyncCallback = asyncCallback;
             State = state;
         }
     }
 
-    public class BeginPlayerSetRemoveBlock : IAsyncSending { }
+    public struct BeginPlayerSetRemoveBlock : IAsyncSending { }
     public struct BeginPlayerSetRemoveBlockParameters : IAsyncSendingParameters
     {
         public AsyncCallback AsyncCallback { get; set; }
         public object State { get; set; }
 
-        public PlayerSetRemoveBlockData PlayerSetRemoveBlockData { get; set; }
+        public PlayerSetRemoveBlockMode Mode { get; set; }
+        public IPlayerSetRemoveBlockData Data { get; set; }
 
-        public BeginPlayerSetRemoveBlockParameters(PlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state) : this()
+        public BeginPlayerSetRemoveBlockParameters(IPlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state) : this()
         {
-            PlayerSetRemoveBlockData = data;
+            {
+                var type = data as PlayerSetRemoveBlockDataDig;
+                if (type != null)
+                    Mode = PlayerSetRemoveBlockMode.Dig;
+            }
+
+            {
+                var type = data as PlayerSetRemoveBlockDataPlace;
+                if (type != null)
+                    Mode = PlayerSetRemoveBlockMode.Place;
+            }
+
+            {
+                var type = data as PlayerSetRemoveBlockDataRemove;
+                if (type != null)
+                    Mode = PlayerSetRemoveBlockMode.Remove;
+            }
+
+            Data = data;
+
+            AsyncCallback = asyncCallback;
+            State = state;
+        }
+
+        public BeginPlayerSetRemoveBlockParameters(PlayerSetRemoveBlockMode mode, IPlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state) : this()
+        {
+            Mode = mode;
+
+            Data = data;
 
             AsyncCallback = asyncCallback;
             State = state;
         }
     }
 
-    public class BeginSendMessage : IAsyncSending { }
+    public struct BeginSendMessage : IAsyncSending { }
     public struct BeginSendMessageParameters : IAsyncSendingParameters
     {
         public AsyncCallback AsyncCallback { get; set; }
@@ -118,7 +182,7 @@ namespace MineLib.Network
         }
     }
 
-    public class BeginPlayerHeldItem : IAsyncSending { }
+    public struct BeginPlayerHeldItem : IAsyncSending { }
     public struct BeginPlayerHeldItemParameters : IAsyncSendingParameters
     {
         public AsyncCallback AsyncCallback { get; set; }

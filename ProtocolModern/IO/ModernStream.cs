@@ -4,6 +4,7 @@ using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using MineLib.Network;
+using MineLib.Network.Data;
 using Org.BouncyCastle.Math;
 
 namespace ProtocolModern.IO
@@ -69,7 +70,7 @@ namespace ProtocolModern.IO
 
         // -- VarInt
 
-        public void WriteVarInt(int value)
+        public void WriteVarInt(VarInt value)
         {
             WriteByteArray(GetVarIntBytes(value));
         }
@@ -286,7 +287,7 @@ namespace ProtocolModern.IO
                 return (byte)_stream.ReadByte();
         }
 
-        public int ReadVarInt()
+        public VarInt ReadVarInt()
         {
             var result = 0;
             var length = 0;

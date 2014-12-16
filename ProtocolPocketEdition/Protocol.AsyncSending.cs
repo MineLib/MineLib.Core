@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MineLib.Network;
+using MineLib.Network.Data.Structs;
 
 namespace ProtocolPocketEdition
 {
@@ -75,18 +76,65 @@ namespace ProtocolPocketEdition
         private IAsyncResult BeginPlayerMoved(IAsyncSendingParameters parameters)
         {
             var param = (BeginPlayerMovedParameters) parameters;
-            var data = param.PlaverMovedData;
+            switch (param.Mode)
+            {
+                case PlaverMovedMode.OnGround:
+                    {
+                        var data = (PlaverMovedDataOnGround) param.Data;
+                        return null;
+                    }
 
-            return null;
+                case PlaverMovedMode.Vector3:
+                    {
+                        var data = (PlaverMovedDataVector3) param.Data;
+                        return null;
+                    }
+
+                case PlaverMovedMode.YawPitch:
+                    {
+                        var data = (PlaverMovedDataYawPitch) param.Data;
+                        return null;
+                    }
+
+                case PlaverMovedMode.All:
+                    {
+                        var data = (PlaverMovedDataAll) param.Data;
+                        return null;
+                    }
+
+                default:
+                    throw new Exception("PacketError");
+            }
         }
 
         private IAsyncResult BeginPlayerSetRemoveBlock(IAsyncSendingParameters parameters)
         {
             var param = (BeginPlayerSetRemoveBlockParameters)parameters;
-            var data = param.PlayerSetRemoveBlockData;
+            switch (param.Mode)
+            {
+                case PlayerSetRemoveBlockMode.Place:
+                    {
+                        var data = (PlayerSetRemoveBlockDataPlace)param.Data;
+                        return null;
+                    }
 
-            return null;
+                case PlayerSetRemoveBlockMode.Dig:
+                    {
+                        var data = (PlayerSetRemoveBlockDataDig)param.Data;
+                        return null;
+                    }
+
+                case PlayerSetRemoveBlockMode.Remove:
+                    {
+                        var data = (PlayerSetRemoveBlockDataRemove)param.Data;
+                        return null;
+                    }
+
+                default:
+                    throw new Exception("PacketError");
+            }
         }
+
 
         private IAsyncResult BeginSendMessage(IAsyncSendingParameters parameters)
         {

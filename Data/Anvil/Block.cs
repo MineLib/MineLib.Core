@@ -5,6 +5,7 @@ namespace MineLib.Network.Data.Anvil
 {
     // -- Full  - 3 bytes.
     // -- Empty - 3 bytes.
+    // -- Performace cost isn't too high. We are handling maximum 1kk, loose ~5 ms, but win 10mb.
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Block : IEquatable<Block>
     {

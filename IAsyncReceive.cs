@@ -156,6 +156,18 @@ namespace MineLib.Network
         }
     }
 
+    public struct OnAction : IAsyncReceive
+    {
+        public int EntityID { get; set; }
+        public int Action { get; set; }
+
+        public OnAction(int entityID, int action): this()
+        {
+            EntityID = entityID;
+            Action = action;
+        }
+    }
+    
     public struct OnSetExperience : IAsyncReceive
     {
         public float ExperienceBar { get; set; }

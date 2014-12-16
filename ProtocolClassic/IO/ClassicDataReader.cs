@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using MineLib.Network.Data;
 using MineLib.Network.IO;
 using Org.BouncyCastle.Math;
 
@@ -33,7 +34,7 @@ namespace ProtocolClassic.IO
 
         // -- VarInt
 
-        public int ReadVarInt()
+        public VarInt ReadVarInt()
         {
             throw new NotImplementedException();
         }
@@ -164,9 +165,7 @@ namespace ProtocolClassic.IO
             var myStrings = new string[value];
 
             for (var i = 0; i < value; i++)
-            {
                 myStrings[i] = ReadString();
-            }
 
             return myStrings;
         }
@@ -178,10 +177,8 @@ namespace ProtocolClassic.IO
             var myInts = new int[value];
 
             for (var i = 0; i < value; i++)
-            {
                 myInts[i] = ReadVarInt();
-            }
-
+            
             return myInts;
         }
 
@@ -192,10 +189,8 @@ namespace ProtocolClassic.IO
             var myInts = new int[value];
 
             for (var i = 0; i < value; i++)
-            {
                 myInts[i] = ReadInt();
-            }
-
+            
             return myInts;
         }
 

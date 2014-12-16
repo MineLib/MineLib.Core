@@ -10,24 +10,24 @@ namespace MineLib.Network
         NetworkMode NetworkMode { get; }
         ConnectionState ConnectionState { get; }
 
-        bool UseLogin { get; }
-        
-        bool SavePackets { get; }
+        Boolean UseLogin { get; }
 
-        bool Connected { get; }
+        Boolean SavePackets { get; }
+
+        Boolean Connected { get; }
 
         #endregion
 
-        INetworkHandler Create(IMinecraftClient client, bool debugPackets = true);
+        INetworkHandler Create(IMinecraftClient client, Boolean debugPackets = false);
 
-        IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback asyncCallback, Object state);
         //void EndConnect(IAsyncResult asyncResult);
-        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, Object state);
         void EndDisconnect(IAsyncResult asyncResult);
 
         IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingParameters parameters);
 
-        void Connect(string ip, ushort port);
+        void Connect(String ip, UInt16 port);
         void Disconnect();
     }
 

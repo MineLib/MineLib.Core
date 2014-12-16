@@ -6,10 +6,10 @@ namespace MineLib.Network.Data.Structs
     public struct ChunkColumnMetadata
     {
         public Coordinates2D Coordinates;
-        public ushort PrimaryBitMap;
+        public byte PrimaryBitMap;
 
         // -- Debugging
-        public int[] PrimaryBitMapConverted { get { return Converter.ConvertUShort(PrimaryBitMap); } }
+        public byte[] PrimaryBitMapConverted { get { return Converter.ConvertUShort(PrimaryBitMap); } }
         // -- Debugging
     }
 
@@ -30,7 +30,13 @@ namespace MineLib.Network.Data.Structs
         public ChunkColumnMetadata this[int index]
         {
             get { return _entries[index]; }
-            set { _entries[index] = value; }
+            set
+            {
+                if (_entries.Count - 1 < index)
+                    _entries.Add(value);
+                else
+                    _entries[index] = value;
+            }
         }
 
         public IEnumerable<ChunkColumnMetadata> GetMetadata()
@@ -47,7 +53,7 @@ namespace MineLib.Network.Data.Structs
                 value[i] = new ChunkColumnMetadata
                 {
                     Coordinates = new Coordinates2D(reader.ReadInt(), reader.ReadInt()),
-                    PrimaryBitMap = reader.ReadUShort()
+                    PrimaryBitMap = (byte) reader.ReadUShort()
                 };
             
             return value;

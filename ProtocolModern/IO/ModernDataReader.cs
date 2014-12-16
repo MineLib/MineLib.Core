@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using MineLib.Network.Data;
 using MineLib.Network.IO;
 using Org.BouncyCastle.Math;
 
@@ -33,7 +34,7 @@ namespace ProtocolModern.IO
 
         // -- VarInt
 
-        public int ReadVarInt()
+        public VarInt ReadVarInt()
         {
             var result = 0;
             var length = 0;
@@ -172,9 +173,8 @@ namespace ProtocolModern.IO
             var myStrings = new string[value];
 
             for (var i = 0; i < value; i++)
-            {
                 myStrings[i] = ReadString();
-            }
+            
 
             return myStrings;
         }
@@ -186,9 +186,8 @@ namespace ProtocolModern.IO
             var myInts = new int[value];
 
             for (var i = 0; i < value; i++)
-            {
                 myInts[i] = ReadVarInt();
-            }
+            
 
             return myInts;
         }
@@ -200,9 +199,8 @@ namespace ProtocolModern.IO
             var myInts = new int[value];
 
             for (var i = 0; i < value; i++)
-            {
                 myInts[i] = ReadInt();
-            }
+            
 
             return myInts;
         }

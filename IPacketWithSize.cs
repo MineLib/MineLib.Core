@@ -1,10 +1,11 @@
-﻿using MineLib.Network.IO;
+﻿using System;
+using MineLib.Network.IO;
 
 namespace MineLib.Network
 {
     public interface IPacketWithSize : IPacket
     {
         new IPacketWithSize ReadPacket(IProtocolDataReader reader);
-        short Size { get; }
+        Int16 Size { get; }
     }
 }

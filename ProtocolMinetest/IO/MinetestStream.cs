@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using MineLib.Network;
+using MineLib.Network.Data;
 using MineLib.Network.IO;
 using Org.BouncyCastle.Math;
 
@@ -58,7 +59,7 @@ namespace ProtocolMinetest.IO
 
         // -- VarInt
 
-        public void WriteVarInt(int value)
+        public void WriteVarInt(VarInt value)
         {
             WriteByteArray(GetVarIntBytes(value));
         }
@@ -272,7 +273,7 @@ namespace ProtocolMinetest.IO
             return (byte) _stream.ReadByte();
         }
 
-        public int ReadVarInt()
+        public VarInt ReadVarInt()
         {
             var result = 0;
             var length = 0;

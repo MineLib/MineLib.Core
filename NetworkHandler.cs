@@ -28,7 +28,7 @@ namespace MineLib.Network
         /// <summary>
         /// Start NetworkHandler.
         /// </summary>
-        public INetworkHandler Create(IMinecraftClient client, bool debugPackets = true)
+        public INetworkHandler Create(IMinecraftClient client, bool debugPackets = false)
         {
             _minecraft = client;
 

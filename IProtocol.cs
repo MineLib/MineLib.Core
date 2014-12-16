@@ -11,18 +11,18 @@ namespace MineLib.Network
     public interface IProtocol : IModule, IProtocolDebug, IProtocolAsyncConnection, IDisposable
     {
         ConnectionState State { get; set; }
-        bool Connected { get; }
+        Boolean Connected { get; }
 
-        IProtocol Create(IMinecraftClient client, bool debugPackets = true);
+        IProtocol Create(IMinecraftClient client, Boolean debugPackets = false);
 
         void SendPacket(IPacket packet);
 
-        void Connect(string ip, ushort port);
+        void Connect(String ip, UInt16 port);
         void Disconnect();
 
-        bool UseLogin { get; }
-        bool Login(string login, string password);
-        bool Logout();
+        Boolean UseLogin { get; }
+        Boolean Login(String login, String password);
+        Boolean Logout();
     }
 
     public interface IProtocolDebug
@@ -31,19 +31,19 @@ namespace MineLib.Network
         List<IPacket> PacketsSended { get; }
         List<IPacket> LastPackets { get; }
         IPacket LastPacket { get; }
-        bool SavePackets { get; }
+        Boolean SavePackets { get; }
     }
 
     public interface IProtocolAsyncConnection
     {
-        IAsyncResult BeginSendPacketHandled(IPacket packet, AsyncCallback asyncCallback, object state);
-        IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginSendPacketHandled(IPacket packet, AsyncCallback asyncCallback, Object state);
+        IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, Object state);
         void EndSendPacket(IAsyncResult asyncResult);
 
-        IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback asyncCallback, Object state);
         //void EndConnect(IAsyncResult asyncResult);
 
-        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state);
+        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, Object state);
         void EndDisconnect(IAsyncResult asyncResult);
 
         void RegisterAsyncSending(Type asyncSendingType, Func<IAsyncSendingParameters, IAsyncResult> method);

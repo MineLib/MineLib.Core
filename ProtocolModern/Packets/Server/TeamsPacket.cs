@@ -32,9 +32,8 @@ namespace ProtocolModern.Packets.Server
             var count = reader.ReadVarInt();
             Players = new string[count];
             for (var i = 0; i < count; i++)
-            {
                 Players[i] = reader.ReadString();
-            }
+            
 
             return this;
         }
@@ -105,9 +104,8 @@ namespace ProtocolModern.Packets.Server
             var count = reader.ReadVarInt();
             Players = new string[count];
             for (var i = 0; i < count; i++)
-            {
                 Players[i] = reader.ReadString();
-            }
+            
 
             return this;
         }
@@ -128,9 +126,8 @@ namespace ProtocolModern.Packets.Server
             var count = reader.ReadVarInt();
             Players = new string[count];
             for (var i = 0; i < count; i++)
-            {
                 Players[i] = reader.ReadString();
-            }
+            
 
             return this;
         }

@@ -104,8 +104,8 @@ namespace MineLib.Network.Data.Structs
             if (!Count.Equals(other.Count))
                 return false;
 
-            for (int i = 0; i < Count; i++)
-                if (!this[(byte) i].Equals(other[(byte) i])) return false;
+            for (byte i = 0; i < Count; i++)
+                if (!this[i].Equals(other[i])) return false;
             
             return true;
         }

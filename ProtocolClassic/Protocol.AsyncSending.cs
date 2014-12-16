@@ -61,40 +61,72 @@ namespace ProtocolClassic
         private IAsyncResult BeginPlayerMoved(IAsyncSendingParameters parameters)
         {
             var param = (BeginPlayerMovedParameters) parameters;
-            var data = param.PlaverMovedData;
-
-            switch (data.Mode)
+            switch (param.Mode)
             {
+                case PlaverMovedMode.OnGround:
+                {
+                    var data = (PlaverMovedDataOnGround) param.Data;
+                    return null;
+                }
+
+                case PlaverMovedMode.Vector3:
+                {
+                    var data = (PlaverMovedDataVector3) param.Data;
+                    return null;
+                }
+
                 case PlaverMovedMode.YawPitch:
-                    return BeginSendPacketHandled(
-                        new PositionAndOrientationPacket
-                        {
-                            Position = data.Vector3,
-                            Yaw = (byte) data.Yaw,
-                            Pitch = (byte) data.Pitch,
-                            PlayerID = 255
-                        }, param.AsyncCallback, param.State);
+                {
+                    var data = (PlaverMovedDataYawPitch) param.Data;
+                    return null;
+                }
+
+                case PlaverMovedMode.All:
+                {
+                    var data = (PlaverMovedDataAll) param.Data;
+
+                    return BeginSendPacketHandled(new PositionAndOrientationPacket
+                    {
+                        Position = data.Vector3,
+                        Yaw = (byte)data.Yaw,
+                        Pitch = (byte)data.Pitch,
+                        PlayerID = 255
+                    }, param.AsyncCallback, param.State);
+                }
 
                 default:
-                    return null;
+                    throw new Exception("PacketError");
             }
         }
 
         private IAsyncResult BeginPlayerSetRemoveBlock(IAsyncSendingParameters parameters)
         {
             var param = (BeginPlayerSetRemoveBlockParameters)parameters;
-            var data = param.PlayerSetRemoveBlockData;
-
-            switch (data.Mode)
+            switch (param.Mode)
             {
-                case PlayerSetRemoveBlockEnum.Place:
-                case PlayerSetRemoveBlockEnum.Remove:
-                    return BeginSendPacketHandled(new SetBlockPacket
+                case PlayerSetRemoveBlockMode.Place:
                     {
-                        Coordinates = data.Location,
-                        BlockType = (byte)data.BlockID,
-                        Mode = (SetBlockMode)data.Mode
-                    }, param.AsyncCallback, param.State);
+                        var data = (PlayerSetRemoveBlockDataPlace)param.Data;
+                        return null;
+                    }
+
+                case PlayerSetRemoveBlockMode.Dig:
+                    {
+                        var data = (PlayerSetRemoveBlockDataDig)param.Data;
+                        return null;
+                    }
+
+                case PlayerSetRemoveBlockMode.Remove:
+                    {
+                        var data = (PlayerSetRemoveBlockDataRemove)param.Data;
+
+                        return BeginSendPacketHandled(new SetBlockPacket
+                        {
+                            Coordinates = data.Location,
+                            BlockType = (byte)data.BlockID,
+                            Mode = (SetBlockMode)data.Mode
+                        }, param.AsyncCallback, param.State);
+                    }
 
                 default:
                     throw new Exception("PacketError");

@@ -19,7 +19,7 @@ namespace ProtocolModern.Packets
             ProtocolVersion = reader.ReadVarInt();
             ServerAddress = reader.ReadString();
             ServerPort = reader.ReadUShort();
-            NextState = (NextState) reader.ReadVarInt();
+            NextState = (NextState) (int) reader.ReadVarInt();
 
             return this;
         }

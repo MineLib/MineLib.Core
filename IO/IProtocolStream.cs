@@ -1,4 +1,5 @@
 using System;
+using MineLib.Network.Data;
 using Org.BouncyCastle.Math;
 
 namespace MineLib.Network.IO
@@ -9,57 +10,57 @@ namespace MineLib.Network.IO
     /// </summary>
     public interface IProtocolStream : IDisposable
     {
-        void WriteString(string value, int length = 0);
+        void WriteString(String value, Int32 length = 0);
 
-        void WriteVarInt(int value);
+        void WriteVarInt(VarInt value);
 
-        void WriteBoolean(bool value);
+        void WriteBoolean(Boolean value);
 
-        void WriteSByte(sbyte value);
-        void WriteByte(byte value);
+        void WriteSByte(SByte value);
+        void WriteByte(Byte value);
 
-        void WriteShort(short value);
-        void WriteUShort(ushort value);
+        void WriteShort(Int16 value);
+        void WriteUShort(UInt16 value);
 
-        void WriteInt(int value);
-        void WriteUInt(uint value);
+        void WriteInt(Int32 value);
+        void WriteUInt(UInt32 value);
 
-        void WriteLong(long value);
-        void WriteULong(ulong value);
+        void WriteLong(Int64 value);
+        void WriteULong(UInt64 value);
 
         void WriteBigInteger(BigInteger value);
         void WriteUBigInteger(BigInteger value);
 
-        void WriteDouble(double value);
+        void WriteDouble(Double value);
 
-        void WriteFloat(float value);
-
-
-        void WriteStringArray(string[] value);
-
-        void WriteVarIntArray(int[] value);
-
-        void WriteIntArray(int[] value);
-
-        void WriteByteArray(byte[] value);
+        void WriteFloat(Single value);
 
 
-        byte ReadByte();
+        void WriteStringArray(String[] value);
 
-        int ReadVarInt();
+        void WriteVarIntArray(Int32[] value);
 
-        byte[] ReadByteArray(int value);
+        void WriteIntArray(Int32[] value);
+
+        void WriteByteArray(Byte[] value);
 
 
-        IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback callback, object state);
-        IAsyncResult BeginSend(byte[] data, AsyncCallback callback, object state);
+        Byte ReadByte();
+
+        VarInt ReadVarInt();
+
+        Byte[] ReadByteArray(Int32 value);
+
+
+        IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback callback, Object state);
+        IAsyncResult BeginSend(Byte[] data, AsyncCallback callback, Object state);
         void EndSend(IAsyncResult asyncResult);
 
-        IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state);
-        int EndRead(IAsyncResult asyncResult);
+        IAsyncResult BeginRead(Byte[] buffer, Int32 offset, Int32 count, AsyncCallback callback, Object state);
+        Int32 EndRead(IAsyncResult asyncResult);
 
         void SendPacket(IPacket packet);
-        int Read(byte[] buffer, int offset, int count);
+        Int32 Read(Byte[] buffer, Int32 offset, Int32 count);
 
         void Purge();
     }

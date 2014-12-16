@@ -1,5 +1,6 @@
 ﻿using System;
 using MineLib.Network;
+using MineLib.Network.Data;
 using ProtocolClassic.Data;
 using ProtocolClassic.Enums;
 using ProtocolClassic.Packets.Server;
@@ -37,7 +38,7 @@ namespace ProtocolClassic
                     break;
 
                 case PacketsServer.LevelFinalize:
-                    var levelFinalizePacket = (LevelFinalizePacket)packet;
+                    var levelFinalizePacket = (LevelFinalizePacket) packet;
 
                     var chunkList = Level.ReadFromArray(levelFinalizePacket.Coordinates);
                     OnChunkList(chunkList);
@@ -50,18 +51,32 @@ namespace ProtocolClassic
                     break;
 
                 case PacketsServer.SpawnPlayer:
+                    var spawnPlayerPacket = (SpawnPlayerPacket) packet;
+
+                    OnSpawnPoint(spawnPlayerPacket.Coordinates);
                     break;
 
                 case PacketsServer.PositionAndOrientationTeleport:
                     break;
 
                 case PacketsServer.PositionAndOrientationUpdate:
+                    var positionAndOrientationUpdatePacket = (PositionAndOrientationUpdatePacket) packet;
+
+                    OnPlayerLook(new Vector3(positionAndOrientationUpdatePacket.Yaw, positionAndOrientationUpdatePacket.Pitch));
+                    OnPlayerPosition(positionAndOrientationUpdatePacket.ChangeLocation);
+
                     break;
 
                 case PacketsServer.PositionUpdate:
+                    var positionUpdatePacket = (PositionUpdatePacket)packet;
+
+                    OnPlayerPosition(positionUpdatePacket.ChangeLocation);
                     break;
 
                 case PacketsServer.OrientationUpdate:
+                    var orientationUpdatePacket = (OrientationUpdatePacket)packet;
+
+                    OnPlayerLook(new Vector3(orientationUpdatePacket.Yaw, orientationUpdatePacket.Pitch));
                     break;
 
                 case PacketsServer.DespawnPlayer:
@@ -78,6 +93,7 @@ namespace ProtocolClassic
 
                 case PacketsServer.UpdateUserType:
                     break;
+
 
                 case PacketsServer.ExtInfo:
                     break;

@@ -21,6 +21,20 @@ namespace MineLib.Network.Data
             X = Y = Z = value;
         }
 
+        public Vector3(float yaw, float pitch)
+        {
+            var yawRadians = ToRadians(yaw);
+            var cosPitch = Math.Cos(ToRadians(pitch));
+
+            X = (float) -(cosPitch * Math.Sin(yawRadians));
+            Y = (float) -Math.Sin(ToRadians(pitch));
+            Z = (float) (cosPitch * Math.Cos(yawRadians));
+
+            //X = (float) (-Math.Cos(pitch) * Math.Sin(yaw));
+            //Y = (float) -Math.Sin(pitch);
+            //Z = (float) (Math.Cos(pitch) * Math.Cos(yaw));
+        }
+
         public Vector3(float x, float y, float z)
         {
             X = x;
@@ -178,10 +192,7 @@ namespace MineLib.Network.Data
         /// </summary>
         public double Distance
         {
-            get
-            {
-                return DistanceTo(Zero);
-            }
+            get { return DistanceTo(Zero); }
         }
 
         public static Vector3 Min(Vector3 value1, Vector3 value2)
@@ -201,6 +212,81 @@ namespace MineLib.Network.Data
                 Math.Max(value1.Z, value2.Z)
                 );
         }
+
+        public static Vector3 Delta(Vector3 firstLocation, Vector3 secondLocation)
+        {
+            return new Vector3(
+                firstLocation.X - secondLocation.X,
+                firstLocation.Y - secondLocation.Y,
+                firstLocation.Z - secondLocation.Z
+                );
+        }
+
+
+        public static float ToYaw(Vector3 position, Vector3 look)
+        {
+            var delta = Delta(look, position);
+
+            return (float) Math.Atan2(delta.Z, delta.X);
+        }
+
+        public static Vector3 Yaw(Vector3 look, float angle)
+        {
+            var x = (look.Z * -Math.Sin(angle)) + (look.X * Math.Cos(angle));
+            var y = look.Y;
+            var z = (look.Z * Math.Cos(angle)) - (look.X * -Math.Sin(angle));
+
+            return new Vector3(x, y, z);
+        }
+
+        public Vector3 Yaw(float angle)
+        {
+            return Yaw(this, angle);
+        }
+
+
+        public static float ToPitch(Vector3 position, Vector3 look)
+        {
+            var delta = Delta(look, position);
+
+            return (float) (Math.Atan2(Math.Sqrt(Square(delta.Z) + Square(delta.X)), delta.Y) + Math.PI);
+        }
+
+        public static Vector3 Pitch(Vector3 look, float angle)
+        {
+            var x = look.X;
+            var y = (look.Y * Math.Cos(angle)) - (look.Z * Math.Sin(angle));
+            var z = (look.Y * Math.Sin(angle)) + (look.Z * Math.Cos(angle));
+
+            return new Vector3(x, y, z);
+        }
+
+        public Vector3 Pitch(float angle)
+        {
+            return Pitch(this, angle);
+        }
+
+
+        public static Vector3 Roll(Vector3 look, float angle)
+        {
+            var x = (look.X * Math.Cos(angle)) - (look.Y * Math.Sin(angle));
+            var y = (look.X * Math.Sin(angle)) + (look.Y * Math.Cos(angle));
+            var z = look.Z;
+
+            return new Vector3(x, y, z);
+        }
+
+        public Vector3 Roll(float angle)
+        {
+            return Roll(this, angle);
+        }
+
+
+        public static float ToRadians(float val)
+        {
+            return (float) (val * Math.PI / 180.0f);
+        }
+
 
         #endregion
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using MineLib.Network.Data;
 using Org.BouncyCastle.Math;
 
 namespace MineLib.Network.IO
@@ -8,38 +9,38 @@ namespace MineLib.Network.IO
     /// </summary>
     public interface IProtocolDataReader : IDisposable
     {
-        string ReadString(int length = 0);
+        String ReadString(Int32 length = 0);
 
-        int ReadVarInt();
+        VarInt ReadVarInt();
 
-        bool ReadBoolean();
+        Boolean ReadBoolean();
 
-        sbyte ReadSByte();
-        byte ReadByte();
+        SByte ReadSByte();
+        Byte ReadByte();
 
-        short ReadShort();
-        ushort ReadUShort();
+        Int16 ReadShort();
+        UInt16 ReadUShort();
 
-        int ReadInt();
-        uint ReadUInt();
+        Int32 ReadInt();
+        UInt32 ReadUInt();
 
-        long ReadLong();
-        ulong ReadULong();
+        Int64 ReadLong();
+        UInt64 ReadULong();
 
         BigInteger ReadBigInteger();
         BigInteger ReadUBigInteger();
 
-        float ReadFloat();
+        Single ReadFloat();
 
-        double ReadDouble();
+        Double ReadDouble();
 
 
-        string[] ReadStringArray(int value);
+        String[] ReadStringArray(Int32 value);
 
-        int[] ReadVarIntArray(int value);
+        Int32[] ReadVarIntArray(Int32 value);
 
-        int[] ReadIntArray(int value);
+        Int32[] ReadIntArray(Int32 value);
 
-        byte[] ReadByteArray(int value);
+        Byte[] ReadByteArray(Int32 value);
     }
 }

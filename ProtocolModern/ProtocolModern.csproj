@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Asn1.cs" />
-    <Compile Include="DebugHelpers.cs" />
     <Compile Include="IO\BouncyCastleAesStream.cs" />
     <Compile Include="IO\IAesStream.cs" />
     <Compile Include="IO\IProtocolStreamExtended.cs" />

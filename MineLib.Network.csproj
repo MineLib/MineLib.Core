@@ -76,6 +76,7 @@
     <Compile Include="ConnectionState.cs" />
     <Compile Include="DebugHelpers.cs" />
     <Compile Include="IAsyncReceive.cs" />
+    <Compile Include="Data\VarInt.cs" />
     <Compile Include="Module\IModule.cs" />
     <Compile Include="INetworkHandler.cs" />
     <Compile Include="IO\IProtocolDataReader.cs" />

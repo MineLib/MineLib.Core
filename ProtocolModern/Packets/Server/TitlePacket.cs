@@ -100,7 +100,7 @@ namespace ProtocolModern.Packets.Server
 
         public IPacket ReadPacket(IProtocolDataReader reader)
         {
-            Action = (TitleAction) reader.ReadVarInt();
+            Action = (TitleAction) (int) reader.ReadVarInt();
 
             switch (Action)
             {

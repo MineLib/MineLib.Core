@@ -95,54 +95,73 @@ namespace ProtocolModern
         private IAsyncResult BeginPlayerMoved(IAsyncSendingParameters parameters)
         {
             var param = (BeginPlayerMovedParameters) parameters;
-            var data = param.PlaverMovedData;
-
-            switch (data.Mode)
+            switch (param.Mode)
             {
                 case PlaverMovedMode.OnGround:
-                    return BeginSendPacketHandled(new PlayerPacket { OnGround = data.OnGround }, param.AsyncCallback, param.State);
+                {
+                    var data = (PlaverMovedDataOnGround) param.Data;
+
+                    return BeginSendPacketHandled(new PlayerPacket
+                    {
+                        OnGround =  data.OnGround
+                    }, param.AsyncCallback, param.State);
+                }
 
                 case PlaverMovedMode.Vector3:
+                {
+                    var data = (PlaverMovedDataVector3) param.Data;
+
                     return BeginSendPacketHandled(new PlayerPositionPacket
                     {
-                        X = data.Vector3.X,
-                        FeetY = data.Vector3.Y,
-                        Z = data.Vector3.Z,
-                        OnGround = data.OnGround
+                        X =         data.Vector3.X,
+                        FeetY =     data.Vector3.Y,
+                        Z =         data.Vector3.Z,
+                        OnGround =  data.OnGround
                     }, param.AsyncCallback, param.State);
+                }
 
                 case PlaverMovedMode.YawPitch:
+                {
+                    var data = (PlaverMovedDataYawPitch) param.Data;
+
                     return BeginSendPacketHandled(new PlayerLookPacket
                     {
-                        Yaw = data.Yaw,
-                        Pitch = data.Pitch,
-                        OnGround = data.OnGround
+                        Yaw =       data.Yaw,
+                        Pitch =     data.Pitch,
+                        OnGround =  data.OnGround
                     }, param.AsyncCallback, param.State);
+                }
 
                 case PlaverMovedMode.All:
+                {
+                    var data = (PlaverMovedDataAll) param.Data;
+
                     return BeginSendPacketHandled(new PlayerPositionAndLookPacket
                     {
-                        X = data.Vector3.X,
-                        FeetY = data.Vector3.Y,
-                        Z = data.Vector3.Z,
-                        Yaw = data.Yaw,
-                        Pitch = data.Pitch,
-                        OnGround = data.OnGround
+                        X =         data.Vector3.X,
+                        FeetY =     data.Vector3.Y,
+                        Z =         data.Vector3.Z,
+                        Yaw =       data.Yaw,
+                        Pitch =     data.Pitch,
+                        OnGround =  data.OnGround
                     }, param.AsyncCallback, param.State);
+                }
 
                 default:
-                    throw new Exception("PacketError");
+                    return null;
             }
         }
 
         private IAsyncResult BeginPlayerSetRemoveBlock(IAsyncSendingParameters parameters)
         {
-            var param = (BeginPlayerSetRemoveBlockParameters)parameters;
-            var data = param.PlayerSetRemoveBlockData;
-
-            switch (data.Mode)
+            var param = (BeginPlayerSetRemoveBlockParameters) parameters;
+            
+            switch (param.Mode)
             {
-                case PlayerSetRemoveBlockEnum.Place:
+                case PlayerSetRemoveBlockMode.Place:
+                {
+                    var data = (PlayerSetRemoveBlockDataPlace) param.Data;
+
                     return BeginSendPacketHandled(new PlayerBlockPlacementPacket
                     {
                         Location = data.Location,
@@ -150,14 +169,25 @@ namespace ProtocolModern
                         CursorVector3 = data.Crosshair,
                         Direction = (Direction) data.Direction
                     }, param.AsyncCallback, param.State);
+                }
 
-                case PlayerSetRemoveBlockEnum.Dig:
+                case PlayerSetRemoveBlockMode.Dig:
+                {
+                    var data = (PlayerSetRemoveBlockDataDig)param.Data;
+
                     return BeginSendPacketHandled(new PlayerDiggingPacket
                     {
                         Status = (BlockStatus) data.Status,
                         Location = data.Location,
                         Face = data.Face
                     }, param.AsyncCallback, param.State);
+                }
+
+                case PlayerSetRemoveBlockMode.Remove:
+                {
+                    var data = (PlayerSetRemoveBlockDataRemove)param.Data;
+                    return null;
+                }
 
                 default:
                     throw new Exception("PacketError");

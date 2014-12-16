@@ -20,7 +20,7 @@ namespace MineLib.Network.Data.Anvil
         public const int BiomesLength = Width * Depth;
 
         public Coordinates2D Coordinates;
-        public ushort PrimaryBitMap;
+        public byte PrimaryBitMap;
         public bool OverWorld;
         public bool GroundUp;
 
@@ -29,7 +29,7 @@ namespace MineLib.Network.Data.Anvil
         public Section[] Sections;
 
         // -- Debugging
-        public int[] PrimaryBitMapConverted { get { return SectionStatus(PrimaryBitMap); } }
+        public byte[] PrimaryBitMapConverted { get { return SectionStatus(PrimaryBitMap); } }
         // -- Debugging
     
         public Chunk(Coordinates2D chunkCoordinates)
@@ -39,10 +39,7 @@ namespace MineLib.Network.Data.Anvil
 
             Sections = new Section[16];
             for (var i = 0; i < Sections.Length; i++)
-            {
-                var pos = new Position(Coordinates.X, i, Coordinates.Z);
-                Sections[i] = new Section(pos);
-            }
+                Sections[i] = new Section(new Position(Coordinates.X, i, Coordinates.Z));     
         }
 
         public override string ToString()
@@ -50,17 +47,16 @@ namespace MineLib.Network.Data.Anvil
             return string.Format("Filled Sections: {0}", GetFilledSectionsCount());
         }
 
+        /// <summary>
+        /// Get the total sections included in the bitMap
+        /// </summary>
         public static int GetSectionCount(ushort bitMap)
         {
-            // Get the total sections included in the bitMap
             var sectionCount = 0;
 
             for (var y = 0; y < 16; y++)
-            {
-                if ((bitMap & (1 << y)) > 0)
-                    sectionCount++;
-            }
-
+                if ((bitMap & (1 << y)) > 0) sectionCount++;
+            
             return sectionCount;
         }
 
@@ -71,7 +67,7 @@ namespace MineLib.Network.Data.Anvil
             var overWorld = true;// TODO: From World class
             var coordinates = new Coordinates2D(reader.ReadInt(), reader.ReadInt());
             var groundUp = reader.ReadBoolean();
-            var primaryBitMap = reader.ReadUShort();
+            var primaryBitMap = (byte) reader.ReadUShort();
             
             var value = new Chunk(coordinates);
             value.OverWorld = overWorld;
@@ -171,8 +167,7 @@ namespace MineLib.Network.Data.Anvil
         {
             var sectionPosition = Section.GetSectionPositionByIndex(index);
 
-            return new Position
-            (
+            return new Position(
                 16 * Coordinates.X + sectionPosition.X,
                 16 * section.Position.Y + sectionPosition.Y,
                 16 * Coordinates.Z + sectionPosition.Z
@@ -197,9 +192,7 @@ namespace MineLib.Network.Data.Anvil
         {
             var destSection = GetSectionByY(coordinates.Y);
 
-            var coords = new Position(coordinates.X, GetYinSection(coordinates.Y), coordinates.Z);
-
-            destSection.SetBlock(coords, block);
+            destSection.SetBlock(new Position(coordinates.X, GetYinSection(coordinates.Y), coordinates.Z), block);
         }
 
         public byte GetBlockLight(Position worldCoordinates)
@@ -258,13 +251,12 @@ namespace MineLib.Network.Data.Anvil
 
         private Section GetSectionByY(int blockY)
         {
-            return Sections[(byte)(blockY / 16)];
+            return Sections[blockY / 16];
         }
 
         public static Position GetSectionCoordinates(Position coordinates, Coordinates2D chunkCoordinates)
         {
-            return new Position
-            (
+            return new Position(
                 Math.Abs(coordinates.X - (chunkCoordinates.X * 16)),
                 coordinates.Y % 16,
                 coordinates.Z % chunkCoordinates.Z
@@ -279,8 +271,7 @@ namespace MineLib.Network.Data.Anvil
             if (chunk.X != Coordinates.X || chunk.Z != Coordinates.Z)
                 throw new ArgumentOutOfRangeException("coordinates","You stupid asshole!");
 
-            return new Position
-            (
+            return new Position(
                 GetXinSection(coordinates.X),
                 GetYinSection(coordinates.Y),
                 GetZinSection(coordinates.Z)
@@ -289,8 +280,7 @@ namespace MineLib.Network.Data.Anvil
 
         private static Coordinates2D GetChunkCoordinates(Position worldCoordinates)
         {
-            return new Coordinates2D
-            (
+            return new Coordinates2D(
                 worldCoordinates.X >> 4,
                 worldCoordinates.Z >> 4
             );
@@ -312,15 +302,14 @@ namespace MineLib.Network.Data.Anvil
         private int GetFilledSectionsCount()
         {
             var count = 0;
+
             foreach (var section in Sections)
-            {
-                if (section.IsFilled)
-                    count++;
-            }
+                if (section.IsFilled) count++;
+            
             return count;
         }
 
-        private int[] SectionStatus(ushort primaryBitMap)
+        private byte[] SectionStatus(ushort primaryBitMap)
         {
             return Converter.ConvertUShort(primaryBitMap);
         }
@@ -335,8 +324,9 @@ namespace MineLib.Network.Data.Anvil
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Chunk)) return false;
+            if (obj.GetType() != typeof(Chunk))
+                return false;
+
             return Equals((Chunk)obj);
         }
 
@@ -378,7 +368,13 @@ namespace MineLib.Network.Data.Anvil
         public Chunk this[int index]
         {
             get { return _entries[index]; }
-            set { _entries[index] = value; }
+            set
+            {
+                if (_entries.Count - 1 < index)
+                    _entries.Add(value);
+                else
+                    _entries[index] = value;
+            }
         }
 
         public IEnumerable<Chunk> GetChunk()

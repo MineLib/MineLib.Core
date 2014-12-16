@@ -2,11 +2,11 @@
 using System.Runtime.InteropServices;
 using System.Resources;
 
-[assembly: AssemblyTitle("MineLib.Network")]
+[assembly: AssemblyTitle("MineLib.Network.Modular")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("http://github.com/Aragas/MineLib.Network")]
-[assembly: AssemblyProduct("MineLib.Network")]
+[assembly: AssemblyCompany("http://github.com/Aragas/MineLib.Network.Modular")]
+[assembly: AssemblyProduct("MineLib.Network.Modular")]
 [assembly: AssemblyCopyright("Aragas (Aragasas)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

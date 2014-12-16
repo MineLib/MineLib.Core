@@ -8,9 +8,7 @@ namespace MineLib.Network.Module
     {
         public static T CreateModule<T>(string file)
         {
-            T plugin = default(T);
-
-            Type pluginType = null;
+            var plugin = default(T);
 
             if (File.Exists(file))
             {
@@ -36,10 +34,9 @@ namespace MineLib.Network.Module
         {
             var interfaces = type.GetInterfaces();
 
-            for (int index = 0; index < interfaces.Length; index++)
+            for (int i = 0; i < interfaces.Length; i++)
             {
-                var current = interfaces[index];
-                if (IsSubtypeOf(ref current, @interface)) 
+                if (IsSubtypeOf(ref interfaces[i], @interface))
                     return true;
             }
 

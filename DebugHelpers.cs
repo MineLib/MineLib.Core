@@ -2,16 +2,13 @@
 {
     public static class Converter
     {
-        public static int[] ConvertUShort(ushort value)
+        public static byte[] ConvertUShort(ushort value)
         {
-            var intArray = new int[15];
+            var intArray = new byte[15];
+
             for (var i = 0; i < 15; i++)
-            {
-                if ((value & (1 << i)) > 0)
-                    intArray[i] = 1;
-                else
-                    intArray[i] = 0;
-            }
+                intArray[i] = (byte) ((value & (1 << i)) > 0 ? 1 : 0);
+            
             return intArray;
         }
     }

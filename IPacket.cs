@@ -1,10 +1,11 @@
-﻿using MineLib.Network.IO;
+﻿using System;
+using MineLib.Network.IO;
 
 namespace MineLib.Network
 {
     public interface IPacket
     {
-        byte ID { get; }
+        Byte ID { get; }
         IPacket ReadPacket(IProtocolDataReader reader);
         IPacket WritePacket(IProtocolStream stream);
     }
