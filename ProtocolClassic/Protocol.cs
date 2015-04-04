@@ -48,7 +48,7 @@ namespace ProtocolClassic
         private IProtocolStream _stream;
 
 
-        public IProtocol Create(IMinecraftClient client, bool debugPackets = false)
+        public IProtocol Initialize(IMinecraftClient client, bool debugPackets = false)
         {
             _minecraft = client;
             SavePackets = debugPackets;
