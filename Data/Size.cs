@@ -45,34 +45,38 @@ namespace MineLib.Network.Data
         // TODO: More operators
         public static Size operator /(Size a, float b)
         {
-            return new Size(
-                a.Width / b, 
-                a.Height / b,
-                a.Depth / b
-            );
+            return new Size(a.Width / b, a.Height / b, a.Depth / b);
         }
 
         public static bool operator ==(Size a, float b)
         {
-            return a.Width == b && a.Height == b && a.Depth == b;
+            return a.Width.Equals(b) && a.Height.Equals(b) && a.Depth.Equals(b);
         }
 
         public static bool operator !=(Size a, float b)
         {
-            return a.Width!= b && a.Height != b && a.Depth != b;
+            return !a.Width.Equals(b) && !a.Height.Equals(b) && !a.Depth.Equals(b);
         }
 
         public bool Equals(Size other)
         {
-            return other.Width.Equals(Width) && other.Height.Equals(Height) && other.Depth.Equals(Depth);
+            return other.Width.NearlyEquals(Width) && other.Height.NearlyEquals(Height) && other.Depth.NearlyEquals(Depth);
+        }
+
+        public bool Equals(float other)
+        {
+            return other.NearlyEquals(Width) && other.NearlyEquals(Height) && other.NearlyEquals(Depth);
         }
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(Size))
-                return false;
+            if (obj is Size)
+                return Equals((Size) obj);
 
-            return Equals((Size)obj);
+            if (obj is float)
+                return Equals((float) obj);
+
+            return false;
         }
 
         public override int GetHashCode()

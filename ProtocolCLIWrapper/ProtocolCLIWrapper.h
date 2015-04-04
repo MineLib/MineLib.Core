@@ -18,7 +18,7 @@ public:
 	virtual property ConnectionState State;
 	virtual property bool Connected;
 
-	virtual IProtocol^ Create(IMinecraftClient^ client, bool debugPackets);
+	virtual IProtocol^ Initialize(IMinecraftClient^ client, bool debugPackets);
 
 	virtual void SendPacket(IPacket^ packet);
 

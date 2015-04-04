@@ -7,7 +7,7 @@ namespace MineLib.Network.Cryptography
     public static class JavaHelper
     {
         /// <summary>
-        ///     Produces a Java-style SHA-1 hex digest of the given data.
+        /// Produces a Java-style SHA-1 hex digest of the given data.
         /// </summary>
         public static string JavaHexDigest(byte[] data)
         {
@@ -24,20 +24,20 @@ namespace MineLib.Network.Cryptography
         }
 
         /// <summary>
-        ///     Converts the given n-bit little-endian unsigned number into
-        ///     lowercase hexadecimal form.
+        /// Converts the given n-bit little-endian unsigned number into
+        /// lowercase hexadecimal form.
         /// </summary>
         private static string GetHexString(byte[] data)
         {
             var result = "";
-            for (var i = 0; i < data.Length; i++)
-                result += data[i].ToString("x2", CultureInfo.InvariantCulture);
+            foreach (byte hex in data)
+                result += hex.ToString("x2", CultureInfo.InvariantCulture);
             return result;
         }
 
         /// <summary>
-        ///     Given an array that represents an n-bit little-endian signed number,
-        ///     the two's compliment (negation) is produced.
+        /// Given an array that represents an n-bit little-endian signed number,
+        /// the two's compliment (negation) is produced.
         /// </summary>
         private static byte[] TwosCompliment(byte[] data)
         {

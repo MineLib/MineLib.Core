@@ -34,8 +34,10 @@ namespace ProtocolModern
         {
             get
             {
-                try { return PacketsReceived.GetRange(PacketsReceived.Count - 50, 50); }
-                catch { return null; }
+                if (PacketsReceived != null)
+                    return PacketsReceived.GetRange(PacketsReceived.Count - 50, 50);
+                else
+                    return null;
             }
         }
         public IPacket LastPacket { get { return PacketsReceived[PacketsReceived.Count - 1]; } }
@@ -52,7 +54,7 @@ namespace ProtocolModern
         private long CompressionThreshold { get { return _stream == null ? -1 : _stream.ModernCompressionThreshold; } }
 
 
-        public IProtocol Create(IMinecraftClient client, bool debugPackets = false)
+        public IProtocol Initialize(IMinecraftClient client, bool debugPackets = false)
         {
             _minecraft = client;
             SavePackets = debugPackets;

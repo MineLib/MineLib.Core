@@ -190,9 +190,9 @@ namespace MineLib.Network.Data
         /// <summary>
         /// Finds the distance of this vector from Vector3.Zero
         /// </summary>
-        public double Distance
+        public double Distance()
         {
-            get { return DistanceTo(Zero); }
+            return DistanceTo(Zero);
         }
 
         public static Vector3 Min(Vector3 value1, Vector3 value2)
@@ -304,58 +304,37 @@ namespace MineLib.Network.Data
 
         public static Vector3 operator +(Vector3 a, Vector3 b)
         {
-            return new Vector3(
-                a.X + b.X,
-                a.Y + b.Y,
-                a.Z + b.Z);
+            return new Vector3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
         }
 
         public static Vector3 operator -(Vector3 a, Vector3 b)
         {
-            return new Vector3(
-                a.X - b.X,
-                a.Y - b.Y,
-                a.Z - b.Z);
+            return new Vector3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
 
         public static Vector3 operator +(Vector3 a, Size b)
         {
-            return new Vector3(
-                a.X + b.Width,
-                a.Y + b.Height,
-                a.Z + b.Depth);
+            return new Vector3(a.X + b.Width, a.Y + b.Height, a.Z + b.Depth);
         }
 
         public static Vector3 operator -(Vector3 a, Size b)
         {
-            return new Vector3(
-                a.X - b.Width,
-                a.Y - b.Height,
-                a.Z - b.Depth);
+            return new Vector3(a.X - b.Width, a.Y - b.Height, a.Z - b.Depth);
         }
 
         public static Vector3 operator -(Vector3 a)
         {
-            return new Vector3(
-                -a.X,
-                -a.Y,
-                -a.Z);
+            return new Vector3(-a.X, -a.Y, -a.Z);
         }
 
         public static Vector3 operator *(Vector3 a, Vector3 b)
         {
-            return new Vector3(
-                a.X * b.X,
-                a.Y * b.Y,
-                a.Z * b.Z);
+            return new Vector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
         }
 
         public static Vector3 operator /(Vector3 a, Vector3 b)
         {
-            return new Vector3(
-                a.X / b.X,
-                a.Y / b.Y,
-                a.Z / b.Z);
+            return new Vector3(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
         }
 
         public static Vector3 operator %(Vector3 a, Vector3 b)
@@ -365,34 +344,22 @@ namespace MineLib.Network.Data
 
         public static Vector3 operator +(Vector3 a, double b)
         {
-            return new Vector3(
-                a.X + b,
-                a.Y + b,
-                a.Z + b);
+            return new Vector3(a.X + b, a.Y + b, a.Z + b);
         }
 
         public static Vector3 operator -(Vector3 a, double b)
         {
-            return new Vector3(
-                a.X - b,
-                a.Y - b,
-                a.Z - b);
+            return new Vector3(a.X - b, a.Y - b, a.Z - b);
         }
 
         public static Vector3 operator *(Vector3 a, double b)
         {
-            return new Vector3(
-                a.X * b,
-                a.Y * b,
-                a.Z * b);
+            return new Vector3(a.X * b, a.Y * b, a.Z * b);
         }
 
         public static Vector3 operator /(Vector3 a, double b)
         {
-            return new Vector3(
-                a.X / b,
-                a.Y / b,
-                a.Z / b);
+            return new Vector3(a.X / b, a.Y / b, a.Z / b);
         }
 
         public static Vector3 operator %(Vector3 a, double b)
@@ -402,34 +369,22 @@ namespace MineLib.Network.Data
 
         public static Vector3 operator +(double a, Vector3 b)
         {
-            return new Vector3(
-                a + b.X,
-                a + b.Y,
-                a + b.Z);
+            return new Vector3(a + b.X, a + b.Y, a + b.Z);
         }
 
         public static Vector3 operator -(double a, Vector3 b)
         {
-            return new Vector3(
-                a - b.X,
-                a - b.Y,
-                a - b.Z);
+            return new Vector3(a - b.X, a - b.Y, a - b.Z);
         }
 
         public static Vector3 operator *(double a, Vector3 b)
         {
-            return new Vector3(
-                a * b.X,
-                a * b.Y,
-                a * b.Z);
+            return new Vector3(a * b.X, a * b.Y, a * b.Z);
         }
 
         public static Vector3 operator /(double a, Vector3 b)
         {
-            return new Vector3(
-                a / b.X,
-                a / b.Y,
-                a / b.Z);
+            return new Vector3(a / b.X, a / b.Y, a / b.Z);
         }
 
         public static Vector3 operator %(double a, Vector3 b)
@@ -460,15 +415,23 @@ namespace MineLib.Network.Data
 
         public bool Equals(Vector3 other)
         {
-            return other.X.Equals(X) && other.Y.Equals(Y) && other.Z.Equals(Z);
+            return other.X.NearlyEquals(X) && other.Y.NearlyEquals(Y) && other.Z.NearlyEquals(Z);
+        }
+
+        public bool Equals(float other)
+        {
+            return other.NearlyEquals(X) && other.NearlyEquals(Y) && other.NearlyEquals(Z);
         }
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(Vector3))
-                return false;
+            if (obj is Vector3)
+                return Equals((Vector3) obj);
 
-            return Equals((Vector3) obj);
+            if (obj is float)
+                return Equals((float) obj);
+
+            return false;
         }
 
         public override int GetHashCode()

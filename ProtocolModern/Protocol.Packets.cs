@@ -77,6 +77,8 @@ namespace ProtocolModern
                             break;
 
                         case PacketsServer.SpawnPosition:
+							var spawnPositionPacket = (SpawnPositionPacket)packet;
+							OnSpawnPoint(spawnPositionPacket.Location);
                             break;
 
                         case PacketsServer.UpdateHealth:

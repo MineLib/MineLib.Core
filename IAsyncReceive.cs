@@ -8,7 +8,7 @@ namespace MineLib.Network
 
     public struct OnChatMessage : IAsyncReceive
     {
-        public string Message { get; set; }
+        public string Message { get; private set; }
 
         public OnChatMessage(string message): this()
         {
@@ -20,7 +20,7 @@ namespace MineLib.Network
 
     public struct OnChunk : IAsyncReceive
     {
-        public Chunk Chunk { get; set; }
+        public Chunk Chunk { get; private set; }
 
         public OnChunk(Chunk chunk) : this()
         {
@@ -30,7 +30,7 @@ namespace MineLib.Network
 
     public struct OnChunkList : IAsyncReceive
     {
-        public ChunkList Chunks { get; set; }
+        public ChunkList Chunks { get; private set; }
 
         public OnChunkList(ChunkList chunks) : this()
         {
@@ -40,8 +40,8 @@ namespace MineLib.Network
 
     public struct OnBlockChange : IAsyncReceive
     {
-        public Position Location { get; set; }
-        public int Block { get; set; }
+        public Position Location { get; private set; }
+        public int Block { get; private set; }
 
         public OnBlockChange(Position location, int block) : this()
         {
@@ -52,8 +52,8 @@ namespace MineLib.Network
 
     public struct OnMultiBlockChange : IAsyncReceive
     {
-        public Coordinates2D ChunkLocation { get; set; }
-        public Record[] Records { get; set; }
+        public Coordinates2D ChunkLocation { get; private set; }
+        public Record[] Records { get; private set; }
 
         public OnMultiBlockChange(Coordinates2D chunkLocation, Record[] records) : this()
         {
@@ -64,9 +64,9 @@ namespace MineLib.Network
 
     public struct OnBlockAction : IAsyncReceive
     {
-        public Position Location { get; set; }
-        public int Block { get; set; }
-        public object BlockAction { get; set; }
+        public Position Location { get; private set; }
+        public int Block { get; private set; }
+        public object BlockAction { get; private set; }
 
         public OnBlockAction(Position location, int block, object blockAction) : this()
         {
@@ -78,9 +78,9 @@ namespace MineLib.Network
 
     public struct OnBlockBreakAction : IAsyncReceive
     {
-        public int EntityID { get; set; }
-        public Position Location { get; set; }
-        public byte Stage { get; set; }
+        public int EntityID { get; private set; }
+        public Position Location { get; private set; }
+        public byte Stage { get; private set; }
 
         public OnBlockBreakAction(int entityID, Position location, byte stage) : this()
         {
@@ -94,7 +94,7 @@ namespace MineLib.Network
 
     public struct OnPlayerPosition : IAsyncReceive
     {
-        public Vector3 Position { get; set; }
+        public Vector3 Position { get; private set; }
 
         public OnPlayerPosition(Vector3 position): this()
         {
@@ -104,7 +104,7 @@ namespace MineLib.Network
 
     public struct OnPlayerLook : IAsyncReceive
     {
-        public Vector3 Look { get; set; }
+        public Vector3 Look { get; private set; }
 
         public OnPlayerLook(Vector3 look): this()
         {
@@ -114,7 +114,7 @@ namespace MineLib.Network
 
     public struct OnHeldItemChange : IAsyncReceive
     {
-        public byte Slot { get; set; }
+        public byte Slot { get; private set; }
 
         public OnHeldItemChange(byte slot): this()
         {
@@ -124,7 +124,7 @@ namespace MineLib.Network
 
     public struct OnSpawnPoint : IAsyncReceive
     {
-        public Position Location { get; set; }
+        public Position Location { get; private set; }
 
         public OnSpawnPoint(Position location): this()
         {
@@ -134,7 +134,7 @@ namespace MineLib.Network
 
     public struct OnUpdateHealth : IAsyncReceive
     {
-        public float Health { get; set; }
+        public float Health { get; private set; }
         public int Food { get; set; }
         public float FoodSaturation { get; set; }
 
@@ -148,7 +148,7 @@ namespace MineLib.Network
 
     public struct OnRespawn : IAsyncReceive
     {
-        public object GameInfo { get; set; }
+        public object GameInfo { get; private set; }
 
         public OnRespawn(object gameInfo): this()
         {
@@ -158,8 +158,8 @@ namespace MineLib.Network
 
     public struct OnAction : IAsyncReceive
     {
-        public int EntityID { get; set; }
-        public int Action { get; set; }
+        public int EntityID { get; private set; }
+        public int Action { get; private set; }
 
         public OnAction(int entityID, int action): this()
         {
@@ -170,9 +170,9 @@ namespace MineLib.Network
     
     public struct OnSetExperience : IAsyncReceive
     {
-        public float ExperienceBar { get; set; }
-        public int Level { get; set; }
-        public int TotalExperience { get; set; }
+        public float ExperienceBar { get; private set; }
+        public int Level { get; private set; }
+        public int TotalExperience { get; private set; }
 
         public OnSetExperience(float experienceBar, int level, int totalExperience): this()
         {

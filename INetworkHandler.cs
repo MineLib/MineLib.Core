@@ -1,8 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MineLib.Network
 {
+    public class ProtocolModule
+    {
+        public string FilePath { get; set; }
+
+        public string FileName
+        {
+            get
+            {
+                List<string> splits = new List<string>(FilePath.Split('\\'));
+
+                return splits[splits.Count - 1];
+            }
+        }
+
+        public ProtocolModule(string path)
+        {
+            FilePath = path;
+        }
+
+        public override string ToString()
+        {
+            return FileName;
+        }
+    }
+
     public interface INetworkHandler : IDisposable 
     {
         #region Properties
@@ -18,7 +44,12 @@ namespace MineLib.Network
 
         #endregion
 
-        INetworkHandler Create(IMinecraftClient client, Boolean debugPackets = false);
+        List<ProtocolModule> GetModules();
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        INetworkHandler Initialize(ProtocolModule module, IMinecraftClient client, Boolean debugPackets = false);
 
         IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback asyncCallback, Object state);
         //void EndConnect(IAsyncResult asyncResult);

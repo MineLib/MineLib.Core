@@ -2,7 +2,7 @@
 
 namespace MineLib.Network
 {
-    // TODO: Clean this shit.
+    // TODO: Clean this mess.
     public interface IMinecraftClient : IDisposable
     {
         NetworkMode Mode { get; }
@@ -27,7 +27,10 @@ namespace MineLib.Network
         String ClientToken { get; set; }
         // -- Modern
 
-        IMinecraftClient Create(String login, String password, NetworkMode mode, Boolean nameVerification = false, String serverSalt = null);
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        IMinecraftClient Initialize(String login, String password, NetworkMode mode, Boolean nameVerification = false, String serverSalt = null);
 
         IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback asyncCallback, Object state);
         //void EndConnect(IAsyncResult asyncResult);

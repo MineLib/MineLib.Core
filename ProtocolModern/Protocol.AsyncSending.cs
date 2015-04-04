@@ -35,7 +35,9 @@ namespace ProtocolModern
             RegisterAsyncSending(typeof(BeginPlayerSetRemoveBlock), BeginPlayerSetRemoveBlock);
             RegisterAsyncSending(typeof(BeginSendMessage), BeginSendMessage);
             RegisterAsyncSending(typeof(BeginPlayerHeldItem), BeginPlayerHeldItem);
-        }
+
+			RegisterAsyncSending(typeof(BeginPlayerHeldItem), BeginPlayerHeldItem);
+		}
 
         public IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingParameters parameters)
         {

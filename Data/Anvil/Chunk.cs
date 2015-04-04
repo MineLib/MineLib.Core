@@ -169,7 +169,7 @@ namespace MineLib.Network.Data.Anvil
 
             return new Position(
                 16 * Coordinates.X + sectionPosition.X,
-                16 * section.Position.Y + sectionPosition.Y,
+                16 * section.ChunkPosition.Y + sectionPosition.Y,
                 16 * Coordinates.Z + sectionPosition.Z
             );
         }
@@ -362,7 +362,7 @@ namespace MineLib.Network.Data.Anvil
 
         public int Count
         {
-            get { return _entries.Count; }
+            get { return _entries.Count ; }
         }
 
         public Chunk this[int index]
@@ -406,17 +406,17 @@ namespace MineLib.Network.Data.Anvil
 
                 var sectionCount = Chunk.GetSectionCount(chunk.PrimaryBitMap);
 
-                var chunkRawBlocks = new byte[sectionCount * Chunk.TwoByteData];
+                var chunkRawBlocks      = new byte[sectionCount * Chunk.TwoByteData];
                 var chunkRawBlocksLight = new byte[sectionCount * Chunk.HalfByteData];
-                var chunkRawSkylight = new byte[sectionCount * Chunk.HalfByteData];
+                var chunkRawSkylight    = new byte[sectionCount * Chunk.HalfByteData];
 
                 var chunkLength = sectionCount * (Chunk.TwoByteData + Chunk.HalfByteData + (chunk.OverWorld ? Chunk.HalfByteData : 0)) + Chunk.BiomesLength;
                 var chunkData = new byte[chunkLength];
                 Array.Copy(data, offset, chunkData, 0, chunkData.Length);
 
-                Array.Copy(chunkData, 0, chunkRawBlocks, 0, chunkRawBlocks.Length);
-                Array.Copy(chunkData, chunkRawBlocks.Length, chunkRawBlocksLight, 0, chunkRawBlocksLight.Length);
-                Array.Copy(chunkData, chunkRawBlocks.Length + chunkRawBlocksLight.Length, chunkRawSkylight, 0, chunkRawSkylight.Length);
+                Array.Copy(chunkData, 0,                                                    chunkRawBlocks,         0, chunkRawBlocks.Length);
+                Array.Copy(chunkData, chunkRawBlocks.Length,                                chunkRawBlocksLight,    0, chunkRawBlocksLight.Length);
+                Array.Copy(chunkData, chunkRawBlocks.Length + chunkRawBlocksLight.Length,   chunkRawSkylight,       0, chunkRawSkylight.Length);
                 if (value.GroundUp)
                     Array.Copy(chunkData, chunkRawBlocks.Length + chunkRawBlocksLight.Length + chunkRawSkylight.Length, chunk.Biomes, 0, Chunk.BiomesLength);
 

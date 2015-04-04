@@ -13,7 +13,10 @@ namespace MineLib.Network
         ConnectionState State { get; set; }
         Boolean Connected { get; }
 
-        IProtocol Create(IMinecraftClient client, Boolean debugPackets = false);
+        /// <summary>
+        /// Constructor.
+        /// </summary> 
+        IProtocol Initialize(IMinecraftClient client, Boolean debugPackets = false);
 
         void SendPacket(IPacket packet);
 
@@ -49,6 +52,7 @@ namespace MineLib.Network
         void RegisterAsyncSending(Type asyncSendingType, Func<IAsyncSendingParameters, IAsyncResult> method);
         IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingParameters parameters);
     }
+
 
     public class ProtocolAsyncResult : IAsyncResult
     {

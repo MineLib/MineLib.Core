@@ -62,25 +62,33 @@ namespace MineLib.Network.Data
 
         public static bool operator ==(Rotation a, Rotation b)
         {
-            return a.Pitch == b.Pitch && a.Yaw == b.Yaw && a.Roll == b.Roll;
+            return a.Pitch.Equals(b.Pitch) && a.Yaw.Equals(b.Yaw) && a.Roll.Equals(b.Roll);
         }
 
         public static bool operator !=(Rotation a, Rotation b)
         {
-            return a.Pitch != b.Pitch && a.Yaw != b.Yaw && a.Roll != b.Roll;
+            return !a.Pitch.Equals(b.Pitch) && !a.Yaw.Equals(b.Yaw) && !a.Roll.Equals(b.Roll);
         }
 
         public bool Equals(Rotation other)
         {
-            return other.Pitch.Equals(Pitch) && other.Yaw.Equals(Yaw) && other.Roll.Equals(Roll);
+            return other.Pitch.NearlyEquals(Pitch) && other.Yaw.NearlyEquals(Yaw) && other.Roll.NearlyEquals(Roll);
+        }
+
+        public bool Equals(float other)
+        {
+            return other.NearlyEquals(Pitch) && other.NearlyEquals(Yaw) && other.NearlyEquals(Roll);
         }
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(Rotation))
-                return false;
+            if (obj is Rotation)
+                return Equals((Rotation) obj);
 
-            return Equals((Rotation)obj);
+            if (obj is float)
+                return Equals((float) obj);
+
+            return false;           
         }
 
         public override int GetHashCode()

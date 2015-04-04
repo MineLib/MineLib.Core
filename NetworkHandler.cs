@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using MineLib.Network.Module;
@@ -10,35 +10,64 @@ namespace MineLib.Network
     {
         #region Properties
 
-        public NetworkMode NetworkMode { get { return _minecraft.Mode; } }
-        public ConnectionState ConnectionState { get { return _protocol.State; } }
+        public NetworkMode NetworkMode
+        {
+            get { return _minecraft.Mode; }
+        }
 
-        public bool Connected { get { return _protocol.Connected; } }
+        public ConnectionState ConnectionState
+        {
+            get { return _protocol.State; }
+        }
 
-        public bool UseLogin { get { return _minecraft.UseLogin; }}
+        public bool Connected
+        {
+            get { return _protocol.Connected; }
+        }
 
-        public bool SavePackets { get { return _protocol.SavePackets; } }
+        public bool UseLogin
+        {
+            get { return _minecraft.UseLogin; }
+        }
+
+        public bool SavePackets
+        {
+            get { return _protocol.SavePackets; }
+        }
 
         #endregion
 
-        private IMinecraftClient _minecraft;
+        private IMinecraftClient _minecraft; // -- Readonly.
         private IProtocol _protocol;
 
+        /// <summary>
+        /// Get all Modules that we can use.
+        /// </summary>
+        /// <returns></returns>
+        public List<ProtocolModule> GetModules()
+        {
+            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var protocols = new List<ProtocolModule>();
+
+            if (path != null)
+                foreach (var file in Directory.GetFiles(path, "Protocol*.dll"))
+                    protocols.Add(new ProtocolModule(file));
+
+            return protocols;
+        }
 
         /// <summary>
         /// Start NetworkHandler.
         /// </summary>
-        public INetworkHandler Create(IMinecraftClient client, bool debugPackets = false)
+        public INetworkHandler Initialize(ProtocolModule module, IMinecraftClient client, bool debugPackets = false)
         {
             _minecraft = client;
 
-            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
-            _protocol = ModuleLoader.CreateModule<IProtocol>(string.Format(CultureInfo.InvariantCulture, path + "\\{0}.dll", NetworkMode)).Create(_minecraft, debugPackets);
+            _protocol = ModuleLoader.CreateModule<IProtocol>(module.FilePath).Initialize(_minecraft, debugPackets);
             if (_protocol == null)
-                throw new NetworkHandlerException(string.Format("Module loading error: {0}.dll was not found or corrupted.", NetworkMode));
+                throw new NetworkHandlerException(string.Format("Module loading error: {0} was not found or corrupted.", module.FileName));
 
-            // -- Make async
+            // TODO: Make async
             if (UseLogin)
                 _protocol.Login(_minecraft.ClientLogin, _minecraft.ClientPassword);
 
@@ -82,8 +111,6 @@ namespace MineLib.Network
         public void Disconnect()
         {
             _protocol.Disconnect();
-
-            Dispose();
         }
 
 

@@ -6,28 +6,13 @@
     public enum NetworkMode
     {
         /// <summary>
-        /// Modern Minecraft protocol.
+        /// C# protocol.
         /// </summary>
-        ProtocolModern,
+        Module,
 
         /// <summary>
-        /// Classic Minecraft protocol.
+        /// C++ CLI protocol.
         /// </summary>
-        ProtocolClassic,
-
-        /// <summary>
-        /// Pocket Edition Minecraft protocol.
-        /// </summary>
-        ProtocolPocketEdition,
-
-        /// <summary>
-        /// Custom C# protocol.
-        /// </summary>
-        CustomModule,
-
-        /// <summary>
-        /// Custom C++ CLI protocol.
-        /// </summary>
-        CustomModuleCLI
+        ModuleCLI
     }
 }

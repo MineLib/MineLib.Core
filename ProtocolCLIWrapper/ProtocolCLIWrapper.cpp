@@ -6,7 +6,7 @@ using namespace MineLib::Network;
 
 namespace ProtocolCLIWrapper {
 
-IProtocol^ Protocol::Create(IMinecraftClient^ client, bool debugPackets) { return this;}
+IProtocol^ Protocol::Initialize(IMinecraftClient^ client, bool debugPackets) { return this;}
 
 IAsyncResult^ Protocol::BeginSendPacketHandled(IPacket^ packet, AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}
 IAsyncResult^ Protocol::BeginSendPacket(IPacket^ packet, AsyncCallback^ asyncCallback, Object^ state){ return gcnew ProtocolAsyncResult();}

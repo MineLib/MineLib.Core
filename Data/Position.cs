@@ -35,8 +35,7 @@ namespace MineLib.Network.Data
 
         public static Position FromLong(long value)
         {
-            return new Position
-            (
+            return new Position(
                 (int) (value >> 38),
                 (int) (value >> 26) & 0xFFF,
                 (int) value << 38 >> 38
@@ -52,8 +51,7 @@ namespace MineLib.Network.Data
 
         public static Position FromReaderVarInt(IProtocolDataReader reader)
         {
-            return new Position
-            (
+            return new Position(
                 reader.ReadVarInt(),
                 reader.ReadVarInt(),
                 reader.ReadVarInt()
@@ -62,8 +60,7 @@ namespace MineLib.Network.Data
 
         public static Position FromReaderSByte(IProtocolDataReader reader)
         {
-            return new Position
-            (
+            return new Position(
                 reader.ReadSByte(),
                 reader.ReadSByte(),
                 reader.ReadSByte()
@@ -72,8 +69,7 @@ namespace MineLib.Network.Data
 
         public static Position FromReaderByte(IProtocolDataReader reader)
         {
-            return new Position
-            (
+            return new Position(
                 reader.ReadByte(),
                 reader.ReadByte(),
                 reader.ReadByte()
@@ -82,8 +78,7 @@ namespace MineLib.Network.Data
 
         public static Position FromReaderShort(IProtocolDataReader reader)
         {
-            return new Position
-            (
+            return new Position(
                 reader.ReadShort(),
                 reader.ReadShort(),
                 reader.ReadShort()
@@ -92,8 +87,7 @@ namespace MineLib.Network.Data
 
         public static Position FromReaderInt(IProtocolDataReader reader)
         {
-            return new Position
-            (
+            return new Position(
                 reader.ReadInt(),
                 reader.ReadInt(),
                 reader.ReadInt()
@@ -180,12 +174,9 @@ namespace MineLib.Network.Data
         /// <summary>
         /// Finds the distance of this Position from Position.Zero
         /// </summary>
-        public double Distance
+        public double Distance()
         {
-            get
-            {
-                return DistanceTo(Zero);
-            }
+            return DistanceTo(Zero);
         }
 
         public static Position Min(Position value1, Position value2)

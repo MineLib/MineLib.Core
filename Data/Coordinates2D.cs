@@ -34,8 +34,7 @@ namespace MineLib.Network.Data
 
         public static Coordinates2D FromReaderVarInt(IProtocolDataReader reader)
         {
-            return new Coordinates2D
-            (
+            return new Coordinates2D(
                 reader.ReadVarInt(),
                 reader.ReadVarInt()
             );
@@ -43,8 +42,7 @@ namespace MineLib.Network.Data
 
         public static Coordinates2D FromReaderByte(IProtocolDataReader reader)
         {
-            return new Coordinates2D
-            (
+            return new Coordinates2D(
                 reader.ReadByte(),
                 reader.ReadByte()
             );
@@ -52,8 +50,7 @@ namespace MineLib.Network.Data
 
         public static Coordinates2D FromReaderShort(IProtocolDataReader reader)
         {
-            return new Coordinates2D
-            (
+            return new Coordinates2D(
                 reader.ReadShort(),
                 reader.ReadShort()
             );
@@ -61,8 +58,7 @@ namespace MineLib.Network.Data
 
         public static Coordinates2D FromReaderInt(IProtocolDataReader reader)
         {
-            return new Coordinates2D
-            (
+            return new Coordinates2D(
                 reader.ReadInt(),
                 reader.ReadInt()
             );
@@ -126,12 +122,9 @@ namespace MineLib.Network.Data
         /// <summary>
         /// Finds the distance of this Coordinates2D from Coordinates2D.Zero
         /// </summary>
-        public double Distance
+        public double Distance()
         {
-            get
-            {
-                return DistanceTo(Zero);
-            }
+            return DistanceTo(Zero);
         }
 
         public static Coordinates2D Min(Coordinates2D value1, Coordinates2D value2)
@@ -176,9 +169,7 @@ namespace MineLib.Network.Data
 
         public static Coordinates2D operator -(Coordinates2D a)
         {
-            return new Coordinates2D(
-                -a.X,
-                -a.Z);
+            return new Coordinates2D(-a.X, -a.Z);
         }
 
         public static Coordinates2D operator *(Coordinates2D a, Coordinates2D b)
