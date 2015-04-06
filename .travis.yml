@@ -2,6 +2,8 @@ language: csharp
 mono:
   - 3.10.0
   - 2.10.8
+  
+solution: MineLib.Network.sln
 
 notifications:
   email:
