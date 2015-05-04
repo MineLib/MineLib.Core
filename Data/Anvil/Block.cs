@@ -19,36 +19,36 @@ namespace MineLib.Network.Data.Anvil
 		public byte SkyLight
 		{
 			get { return (byte)(SkyAndBlockLight >> 4); }
-			set { SkyAndBlockLight = (byte)(value << 4 & 0xF0 | Light & 0x0F); }
+			set { SkyAndBlockLight = (byte)(value << 4      | Light & 0x0F); }
 		}
 		public byte Light
 		{
-			get { return (byte)(SkyAndBlockLight & 0xF); }
-			set { SkyAndBlockLight = (byte)(SkyLight << 4 & 0xF0 | value & 0x0F); }
+			get { return (byte)(SkyAndBlockLight & 0x0F); }
+			set { SkyAndBlockLight = (byte)(SkyLight << 4   | value & 0x0F); }
 		}
 
 		public Block(ushort id)
 		{
-			IDMeta = (ushort)(id << 4 & 0xFFF0 | 0 & 0x000F);
+			IDMeta = (ushort)(id << 4 & 0xFFF0              | 0 & 0x000F);
 			SkyAndBlockLight = 0;
 		}
 
 		public Block(ushort id, byte meta)
 		{
-			IDMeta = (ushort)(id << 4 & 0xFFF0 | meta & 0x000F);
+			IDMeta = (ushort)(id << 4 & 0xFFF0              | meta & 0x000F);
 			SkyAndBlockLight = 0;
 		}
 
 		public Block(ushort id, byte meta, byte light)
 		{
-			IDMeta = (ushort)(id << 4 & 0xFFF0 | meta & 0x000F);
-			SkyAndBlockLight = (byte)(0 << 4 & 0xF0 | light & 0x0F);
+			IDMeta = (ushort)(id << 4 & 0xFFF0              | meta & 0x000F);
+			SkyAndBlockLight = (byte)(0 << 4 & 0xF0         | light & 0x0F);
 		}
 
 		public Block(ushort id, byte meta, byte light, byte skyLight)
 		{
-			IDMeta = (ushort)(id << 4 & 0xFFF0 | meta & 0x000F);
-			SkyAndBlockLight = (byte)(skyLight << 4 & 0xF0 | light & 0x0F);
+			IDMeta = (ushort)(id << 4 & 0xFFF0              | meta & 0x000F);
+			SkyAndBlockLight = (byte)(skyLight << 4 & 0xF0  | light & 0x0F);
 		}
 
 		public override string ToString()
@@ -76,7 +76,7 @@ namespace MineLib.Network.Data.Anvil
 			if (obj.GetType() != typeof(Block))
 				return false;
 
-			return Equals((Block)obj);
+			return Equals((Block) obj);
 		}
 
 		public override int GetHashCode()
@@ -96,7 +96,7 @@ namespace MineLib.Network.Data.Anvil
 
         public static readonly int[] TransparentBlocks = 
         {
-            
+            6, 8, 9, 18, 20, 27, 28, 30,  31, 32, 37, 38, 39, 40, 
         };
 	}
 }

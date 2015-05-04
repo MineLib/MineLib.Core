@@ -1,11 +1,13 @@
 ﻿using System;
 
+using MineLib.Network.IO;
+
 namespace MineLib.Network
 {
     // TODO: Clean this mess.
     public interface IMinecraftClient : IDisposable
     {
-        NetworkMode Mode { get; }
+        ProtocolType Mode { get; }
         ConnectionState ConnectionState { get; }
 
         String ClientLogin { get; }
@@ -30,12 +32,13 @@ namespace MineLib.Network
         /// <summary>
         /// Constructor.
         /// </summary>
-        IMinecraftClient Initialize(String login, String password, NetworkMode mode, Boolean nameVerification = false, String serverSalt = null);
+        IMinecraftClient Initialize(String login, String password, ProtocolType mode, INetworkTCP tcp, Boolean nameVerification = false, String serverSalt = null);
 
         IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback asyncCallback, Object state);
         //void EndConnect(IAsyncResult asyncResult);
         IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, Object state);
         void EndDisconnect(IAsyncResult asyncResult);
+
 
         void Connect(String ip, UInt16 port);
         void Disconnect();

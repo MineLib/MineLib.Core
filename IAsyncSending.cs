@@ -1,11 +1,18 @@
 ﻿using System;
+
 using MineLib.Network.Data.Structs;
 
 namespace MineLib.Network
 {
+    /// <summary>
+    /// Interface for registering supported sending types.
+    /// </summary>
     public interface IAsyncSending { }
 
-    public interface IAsyncSendingParameters
+    /// <summary>
+    /// Basic interface for registering supported receive types.
+    /// </summary>
+    public interface IAsyncSendingArgs
     {
         AsyncCallback AsyncCallback { get; } 
         Object State { get; }
@@ -13,12 +20,12 @@ namespace MineLib.Network
 
 
     public struct BeginConnectToServer : IAsyncSending { }
-    public struct BeginConnectToServerParameters : IAsyncSendingParameters 
+    public struct BeginConnectToServerArgs : IAsyncSendingArgs 
     {
         public AsyncCallback AsyncCallback { get; private set; }
         public object State { get; private set; }
 
-        public BeginConnectToServerParameters(AsyncCallback asyncCallback, object state) : this()
+        public BeginConnectToServerArgs(AsyncCallback asyncCallback, object state) : this()
         {
             AsyncCallback = asyncCallback;
             State = state;
@@ -26,14 +33,14 @@ namespace MineLib.Network
     }
 
     public struct BeginKeepAlive : IAsyncSending { }
-    public struct BeginKeepAliveParameters : IAsyncSendingParameters
+    public struct BeginKeepAliveArgs : IAsyncSendingArgs
     {
         public int KeepAlive { get; private set; }
 
         public AsyncCallback AsyncCallback { get; private set; }
         public object State { get; private set; }
 
-        public BeginKeepAliveParameters(int value, AsyncCallback asyncCallback, object state) : this()
+        public BeginKeepAliveArgs(int value, AsyncCallback asyncCallback, object state) : this()
         {
             KeepAlive = value;
 
@@ -43,12 +50,12 @@ namespace MineLib.Network
     }
 
     public struct BeginSendClientInfo : IAsyncSending { }
-    public struct BeginSendClientInfoParameters : IAsyncSendingParameters
+    public struct BeginSendClientInfoArgs : IAsyncSendingArgs
     {
         public AsyncCallback AsyncCallback { get; private set; }
         public object State { get; private set; }
 
-        public BeginSendClientInfoParameters(AsyncCallback asyncCallback, object state) : this()
+        public BeginSendClientInfoArgs(AsyncCallback asyncCallback, object state) : this()
         {
             AsyncCallback = asyncCallback;
             State = state;
@@ -56,12 +63,12 @@ namespace MineLib.Network
     }
 
     public struct BeginRespawn : IAsyncSending { }
-    public struct BeginRespawnParameters : IAsyncSendingParameters
+    public struct BeginRespawnArgs : IAsyncSendingArgs
     {
         public AsyncCallback AsyncCallback { get; private set; }
         public object State { get; private set; }
 
-        public BeginRespawnParameters(AsyncCallback asyncCallback, object state) : this()
+        public BeginRespawnArgs(AsyncCallback asyncCallback, object state) : this()
         {
             AsyncCallback = asyncCallback;
             State = state;
@@ -69,7 +76,7 @@ namespace MineLib.Network
     }
 
     public struct BeginPlayerMoved : IAsyncSending { }
-    public struct BeginPlayerMovedParameters : IAsyncSendingParameters
+    public struct BeginPlayerMovedArgs : IAsyncSendingArgs
     {
         public AsyncCallback AsyncCallback { get; private set; }
         public object State { get; private set; }
@@ -77,7 +84,7 @@ namespace MineLib.Network
         public PlaverMovedMode Mode { get; private set; }
         public IPlaverMovedData Data { get; private set; }
 
-        public BeginPlayerMovedParameters(IPlaverMovedData data, AsyncCallback asyncCallback, object state) : this()
+        public BeginPlayerMovedArgs(IPlaverMovedData data, AsyncCallback asyncCallback, object state) : this()
         {
             {
                 var type = data as PlaverMovedDataOnGround;
@@ -109,7 +116,7 @@ namespace MineLib.Network
             State = state;
         }
 
-        public BeginPlayerMovedParameters(PlaverMovedMode mode, IPlaverMovedData data, AsyncCallback asyncCallback, object state): this()
+        public BeginPlayerMovedArgs(PlaverMovedMode mode, IPlaverMovedData data, AsyncCallback asyncCallback, object state): this()
         {
             Mode = mode;
 
@@ -121,7 +128,7 @@ namespace MineLib.Network
     }
 
     public struct BeginPlayerSetRemoveBlock : IAsyncSending { }
-    public struct BeginPlayerSetRemoveBlockParameters : IAsyncSendingParameters
+    public struct BeginPlayerSetRemoveBlockArgs : IAsyncSendingArgs
     {
         public AsyncCallback AsyncCallback { get; private set; }
         public object State { get; private set; }
@@ -129,7 +136,7 @@ namespace MineLib.Network
         public PlayerSetRemoveBlockMode Mode { get; private set; }
         public IPlayerSetRemoveBlockData Data { get; private set; }
 
-        public BeginPlayerSetRemoveBlockParameters(IPlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state) : this()
+        public BeginPlayerSetRemoveBlockArgs(IPlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state) : this()
         {
             {
                 var type = data as PlayerSetRemoveBlockDataDig;
@@ -155,7 +162,7 @@ namespace MineLib.Network
             State = state;
         }
 
-        public BeginPlayerSetRemoveBlockParameters(PlayerSetRemoveBlockMode mode, IPlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state) : this()
+        public BeginPlayerSetRemoveBlockArgs(PlayerSetRemoveBlockMode mode, IPlayerSetRemoveBlockData data, AsyncCallback asyncCallback, object state) : this()
         {
             Mode = mode;
 
@@ -167,14 +174,14 @@ namespace MineLib.Network
     }
 
     public struct BeginSendMessage : IAsyncSending { }
-    public struct BeginSendMessageParameters : IAsyncSendingParameters
+    public struct BeginSendMessageArgs : IAsyncSendingArgs
     {
         public AsyncCallback AsyncCallback { get; private set; }
         public object State { get; private set; }
 
         public string Message { get; private set; }
 
-        public BeginSendMessageParameters(string message, AsyncCallback asyncCallback, object state) : this()
+        public BeginSendMessageArgs(string message, AsyncCallback asyncCallback, object state) : this()
         {
             Message = message;
 
@@ -184,14 +191,14 @@ namespace MineLib.Network
     }
 
     public struct BeginPlayerHeldItem : IAsyncSending { }
-    public struct BeginPlayerHeldItemParameters : IAsyncSendingParameters
+    public struct BeginPlayerHeldItemArgs : IAsyncSendingArgs
     {
         public AsyncCallback AsyncCallback { get; private set; }
         public object State { get; private set; }
 
         public short Slot { get; private set; }
 
-        public BeginPlayerHeldItemParameters(short slot, AsyncCallback asyncCallback, object state) : this()
+        public BeginPlayerHeldItemArgs(short slot, AsyncCallback asyncCallback, object state) : this()
         {
             Slot = slot;
 

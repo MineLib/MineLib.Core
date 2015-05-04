@@ -13,11 +13,10 @@ namespace MineLib.Network.Data.Anvil
         public const int Height = 16;
         public const int Depth = 16;
 
-        // 12
-        public Position ChunkPosition;
-        // 7
+        public readonly Position ChunkPosition;
+
         public Block[,,] Blocks;
-        // 1
+
         public bool IsFilled;
 
 
@@ -56,22 +55,17 @@ namespace MineLib.Network.Data.Anvil
 
             for (int i = 0, j = 0; i < Width * Height * Depth; i++)
             {
-                //var idMetadata = (ushort)(blocks[j] + blocks[j + 1]);
-                var idMetadata = BitConverter.ToUInt16(new byte[2] { blocks[j], blocks[j + 1] }, 0);
+                var idMetadata = BitConverter.ToUInt16(new[] { blocks[j], blocks[j + 1] }, 0);
 
                 // TODO: Add auto Coordinate calculator
 
                 var id = (ushort)(idMetadata >> 4);
                 var meta = (byte)(idMetadata & 0x000F); // & 15
 
-                //var id = (ushort)(idMetadata & 0xff);
-                //var meta = (byte)(idMetadata >> 8); // & 15
-
                 var sectionPos = GetSectionPositionByIndex(i);
 		        Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z] = new Block(id, meta, blockLight[i], skyLight[i]);
 
-				j++;
-				j++;
+				j = j + 2;
 			}
 
             IsFilled = true;
@@ -90,7 +84,7 @@ namespace MineLib.Network.Data.Anvil
         public Block GetBlock(Position sectionPos)
         {
             if (!IsFilled)
-                throw new AccessViolationException("Section is empty");
+                throw new IndexOutOfRangeException("Section is empty");
 
             return Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z];
         }
@@ -102,7 +96,7 @@ namespace MineLib.Network.Data.Anvil
 
             var oldBlock = Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z];
 
-            // I don't think that these values will change
+            // TODO: Light recalculating or what?
             block.Light = oldBlock.Light;
             block.SkyLight = oldBlock.SkyLight;
 
@@ -112,7 +106,7 @@ namespace MineLib.Network.Data.Anvil
         public byte GetBlockLighting(Position sectionPos)
         {
             if (!IsFilled)
-                throw new AccessViolationException("Section is empty");
+                throw new IndexOutOfRangeException("Section is empty");
 
             return Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z].Light;
         }
@@ -128,7 +122,7 @@ namespace MineLib.Network.Data.Anvil
         public byte GetBlockSkylight(Position sectionPos)
         {
             if (!IsFilled)
-                throw new AccessViolationException("Section is empty");
+                throw new IndexOutOfRangeException("Section is empty");
 
             return Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z].SkyLight;
         }
@@ -198,8 +192,6 @@ namespace MineLib.Network.Data.Anvil
 			for (var i = 0; i < halfByteData.Length; i++)
             {
                 var data = halfByteData[i];
-				//var block2 = (byte)((data >> 4) & 0xF);
-				//var block1 = (byte)(data & 0xF);
 				var block2 = (byte)(data >> 4);
 				var block1 = (byte)(data & 0x0F);
 

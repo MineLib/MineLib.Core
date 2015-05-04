@@ -1,5 +1,7 @@
 using System;
+
 using MineLib.Network.Data;
+
 using Org.BouncyCastle.Math;
 
 namespace MineLib.Network.IO
@@ -10,6 +12,20 @@ namespace MineLib.Network.IO
     /// </summary>
     public interface IProtocolStream : IDisposable
     {
+        Boolean Available { get; }
+        Boolean Connected { get; }
+
+
+        void Connect(String ip, UInt16 port);
+        void Disconnect(Boolean reuse);
+
+        IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback callback, Object obj);
+        void EndConnect(IAsyncResult result);
+
+        IAsyncResult BeginDisconnect(Boolean reuse, AsyncCallback callback, Object obj);
+        void EndDisconnect(IAsyncResult result);
+
+
         void WriteString(String value, Int32 length = 0);
 
         void WriteVarInt(VarInt value);
@@ -53,6 +69,7 @@ namespace MineLib.Network.IO
 
 
         IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback callback, Object state);
+
         IAsyncResult BeginSend(Byte[] data, AsyncCallback callback, Object state);
         void EndSend(IAsyncResult asyncResult);
 
@@ -60,7 +77,6 @@ namespace MineLib.Network.IO
         Int32 EndRead(IAsyncResult asyncResult);
 
         void SendPacket(IPacket packet);
-        Int32 Read(Byte[] buffer, Int32 offset, Int32 count);
 
         void Purge();
     }

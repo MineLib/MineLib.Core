@@ -1,10 +1,27 @@
 ﻿namespace MineLib.Network
 {
+    /// <summary>
+    /// Current connection state
+    /// </summary>
     public enum ConnectionState
     {
+        /// <summary>
+        /// Not initialized.
+        /// </summary>
         None,
-        JoiningServer,
-        JoinedServer,
+        /// <summary>
+        /// Joining.
+        /// </summary>
+        Joining,
+
+        /// <summary>
+        /// Joined.
+        /// </summary>
+        Joined,
+
+        /// <summary>
+        /// Getting an info request.
+        /// </summary>
         InfoRequest
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using MineLib.Network.Data.Structs;
+﻿using MineLib.Network.Data.Structs;
 using MineLib.Network.IO;
 
 namespace MineLib.Network.Data.EntityMetadata
@@ -60,14 +58,14 @@ namespace MineLib.Network.Data.EntityMetadata
             return (byte) ((Identifier << 5) | (index & 0x1F));
         }
 
-        public override string ToString()
-        {
-            Type type = GetType();
-            FieldInfo[] fields = type.GetFields();
-            string result = FriendlyName + "[" + Index + "]: ";
-            if (fields.Length != 0)
-                result += fields[0].GetValue(this).ToString();
-            return result;
-        }
+        //public override string ToString()
+        //{
+        //    Type type = GetType();
+        //    FieldInfo[] fields = type.GetFields();
+        //    string result = FriendlyName + "[" + Index + "]: ";
+        //    if (fields.Length != 0)
+        //        result += fields[0].GetValue(this).ToString();
+        //    return result;
+        //}
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using MineLib.Network.IO;
+using MineLib.Network.IO;
 
 namespace MineLib.Network.Data.Structs
 {
@@ -25,7 +26,7 @@ namespace MineLib.Network.Data.Structs
         {
             var bitArray = new BitArray(new byte[value]);
             var boolArray = new bool[7];
-            bitArray.CopyTo(boolArray, 0);
+            ((ICollection) bitArray).CopyTo(boolArray, 0);
 
             return new DisplayedSkinParts
             {
@@ -51,7 +52,7 @@ namespace MineLib.Network.Data.Structs
         {
             var bitArray = new BitArray(new bool[] { CapeEnabled, JackedEnabled, LeftSleeveEnabled, RightSleeveEnabled, LeftPantsEnabled, RightPantsEnabled, HatEnabled, Unused });
             var byteArray = new byte[1];
-            bitArray.CopyTo(byteArray, 0);
+            ((ICollection) bitArray).CopyTo(byteArray, 0);
 
             return byteArray[0];
         }

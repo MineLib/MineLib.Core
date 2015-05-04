@@ -10,7 +10,7 @@ namespace MineLib.Network.Data.Structs
 {
     // TODO: Uses more memory than class
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct ItemStack  : ICloneable, IEquatable<ItemStack>
+    public struct ItemStack  : IEquatable<ItemStack>
     {
         public readonly short ID;
         public sbyte Count;

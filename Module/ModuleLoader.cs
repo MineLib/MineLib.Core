@@ -1,62 +1,67 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
+using PCLStorage;
+
 namespace MineLib.Network.Module
 {
+    public delegate Assembly LoadAssembly(object sender, byte[] assembly);
+    public delegate IFolder Storage(object sender);
+
     public static class ModuleLoader
     {
-        public static T CreateModule<T>(string file)
+        public static event LoadAssembly LoadAssembly;
+        public static event Storage GetStorage;
+
+        public static T CreateModule1<T>(string file) where T : class
         {
             var plugin = default(T);
 
-            if (File.Exists(file))
+            if (FileSystem.Current.LocalStorage.CheckExistsAsync(file).Result == ExistenceCheckResult.FileExists)
             {
-                var asm = Assembly.LoadFile(file);
+                var asm = Assembly.Load(new AssemblyName(file.Replace(".dll", "")));
 
                 if (asm != null)
-                {
-                    for (int i = 0; i < asm.GetTypes().Length; i++)
-                    {
-                        var type = (Type) asm.GetTypes().GetValue(i);
-
-                        if (IsImplementationOf(type, typeof(IModule)))
-                            plugin = (T) Activator.CreateInstance(type);
-                        
-                    }
-                }
+                    foreach (var type in new List<Type>(asm.ExportedTypes))
+                        if (type.Name == "Protocol")
+                            plugin = Activator.CreateInstance(type) as T;
             }
 
             return plugin;
         }
 
-        private static bool IsImplementationOf(Type type, Type @interface)
+        public static T CreateModule<T>(string file)
         {
-            var interfaces = type.GetInterfaces();
+            var plugin = default(T);
 
-            for (int i = 0; i < interfaces.Length; i++)
-            {
-                if (IsSubtypeOf(ref interfaces[i], @interface))
-                    return true;
-            }
+            //if (GetStorage != null && GetStorage().CheckExistsAsync(file).Result == ExistenceCheckResult.FileExists)
+            //{
+                var asm = Assembly.Load(new AssemblyName("ProtocolModern.Portable"));
+                //var asm = LoadAssembly(null, GetStorage(null).GetFileAsync(file).Result.OpenAsync(FileAccess.Read).Result.ReadFully());
 
-            return false;
+                if (asm != null)
+                    foreach (var typeInfo in new List<TypeInfo>(asm.DefinedTypes))
+                        foreach (var type in new List<Type>(typeInfo.ImplementedInterfaces))
+                            if (type == typeof (T))
+                                plugin = (T) Activator.CreateInstance(typeInfo.AsType());
+            //}
+
+            return plugin;
         }
 
-        private static bool IsSubtypeOf(ref Type a, Type b)
+        private static byte[] ReadFully(this Stream input)
         {
-            if (a == b)
-                return true;
-            
-            if (a.IsGenericType)
+            var buffer = new byte[16 * 1024];
+            using (var ms = new MemoryStream())
             {
-                a = a.GetGenericTypeDefinition();
-
-                if (a == b)
-                    return true;              
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                    ms.Write(buffer, 0, read);
+                
+                return ms.ToArray();
             }
-
-            return false;
         }
     }
 }

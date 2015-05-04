@@ -4,6 +4,9 @@ using MineLib.Network.Data.Structs;
 
 namespace MineLib.Network
 {
+    /// <summary>
+    /// Interface for registering supported receive types.
+    /// </summary>
     public interface IAsyncReceive { }
 
     public struct OnChatMessage : IAsyncReceive
@@ -179,6 +182,18 @@ namespace MineLib.Network
             ExperienceBar = experienceBar;
             Level = level;
             TotalExperience = totalExperience;
+        }
+    }
+
+    public struct OnTimeUpdate : IAsyncReceive
+    {
+        public long WorldAge { get; private set; }
+        public long TimeOfDay { get; private set; }
+
+        public OnTimeUpdate(long worldAge, long timeOfDay) : this()
+        {
+            WorldAge = worldAge;
+            TimeOfDay = timeOfDay;
         }
     }
     

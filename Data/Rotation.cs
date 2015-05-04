@@ -36,8 +36,7 @@ namespace MineLib.Network.Data
             return new Rotation(
                 reader.ReadFloat(),
                 reader.ReadFloat(),
-                reader.ReadFloat()
-            );
+                reader.ReadFloat());
         }
 
 

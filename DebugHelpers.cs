@@ -1,17 +1,31 @@
 ﻿using System;
+using MineLib.Network.Data.Anvil;
 
 namespace MineLib.Network
 {
+    /// <summary>
+    /// Class helper for better debug.
+    /// </summary>
     public static class Converter
     {
-        public static byte[] ConvertUShort(ushort value)
+        /// <summary>
+        /// Converting ushort value from a Chunk to a boolean value. Which Sections are empty or not.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool[] ConvertFromUShort(ushort value)
         {
-            var intArray = new byte[15];
+            var intArray = new bool[15];
 
             for (var i = 0; i < 15; i++)
-                intArray[i] = (byte) ((value & (1 << i)) > 0 ? 1 : 0);
+                intArray[i] = ((value & (1 << i)) > 0);
             
             return intArray;
+        }
+
+        public static ushort ConvertToUShort(Section[] value)
+        {
+            return 0;
         }
 
         public static bool NearlyEquals(this double? value1, double? value2, double unimportantDifference = 0.0001)
