@@ -60,16 +60,6 @@ namespace MineLib.Network.Data.Anvil
             return sectionCount;
         }
 
-        public Position GetBlockPosition(Section section, int index)
-        {
-            var sectionPosition = Section.GetSectionPositionByIndex(index);
-
-            return new Position(
-                16 * Coordinates.X + sectionPosition.X,
-                16 * section.ChunkPosition.Y + sectionPosition.Y,
-                16 * Coordinates.Z + sectionPosition.Z);
-        }
-
         public Block GetBlock(Position coordinates)
         {
             var destSection = GetSectionByY(coordinates.Y);
@@ -144,6 +134,15 @@ namespace MineLib.Network.Data.Anvil
         }
 
         #region Helping Methods
+        public Position GetBlockPosition(Section section, int index)
+        {
+            var sectionPosition = Section.GetSectionPositionByIndex(index);
+
+            return new Position(
+                16 * Coordinates.X + sectionPosition.X,
+                16 * section.ChunkPosition.Y + sectionPosition.Y,
+                16 * Coordinates.Z + sectionPosition.Z);
+        }
 
         private Section GetSectionByY(int blockY)
         {

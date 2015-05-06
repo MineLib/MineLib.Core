@@ -1,6 +1,9 @@
-﻿using System;
+﻿//#define PARALLEL
+
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace MineLib.Network.Data.Anvil
 {
@@ -15,7 +18,7 @@ namespace MineLib.Network.Data.Anvil
 
         public readonly Position ChunkPosition;
 
-        public Block[,,] Blocks;
+        public BlockList Blocks;
 
         public bool IsFilled;
 
@@ -24,7 +27,7 @@ namespace MineLib.Network.Data.Anvil
         {
             ChunkPosition = position;
 
-            Blocks = new Block[0, 0, 0];
+            Blocks = new BlockList(0);
             IsFilled = false;
         }
 
@@ -38,45 +41,45 @@ namespace MineLib.Network.Data.Anvil
             if(IsFilled)
                 return;
 
-            Blocks = new Block[Width, Height, Depth];
+            Blocks = new BlockList(Width, Height, Depth);
 
             IsFilled = true;
         }
 
         public void BuildFromNibbleData(byte[] blocks, byte[] blockLights, byte[] blockSkyLights)
         {
-            if(IsFilled) 
+            if (IsFilled)
                 return;
 
-            Blocks = new Block[Width, Height, Depth];
+            Blocks = new BlockList(Width, Height, Depth);
 
+#if PARALLEL
+            var blockLight = new byte[] {};
+            var skyLight = new byte[] {};
+
+            ParallelOptions op = new ParallelOptions();
+            op.MaxDegreeOfParallelism = 2;
+
+            Parallel.Invoke(op,
+                () => { blockLight = ToBytePerBlock(blockLights); },
+                () => { skyLight = ToBytePerBlock(blockSkyLights); });
+#else
             var blockLight = ToBytePerBlock(blockLights);
             var skyLight = ToBytePerBlock(blockSkyLights);
+#endif
 
             for (int i = 0, j = 0; i < Width * Height * Depth; i++)
             {
-                var idMetadata = BitConverter.ToUInt16(new[] { blocks[j], blocks[j + 1] }, 0);
-
-                // TODO: Add auto Coordinate calculator
+                //var idMetadata = BitConverter.ToUInt16(new[] { blocks[j], blocks[j + 1] }, 0);
+                var idMetadata = ((blocks[j + 1] << 8) | blocks[j]);
 
                 var id = (ushort)(idMetadata >> 4);
                 var meta = (byte)(idMetadata & 0x000F); // & 15
 
-                var sectionPos = GetSectionPositionByIndex(i);
-		        Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z] = new Block(id, meta, blockLight[i], skyLight[i]);
+                Blocks[i] = new Block(id, meta, blockLight[i], skyLight[i]);
 
-				j = j + 2;
-			}
-
-            IsFilled = true;
-        }
-
-        public void BuildFromBlocks(Block[, ,] blocks)
-        {
-            if (IsFilled)
-                return;
-
-            Blocks = blocks;
+                j = j + 2;
+            }
 
             IsFilled = true;
         }
@@ -116,7 +119,9 @@ namespace MineLib.Network.Data.Anvil
             if (!IsFilled)
                 BuildEmpty();
 
-            Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z].Light = data;
+            var block = Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z];
+            block.Light = data;
+            Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z] = block;
         }
 
         public byte GetBlockSkylight(Position sectionPos)
@@ -132,7 +137,9 @@ namespace MineLib.Network.Data.Anvil
             if (!IsFilled)
                 BuildEmpty();
 
-            Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z].SkyLight = data;
+            var block = Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z];
+            block.SkyLight = data;
+            Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z] = block;
         }
 
         #region Helping Methods
@@ -142,25 +149,13 @@ namespace MineLib.Network.Data.Anvil
             return new Position(
                 index % 16,
                 index / (16 * 16),
-                (index / 16) % 16
-            );
+                (index / 16) % 16);
         }
 
 	    public int GetIndexByPosition(Position pos)
 	    {
 		    return pos.X + ((pos.Y * 16) + pos.Z) * 16;
 	    }
-
-        public Position GetGlobalPositionByArrayIndex(Position pos)
-        {
-            return GetGlobalPositionByArrayIndex(pos.X, pos.Y, pos.Z);
-        }
-
-        public Position GetGlobalPositionByArrayIndex(int index1, int index2, int index3)
-        {
-	        return GetGlobalPositionByPosition(new Position(index1, index2, index3));
-			//return GetGlobalPositionByIndex(index1 + Width * (index2 + Depth * index3));
-        }
 
         public Position GetGlobalPositionByIndex(int index)
         {
@@ -169,8 +164,12 @@ namespace MineLib.Network.Data.Anvil
             return new Position(
                 Width * ChunkPosition.X + sectionPos.X,
                 Height * ChunkPosition.Y + sectionPos.Y,
-                Depth * ChunkPosition.Z + sectionPos.Z
-            );
+                Depth * ChunkPosition.Z + sectionPos.Z);
+        }
+
+        public Position GetGlobalPositionByArrayIndex(int x, int y, int z)
+        {
+            return GetGlobalPositionByPosition(new Position(x, y, z));
         }
 
 		public Position GetGlobalPositionByPosition(Position pos)
@@ -178,8 +177,7 @@ namespace MineLib.Network.Data.Anvil
 			return new Position(
 				Width * ChunkPosition.X + pos.X,
 				Height * ChunkPosition.Y + pos.Y,
-				Depth * ChunkPosition.Z + pos.Z
-			);
+				Depth * ChunkPosition.Z + pos.Z);
 		}
 
 		private static byte[] ToBytePerBlock(byte[] halfByteData)
@@ -192,9 +190,9 @@ namespace MineLib.Network.Data.Anvil
 			for (var i = 0; i < halfByteData.Length; i++)
             {
                 var data = halfByteData[i];
-				var block2 = (byte)(data >> 4);
-				var block1 = (byte)(data & 0x0F);
-
+				var block2 = (byte) (data >> 4);
+				var block1 = (byte) (data & 0x0F);
+            
 				newMeta[(i * 2)] = block1;
                 newMeta[(i * 2) + 1] = block2;
             }

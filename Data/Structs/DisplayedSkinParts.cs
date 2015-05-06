@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using MineLib.Network.IO;
-using MineLib.Network.IO;
 
 namespace MineLib.Network.Data.Structs
 {
