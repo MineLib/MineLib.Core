@@ -1,9 +1,6 @@
-﻿//#define PARALLEL
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace MineLib.Network.Data.Anvil
 {
@@ -53,20 +50,8 @@ namespace MineLib.Network.Data.Anvil
 
             Blocks = new BlockList(Width, Height, Depth);
 
-#if PARALLEL
-            var blockLight = new byte[] {};
-            var skyLight = new byte[] {};
-
-            ParallelOptions op = new ParallelOptions();
-            op.MaxDegreeOfParallelism = 2;
-
-            Parallel.Invoke(op,
-                () => { blockLight = ToBytePerBlock(blockLights); },
-                () => { skyLight = ToBytePerBlock(blockSkyLights); });
-#else
             var blockLight = ToBytePerBlock(blockLights);
             var skyLight = ToBytePerBlock(blockSkyLights);
-#endif
 
             for (int i = 0, j = 0; i < Width * Height * Depth; i++)
             {
