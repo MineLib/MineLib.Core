@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace MineLib.Network.Data.Anvil
+namespace MineLib.Core.Data.Anvil
 {
     // -- Full  - 12304 bytes.
     // -- Empty - 20    bytes.
@@ -68,6 +68,45 @@ namespace MineLib.Network.Data.Anvil
 
             IsFilled = true;
         }
+
+        public void BuildFromBlocks(BlockList list)
+        {
+            if (IsFilled)
+                return;
+
+            Blocks = list;
+
+            IsFilled = true;
+        }
+
+        public void BuildFromBlocks(Block[] blocks)
+        {
+            if (IsFilled)
+                return;
+
+            Blocks = new BlockList(blocks.Length);
+
+            for (int index = 0; index < blocks.Length; index++)
+                Blocks[index] = blocks[index];
+
+            IsFilled = true;
+        }
+
+        public void BuildFromBlocks(Block[, ,] blocks)
+        {
+            if (IsFilled)
+                return;
+
+            Blocks = new BlockList(blocks.GetLength(0), blocks.GetLength(1), blocks.GetLength(1));
+
+            for (int x = 0; x < blocks.GetLength(0); x++)
+                for (int y = 0; y < blocks.GetLength(1); y++)
+                    for (int z = 0; z < blocks.GetLength(2); z++)
+                        Blocks[x, y, z] = blocks[x, y, z];
+                    
+            IsFilled = true;
+        }
+
 
         public Block GetBlock(Position sectionPos)
         {

@@ -1,12 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using MineLib.Core.IO;
+using MineLib.Core.Module;
 
-using MineLib.Network.IO;
-using MineLib.Network.Module;
-
-namespace MineLib.Network
+namespace MineLib.Core
 {
-    public interface INetworkHandler : IDisposable
+    public interface INetworkHandlerAsync
+    {
+        Task ConnectAsync(String ip, UInt16 port);
+
+        Boolean DisconnectAsync();
+
+        Task DoSendingAsync(Type asyncSendingType, ISendingAsyncArgs parameters);
+    }
+
+    public interface INetworkHandler : INetworkHandlerAsync, IDisposable
     {
         #region Properties
 
@@ -40,25 +49,10 @@ namespace MineLib.Network
         /// <returns></returns>
         INetworkHandler Initialize(ProtocolModule module, IMinecraftClient client, INetworkTCP tcp, Boolean debugPackets = false);
 
-        /// <summary>
-        /// EndConnect is called automatically by IProtocol.
-        /// </summary>
-        IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback asyncCallback, Object state);
-        //void EndConnect(IAsyncResult asyncResult);
-
-        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, Object state);
-        void EndDisconnect(IAsyncResult asyncResult);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="asyncSendingType"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingArgs parameters);
-
         void Connect(String ip, UInt16 port);
         void Disconnect();
+
+        void DoSending(Type sendingType, ISendingAsyncArgs args);
     }
 
     public class NetworkHandlerException : Exception

@@ -8,10 +8,10 @@
     <ProjectGuid>{121AAB68-F93F-4DA5-A0E4-87515E2C0256}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MineLib.Network</RootNamespace>
-    <AssemblyName>MineLib.Network.Modular</AssemblyName>
+    <RootNamespace>MineLib.Core</RootNamespace>
+    <AssemblyName>MineLib.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -66,8 +66,8 @@
     <Compile Include="Data\VarInt.cs" />
     <Compile Include="Data\Vector3.cs" />
     <Compile Include="DebugHelpers.cs" />
-    <Compile Include="IAsyncReceive.cs" />
-    <Compile Include="IAsyncSending.cs" />
+    <Compile Include="IReceiveAsync.cs" />
+    <Compile Include="ISendingAsync.cs" />
     <Compile Include="IMinecraftClient.cs" />
     <Compile Include="INetworkHandler.cs" />
     <Compile Include="IO\IProtocolDataReader.cs" />
@@ -85,17 +85,14 @@
     <Compile Include="SHA1.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="crypto, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="crypto, Version=1.7.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>packages\Portable.BouncyCastle.1.7.0.2\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch10+MonoAndroid10+xamarinmac20+xamarinios10\crypto.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="PCLStorage, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
+    <Reference Include="PCLStorage, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64">
       <HintPath>packages\PCLStorage.1.0.2\lib\portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="PCLStorage.Abstractions, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
+    <Reference Include="PCLStorage.Abstractions, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64">
       <HintPath>packages\PCLStorage.1.0.2\lib\portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.Abstractions.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

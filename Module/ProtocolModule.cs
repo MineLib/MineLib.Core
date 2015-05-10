@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MineLib.Network.Module
+namespace MineLib.Core.Module
 {
     public class ProtocolModule
     {

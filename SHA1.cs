@@ -1,4 +1,4 @@
-namespace MineLib.Network
+namespace MineLib.Core
 {
     /// <summary>
     /// SHA1 class taken from Mono project

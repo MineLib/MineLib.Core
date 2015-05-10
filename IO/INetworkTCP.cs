@@ -1,8 +1,21 @@
 ﻿using System;
+using System.Threading.Tasks;
 
-namespace MineLib.Network.IO
+namespace MineLib.Core.IO
 {
-    public interface INetworkTCP : IDisposable
+    // TODO: use https://github.com/jamesmontemagno/Xamarin.Plugins/tree/master/Battery for cross-platform plugin
+    public interface INetworkTCPAsync
+    {
+        Task ConnectAsync(String ip, UInt16 port);
+
+        Boolean DisconnectAsync(Boolean reuse);
+
+        Task SendAsync(Byte[] bytes, Int32 offset, Int32 count);
+
+        Task<Int32> ReceiveAsync(Byte[] bytes, Int32 offset, Int32 count);
+    }
+
+    public interface INetworkTCP : INetworkTCPAsync, IDisposable
     {
         Boolean Available { get; }
         Boolean Connected { get; }
@@ -11,20 +24,8 @@ namespace MineLib.Network.IO
         void Connect(String ip, UInt16 port);
         void Disconnect(Boolean reuse);
 
-        IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback callback, Object state);
-        void EndConnect(IAsyncResult result);
-
-        IAsyncResult BeginDisconnect(Boolean reuse, AsyncCallback callback, Object state);
-        void EndDisconnect(IAsyncResult result);
-
 
         void Send(Byte[] bytes, Int32 offset, Int32 count);
         Int32 Receive(Byte[] buffer, Int32 offset, Int32 count);
-
-        IAsyncResult BeginSend(Byte[] bytes, Int32 offset, Int32 count, AsyncCallback callback, Object state);
-        void EndSend(IAsyncResult result);
-
-        IAsyncResult BeginReceive(Byte[] bytes, Int32 offset, Int32 count, AsyncCallback callback, Object state);
-        Int32 EndReceive(IAsyncResult result);
     }
 }

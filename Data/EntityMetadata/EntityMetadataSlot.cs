@@ -1,7 +1,7 @@
-﻿using MineLib.Network.Data.Structs;
-using MineLib.Network.IO;
+﻿using MineLib.Core.Data.Structs;
+using MineLib.Core.IO;
 
-namespace MineLib.Network.Data.EntityMetadata
+namespace MineLib.Core.Data.EntityMetadata
 {
     /// <summary>
     /// Slot Metadata

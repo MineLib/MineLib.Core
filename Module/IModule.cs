@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MineLib.Network.Module
+namespace MineLib.Core.Module
 {
     public interface IModule
     {

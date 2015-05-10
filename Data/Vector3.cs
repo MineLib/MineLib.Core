@@ -2,9 +2,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using MineLib.Network.IO;
 
-namespace MineLib.Network.Data
+using MineLib.Core.IO;
+
+namespace MineLib.Core.Data
 {
     /// <summary>
     /// Represents the location of an object in 3D space (double).

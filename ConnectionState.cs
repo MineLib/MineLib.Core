@@ -1,4 +1,4 @@
-﻿namespace MineLib.Network
+﻿namespace MineLib.Core
 {
     /// <summary>
     /// Current connection state

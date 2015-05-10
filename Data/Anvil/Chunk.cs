@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using MineLib.Network.Data.Structs;
+using MineLib.Core.Data.Structs;
 
-namespace MineLib.Network.Data.Anvil
+namespace MineLib.Core.Data.Anvil
 {
     // -- Full  (12304 bytes Section) - 197138 bytes.
     // -- Empty (20    bytes Section) - 594    bytes.

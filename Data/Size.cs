@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace MineLib.Network.Data
+namespace MineLib.Core.Data
 {
     /// <summary>
     /// Represents the size of an object in 3D space.

@@ -1,15 +1,15 @@
-﻿using MineLib.Network.Data;
-using MineLib.Network.Data.Anvil;
-using MineLib.Network.Data.Structs;
+﻿using MineLib.Core.Data;
+using MineLib.Core.Data.Anvil;
+using MineLib.Core.Data.Structs;
 
-namespace MineLib.Network
+namespace MineLib.Core
 {
     /// <summary>
     /// Interface for registering supported receive types.
     /// </summary>
-    public interface IAsyncReceive { }
+    public interface IReceiveAsync { }
 
-    public struct OnChatMessage : IAsyncReceive
+    public struct OnChatMessage : IReceiveAsync
     {
         public string Message { get; private set; }
 
@@ -21,7 +21,7 @@ namespace MineLib.Network
 
     #region Anvil
 
-    public struct OnChunk : IAsyncReceive
+    public struct OnChunk : IReceiveAsync
     {
         public Chunk Chunk { get; private set; }
 
@@ -31,7 +31,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnChunkList : IAsyncReceive
+    public struct OnChunkList : IReceiveAsync
     {
         public ChunkList Chunks { get; private set; }
 
@@ -41,7 +41,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnBlockChange : IAsyncReceive
+    public struct OnBlockChange : IReceiveAsync
     {
         public Position Location { get; private set; }
         public int Block { get; private set; }
@@ -53,7 +53,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnMultiBlockChange : IAsyncReceive
+    public struct OnMultiBlockChange : IReceiveAsync
     {
         public Coordinates2D ChunkLocation { get; private set; }
         public Record[] Records { get; private set; }
@@ -65,7 +65,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnBlockAction : IAsyncReceive
+    public struct OnBlockAction : IReceiveAsync
     {
         public Position Location { get; private set; }
         public int Block { get; private set; }
@@ -79,7 +79,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnBlockBreakAction : IAsyncReceive
+    public struct OnBlockBreakAction : IReceiveAsync
     {
         public int EntityID { get; private set; }
         public Position Location { get; private set; }
@@ -95,7 +95,7 @@ namespace MineLib.Network
 
     #endregion
 
-    public struct OnPlayerPosition : IAsyncReceive
+    public struct OnPlayerPosition : IReceiveAsync
     {
         public Vector3 Position { get; private set; }
 
@@ -105,7 +105,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnPlayerLook : IAsyncReceive
+    public struct OnPlayerLook : IReceiveAsync
     {
         public Vector3 Look { get; private set; }
 
@@ -115,7 +115,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnHeldItemChange : IAsyncReceive
+    public struct OnHeldItemChange : IReceiveAsync
     {
         public byte Slot { get; private set; }
 
@@ -125,7 +125,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnSpawnPoint : IAsyncReceive
+    public struct OnSpawnPoint : IReceiveAsync
     {
         public Position Location { get; private set; }
 
@@ -135,7 +135,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnUpdateHealth : IAsyncReceive
+    public struct OnUpdateHealth : IReceiveAsync
     {
         public float Health { get; private set; }
         public int Food { get; set; }
@@ -149,7 +149,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnRespawn : IAsyncReceive
+    public struct OnRespawn : IReceiveAsync
     {
         public object GameInfo { get; private set; }
 
@@ -159,7 +159,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnAction : IAsyncReceive
+    public struct OnAction : IReceiveAsync
     {
         public int EntityID { get; private set; }
         public int Action { get; private set; }
@@ -171,7 +171,7 @@ namespace MineLib.Network
         }
     }
     
-    public struct OnSetExperience : IAsyncReceive
+    public struct OnSetExperience : IReceiveAsync
     {
         public float ExperienceBar { get; private set; }
         public int Level { get; private set; }
@@ -185,7 +185,7 @@ namespace MineLib.Network
         }
     }
 
-    public struct OnTimeUpdate : IAsyncReceive
+    public struct OnTimeUpdate : IReceiveAsync
     {
         public long WorldAge { get; private set; }
         public long TimeOfDay { get; private set; }

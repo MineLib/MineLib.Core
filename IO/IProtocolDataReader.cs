@@ -1,8 +1,8 @@
 ﻿using System;
-using MineLib.Network.Data;
+using MineLib.Core.Data;
 using Org.BouncyCastle.Math;
 
-namespace MineLib.Network.IO
+namespace MineLib.Core.IO
 {
     /// <summary>
     /// Object that reads data from IPacket.

@@ -1,4 +1,4 @@
-namespace MineLib.Network.Data.Structs
+namespace MineLib.Core.Data.Structs
 {
     public enum PlaverMovedMode
     {

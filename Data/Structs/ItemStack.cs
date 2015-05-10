@@ -4,9 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using MineLib.Network.IO;
 
-namespace MineLib.Network.Data.Structs
+using MineLib.Core.IO;
+
+namespace MineLib.Core.Data.Structs
 {
     // TODO: Uses more memory than class
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using MineLib.Core.IO;
+using MineLib.Core.Module;
 
-using MineLib.Network.IO;
-using MineLib.Network.Module;
-
-namespace MineLib.Network
+namespace MineLib.Core
 {
     /// <summary>
     /// Any Minecraft protocol can be implemented by using this. And even more.
     /// </summary>
-    public interface IProtocol : IModule, IProtocolLogin, IProtocolDebug, IProtocolAsyncConnection, IDisposable
+    public interface IProtocol : IModule, IProtocolLogin, IProtocolDebug, IProtocolAsync, IDisposable
     {
         /// <summary>
         /// Current state of IProtocol client/server connection.
@@ -29,12 +29,14 @@ namespace MineLib.Network
         /// <summary>
         /// IPacket sending function.
         /// </summary>
+        void SendPacket(ref IPacket packet);
+
         void SendPacket(IPacket packet);
 
         void Connect(String ip, UInt16 port);
         void Disconnect();
 
-        
+        void DoSending(Type sendingType, ISendingAsyncArgs args);
     }
 
     public interface IProtocolLogin
@@ -57,22 +59,15 @@ namespace MineLib.Network
         Boolean SavePackets { get; }
     }
 
-    public interface IProtocolAsyncConnection
+    public interface IProtocolAsync
     {
-        IAsyncResult BeginSendPacketHandled(IPacket packet, AsyncCallback asyncCallback, Object state);
-        IAsyncResult BeginSendPacket(IPacket packet, AsyncCallback asyncCallback, Object state);
-        void EndSendPacket(IAsyncResult asyncResult);
+        Task SendPacketAsync(IPacket packet);
+        Task ConnectAsync(String ip, UInt16 port);
+        Boolean DisconnectAsync();
 
-        IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback asyncCallback, Object state);
-        //void EndConnect(IAsyncResult asyncResult);
-
-        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, Object state);
-        void EndDisconnect(IAsyncResult asyncResult);
-
-        void RegisterAsyncSending(Type asyncSendingType, Func<IAsyncSendingArgs, IAsyncResult> method);
-        IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingArgs parameters);
+        void RegisterSending(Type sendingAsyncType, Func<ISendingAsyncArgs, Task> func);
+        Task DoSendingAsync(Type sendingAsyncType, ISendingAsyncArgs args);
     }
-
 
     public class ProtocolException : Exception
     {

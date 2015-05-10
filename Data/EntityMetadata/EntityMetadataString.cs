@@ -1,7 +1,8 @@
 ﻿using System;
-using MineLib.Network.IO;
 
-namespace MineLib.Network.Data.EntityMetadata
+using MineLib.Core.IO;
+
+namespace MineLib.Core.Data.EntityMetadata
 {
     /// <summary>
     /// String Metadata

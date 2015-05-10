@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MineLib.Network.Data.EntityMetadata;
-using MineLib.Network.IO;
 
-namespace MineLib.Network.Data.Structs
+using MineLib.Core.Data.EntityMetadata;
+using MineLib.Core.IO;
+
+namespace MineLib.Core.Data.Structs
 {
     /// <summary>
     /// Used to send metadata with entities

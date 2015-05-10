@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using MineLib.Core.IO;
+using MineLib.Core.Module;
 
-using MineLib.Network.IO;
-using MineLib.Network.Module;
-
-namespace MineLib.Network
+namespace MineLib.Core
 {
     /// <summary>
     /// Standard NetworkHandler, ready for use.
@@ -45,6 +45,7 @@ namespace MineLib.Network
                         protocols.Add(new ProtocolModule(file.Name));
 
             protocols.Add(new ProtocolModule("ProtocolModern.Portable"));
+            //protocols.Add(new ProtocolModule("ProtocolClassic.Portable"));
             return protocols;
         }
 
@@ -73,25 +74,19 @@ namespace MineLib.Network
         }
 
 
-        public IAsyncResult BeginConnect(string ip, ushort port, AsyncCallback asyncCallback, object state)
+        public Task ConnectAsync(string ip, ushort port)
         {
-            return _protocol.BeginConnect(ip, port, asyncCallback, state);
+            return _protocol.ConnectAsync(ip, port);
         }
 
-        public IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, object state)
+        public bool DisconnectAsync()
         {
-            return _protocol.BeginDisconnect(asyncCallback, state);
+            return _protocol.DisconnectAsync();
         }
 
-        public void EndDisconnect(IAsyncResult asyncResult)
+        public Task DoSendingAsync(Type asyncSendingType, ISendingAsyncArgs parameters)
         {
-            _protocol.EndDisconnect(asyncResult);
-        }
-
-
-        public IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingArgs parameters)
-        {
-            return _protocol.DoAsyncSending(asyncSendingType, parameters);
+            return _protocol.DoSendingAsync(asyncSendingType, parameters);
         }
 
 
@@ -103,6 +98,11 @@ namespace MineLib.Network
         public void Disconnect()
         {
             _protocol.Disconnect();
+        }
+
+        public void DoSending(Type sendingType, ISendingAsyncArgs args)
+        {
+            _protocol.DoSending(sendingType, args);
         }
 
 

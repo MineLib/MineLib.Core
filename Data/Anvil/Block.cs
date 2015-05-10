@@ -3,13 +3,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace MineLib.Network.Data.Anvil
-{
-	// -- Full  - 3 bytes.
-	// -- Empty - 3 bytes.
-	// -- Performace cost isn't too high. We are handling maximum 1kk, loose ~5 ms, but win 10mb.
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+namespace MineLib.Core.Data.Anvil
+{	
 #if FULLBLOCK
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Block : IEquatable<Block>
 	{
         public ushort ID { get; set; }
@@ -102,6 +99,10 @@ namespace MineLib.Network.Data.Anvil
         };
 	}
 #else
+    // -- Full  - 3 bytes.
+    // -- Empty - 3 bytes.
+    // -- Performace cost isn't too high. We are handling maximum 1kk, loose ~5 ms, but win 10mb.
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct Block : IEquatable<Block>
 	{
 		private readonly ushort IDMeta;
@@ -195,8 +196,7 @@ namespace MineLib.Network.Data.Anvil
         };
 	}
 #endif
-
-
+    
     public class BlockList
     {
         public readonly int XSize;
@@ -217,6 +217,12 @@ namespace MineLib.Network.Data.Anvil
             ZSize = zSize;
 
             _blocks = new Block[XSize * YSize * ZSize];
+        }
+
+        public Block this[Position pos]
+        {
+            get { return _blocks[pos.X + ((pos.Y * YSize) + pos.Z) * XSize]; }
+            set { _blocks[pos.X + ((pos.Y * YSize) + pos.Z) * XSize] = value; }
         }
 
         public Block this[int x, int y, int z]

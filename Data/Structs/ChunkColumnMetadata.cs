@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using MineLib.Network.IO;
 
-namespace MineLib.Network.Data.Structs
+using MineLib.Core.IO;
+
+namespace MineLib.Core.Data.Structs
 {
     public struct ChunkColumnMetadata
     {

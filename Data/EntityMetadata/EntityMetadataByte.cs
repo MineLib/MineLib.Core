@@ -1,6 +1,6 @@
-﻿using MineLib.Network.IO;
+﻿using MineLib.Core.IO;
 
-namespace MineLib.Network.Data.EntityMetadata
+namespace MineLib.Core.Data.EntityMetadata
 {
     /// <summary>
     /// Byte Metadata

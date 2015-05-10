@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-
 using PCLStorage;
 
-namespace MineLib.Network.Module
+namespace MineLib.Core.Module
 {
     public delegate Assembly LoadAssembly(object sender, byte[] assembly);
     public delegate IFolder Storage(object sender);
@@ -39,6 +38,7 @@ namespace MineLib.Network.Module
             //if (GetStorage != null && GetStorage().CheckExistsAsync(file).Result == ExistenceCheckResult.FileExists)
             //{
                 var asm = Assembly.Load(new AssemblyName("ProtocolModern.Portable"));
+                //var asm = Assembly.Load(new AssemblyName("ProtocolClassic.Portable"));
                 //var asm = LoadAssembly(null, GetStorage(null).GetFileAsync(file).Result.OpenAsync(FileAccess.Read).Result.ReadFully());
 
                 if (asm != null)

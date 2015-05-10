@@ -1,4 +1,4 @@
-namespace MineLib.Network.Data
+namespace MineLib.Core.Data
 {
     public class VarInt
     {

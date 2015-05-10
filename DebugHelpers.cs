@@ -1,7 +1,7 @@
 ﻿using System;
-using MineLib.Network.Data.Anvil;
+using MineLib.Core.Data.Anvil;
 
-namespace MineLib.Network
+namespace MineLib.Core
 {
     /// <summary>
     /// Class helper for better debug.

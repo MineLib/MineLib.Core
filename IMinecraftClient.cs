@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
+using MineLib.Core.IO;
 
-using MineLib.Network.IO;
-
-namespace MineLib.Network
+namespace MineLib.Core
 {
     // TODO: Clean this mess.
-    public interface IMinecraftClient : IDisposable
+    public interface IMinecraftClientAsync
+    {
+        Task ConnectAsync(String ip, UInt16 port);
+        Boolean DisconnectAsync();
+    }
+    public interface IMinecraftClient : IMinecraftClientAsync, IDisposable
     {
         ProtocolType Mode { get; }
         ConnectionState ConnectionState { get; }
@@ -34,17 +39,11 @@ namespace MineLib.Network
         /// </summary>
         IMinecraftClient Initialize(String login, String password, ProtocolType mode, INetworkTCP tcp, Boolean nameVerification = false, String serverSalt = null);
 
-        IAsyncResult BeginConnect(String ip, UInt16 port, AsyncCallback asyncCallback, Object state);
-        //void EndConnect(IAsyncResult asyncResult);
-        IAsyncResult BeginDisconnect(AsyncCallback asyncCallback, Object state);
-        void EndDisconnect(IAsyncResult asyncResult);
-
-
         void Connect(String ip, UInt16 port);
         void Disconnect();
 
-        void RegisterReceiveEvent(Type receiveEventType, Action<IAsyncReceive> method);
-        void DoReceiveEvent(Type receiveEventType, IAsyncReceive data);
+        void RegisterReceiveEvent(Type receiveEventType, Action<IReceiveAsync> method);
+        void DoReceiveEvent(Type receiveEventType, IReceiveAsync data);
 
         //IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingParameters parameters);
     }

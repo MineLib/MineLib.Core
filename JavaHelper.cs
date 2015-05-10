@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace MineLib.Network
+namespace MineLib.Core
 {
     /// <summary>
     /// Helper class to implement Java-style handling with some types.
