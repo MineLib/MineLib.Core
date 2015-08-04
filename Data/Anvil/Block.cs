@@ -147,7 +147,7 @@ namespace MineLib.Core.Data.Anvil
 
 		public override string ToString()
 		{
-			return String.Format("ID: {0}, Meta: {1}, Light: {2}, SkyLight: {3}", ID, Meta, Light, SkyLight);
+			return string.Format("ID: {0}, Meta: {1}, Light: {2}, SkyLight: {3}", ID, Meta, Light, SkyLight);
 		}
 
 		public static bool operator ==(Block a, Block b)

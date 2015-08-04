@@ -114,10 +114,6 @@
       <Project>{4488498d-976d-4da3-bf72-109531af0488}</Project>
       <Name>fNbt.Portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MineLib.Windows\MineLib.Core.Wrappers\MineLib.Core.Wrappers.csproj">
-      <Project>{43793133-b1b3-4d38-98a6-e55b9b72a846}</Project>
-      <Name>MineLib.Core.Wrappers</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
