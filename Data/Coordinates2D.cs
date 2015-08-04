@@ -264,19 +264,18 @@ namespace MineLib.Core.Data
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Coordinates2D)) return false;
-            return Equals((Coordinates2D)obj);
+            if (obj == null)
+                return false;
+
+            if (obj.GetType() != GetType())
+                return false;
+
+            return Equals((Coordinates2D) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var result = X.GetHashCode();
-                result = (result * 397) ^ Z.GetHashCode();
-                return result;
-            }
+            return X.GetHashCode() ^ Z.GetHashCode();
         }
     }
 }

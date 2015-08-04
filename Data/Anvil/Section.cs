@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace MineLib.Core.Data.Anvil
@@ -43,6 +42,7 @@ namespace MineLib.Core.Data.Anvil
             IsFilled = true;
         }
 
+        // REWRITE: Big indivilual work
         public void BuildFromNibbleData(byte[] blocks, byte[] blockLights, byte[] blockSkyLights)
         {
             if (IsFilled)
@@ -79,35 +79,6 @@ namespace MineLib.Core.Data.Anvil
             IsFilled = true;
         }
 
-        public void BuildFromBlocks(Block[] blocks)
-        {
-            if (IsFilled)
-                return;
-
-            Blocks = new BlockList(blocks.Length);
-
-            for (int index = 0; index < blocks.Length; index++)
-                Blocks[index] = blocks[index];
-
-            IsFilled = true;
-        }
-
-        public void BuildFromBlocks(Block[, ,] blocks)
-        {
-            if (IsFilled)
-                return;
-
-            Blocks = new BlockList(blocks.GetLength(0), blocks.GetLength(1), blocks.GetLength(1));
-
-            for (int x = 0; x < blocks.GetLength(0); x++)
-                for (int y = 0; y < blocks.GetLength(1); y++)
-                    for (int z = 0; z < blocks.GetLength(2); z++)
-                        Blocks[x, y, z] = blocks[x, y, z];
-                    
-            IsFilled = true;
-        }
-
-
         public Block GetBlock(Position sectionPos)
         {
             if (!IsFilled)
@@ -123,7 +94,7 @@ namespace MineLib.Core.Data.Anvil
 
             var oldBlock = Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z];
 
-            // TODO: Light recalculating or what?
+            // REWRITE: Light recalculating or what? Remove it cause of deferred lightning
             block.Light = oldBlock.Light;
             block.SkyLight = oldBlock.SkyLight;
 
@@ -214,8 +185,8 @@ namespace MineLib.Core.Data.Anvil
 			for (var i = 0; i < halfByteData.Length; i++)
             {
                 var data = halfByteData[i];
+                var block1 = (byte) (data & 0x0F);
 				var block2 = (byte) (data >> 4);
-				var block1 = (byte) (data & 0x0F);
             
 				newMeta[(i * 2)] = block1;
                 newMeta[(i * 2) + 1] = block2;
@@ -224,16 +195,20 @@ namespace MineLib.Core.Data.Anvil
             return newMeta;
         }
 
-        private static byte[] ToHalfBytePerBlock(IList<byte> byteData)
+        private static byte[] ToHalfBytePerBlock(byte[] byteData)
         {
             var newMeta = new byte[Width * Height * Depth / 2];
 
-            if (byteData.Count != Width * Height * Depth)
+            if (byteData.Length != Width * Height * Depth)
                 throw new ArgumentOutOfRangeException("byteData", "Length != Full Byte Metadata length");
 
-            for (var i = 0; i < byteData.Count; i++)
+            for (var i = 0; i < byteData.Length; i++)
             {
-                // TODO: Convert Full Byte Metadata to Half Byte
+                var block1 = newMeta[i];
+                var block2 = newMeta[i + 1];
+
+                var halfByteData = (byte) ((block1 & 0x0F) | (block2 >> 4));
+                newMeta[i] = halfByteData;
             }
 
             return newMeta;
@@ -262,7 +237,10 @@ namespace MineLib.Core.Data.Anvil
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(Section))
+            if (obj == null)
+                return false;
+
+            if (obj.GetType() != GetType())
                 return false;
 
             return Equals((Section) obj);
@@ -270,12 +248,7 @@ namespace MineLib.Core.Data.Anvil
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var result = Blocks.GetHashCode();
-                result = (result * 397) ^ ChunkPosition.GetHashCode();
-                return result;
-            }
+            return Blocks.GetHashCode() ^ ChunkPosition.GetHashCode();
         }
     }
 }

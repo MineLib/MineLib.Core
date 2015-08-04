@@ -1,7 +1,8 @@
 ﻿using System;
+
 using MineLib.Core.IO;
 
-namespace MineLib.Core
+namespace MineLib.Core.Interfaces
 {
     /// <summary>
     /// Extension of IPacket with defenitioned packet size within it.

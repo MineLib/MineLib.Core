@@ -1,5 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
+using MineLib.Core.Extensions;
+
 namespace MineLib.Core.Data
 {
     /// <summary>
@@ -70,24 +72,18 @@ namespace MineLib.Core.Data
 
         public override bool Equals(object obj)
         {
-            if (obj is Size)
-                return Equals((Size) obj);
+            if (obj == null)
+                return false;
 
-            if (obj is float)
-                return Equals((float) obj);
+            if (obj.GetType() != GetType())
+                return false;
 
-            return false;
+            return Equals((Size) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var result = Width.GetHashCode();
-                result = (result * 397) ^ Height.GetHashCode();
-                result = (result * 397) ^ Depth.GetHashCode();
-                return result;
-            }
+            return Width.GetHashCode() ^ Height.GetHashCode() ^ Depth.GetHashCode();
         }
     }
 }

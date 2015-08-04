@@ -113,7 +113,10 @@ namespace MineLib.Core.Data.Structs
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(EntityMetadataList))
+            if (obj == null)
+                return false;
+
+            if (obj.GetType() != GetType())
                 return false;
 
             return Equals((EntityMetadataList) obj);
@@ -121,12 +124,7 @@ namespace MineLib.Core.Data.Structs
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var result = _entries.GetHashCode();
-                result = (result * 397) ^ Count.GetHashCode();
-                return result;
-            }
+            return _entries.GetHashCode() ^ Count.GetHashCode();
         }
     }
 }

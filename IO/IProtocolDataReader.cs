@@ -1,5 +1,7 @@
 ﻿using System;
+
 using MineLib.Core.Data;
+
 using Org.BouncyCastle.Math;
 
 namespace MineLib.Core.IO
@@ -42,5 +44,7 @@ namespace MineLib.Core.IO
         Int32[] ReadIntArray(Int32 value);
 
         Byte[] ReadByteArray(Int32 value);
+
+        Int32 BytesLeft();
     }
 }

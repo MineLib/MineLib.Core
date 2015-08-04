@@ -1,17 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+using MineLib.Core.Extensions;
 using MineLib.Core.IO;
 
 namespace MineLib.Core.Data.Structs
 {
-    public struct ChunkColumnMetadata
+    public struct ChunkColumnMetadata : IEquatable<ChunkColumnMetadata>
     {
         public Coordinates2D Coordinates;
         public ushort PrimaryBitMap;
 
         // -- Debugging
-        public bool[] PrimaryBitMapConverted { get { return Converter.ConvertFromUShort(PrimaryBitMap); } }
+        public bool[] PrimaryBitMapConverted { get { return Helper.ConvertFromUShort(PrimaryBitMap); } }
         // -- Debugging
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            if (obj.GetType() != GetType())
+                return false;
+
+            return Equals((ChunkColumnMetadata) obj);
+        }
+
+        public bool Equals(ChunkColumnMetadata other)
+        {
+            return Coordinates == other.Coordinates && PrimaryBitMap == other.PrimaryBitMap;
+        }
+
+        public override int GetHashCode()
+        {
+            return Coordinates.GetHashCode() ^ PrimaryBitMap.GetHashCode();
+        }
     }
 
     public class ChunkColumnMetadataList

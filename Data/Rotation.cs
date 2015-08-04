@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+using MineLib.Core.Extensions;
 using MineLib.Core.IO;
 
 namespace MineLib.Core.Data
@@ -82,24 +83,18 @@ namespace MineLib.Core.Data
 
         public override bool Equals(object obj)
         {
-            if (obj is Rotation)
-                return Equals((Rotation) obj);
+            if (obj == null)
+                return false;
 
-            if (obj is float)
-                return Equals((float) obj);
+            if (obj.GetType() != GetType())
+                return false;
 
-            return false;           
+            return Equals((Rotation) obj);         
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var result = Pitch.GetHashCode();
-                result = (result * 397) ^ Yaw.GetHashCode();
-                result = (result * 397) ^ Roll.GetHashCode();
-                return result;
-            }
+            return Pitch.GetHashCode() ^ Yaw.GetHashCode() ^ Roll.GetHashCode();
         }
     }
 }

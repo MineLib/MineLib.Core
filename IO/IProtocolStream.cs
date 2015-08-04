@@ -1,6 +1,9 @@
 using System;
 using System.Threading.Tasks;
+
 using MineLib.Core.Data;
+using MineLib.Core.Interfaces;
+
 using Org.BouncyCastle.Math;
 
 namespace MineLib.Core.IO
@@ -53,20 +56,17 @@ namespace MineLib.Core.IO
 
     public interface IProtocolStreamConnection
     {
-
         void Connect(String ip, UInt16 port);
-        void Disconnect(Boolean reuse);
+        void Disconnect();
 
         void SendPacket(ref IPacket packet);
-
-        void Purge();
     }
 
     public interface IProtocolStreamConnectionAsync
     {
 
         Task ConnectAsync(String ip, UInt16 port);
-        Boolean DisconnectAsync(Boolean reuse);
+        Boolean DisconnectAsync();
 
         Task SendPacketAsync(IPacket packet);
         Task SendAsync(byte[] buffer, int offset, int count);
@@ -75,7 +75,6 @@ namespace MineLib.Core.IO
 
     public interface IProtocolStreamConnectionStatus
     {
-        Boolean Available { get; }
         Boolean Connected { get; }
     }
 
@@ -85,12 +84,11 @@ namespace MineLib.Core.IO
     /// </summary>
     public interface IProtocolStream : IProtocolStreamConnectionAsync, IDisposable
     {
-        Boolean Available { get; }
         Boolean Connected { get; }
 
 
         void Connect(String ip, UInt16 port);
-        void Disconnect(Boolean reuse);
+        void Disconnect();
 
 
         void WriteString(String value, Int32 length = 0);

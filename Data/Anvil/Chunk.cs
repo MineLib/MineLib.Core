@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using MineLib.Core.Data.Structs;
+using MineLib.Core.Extensions;
 
 namespace MineLib.Core.Data.Anvil
 {
@@ -203,12 +204,12 @@ namespace MineLib.Core.Data.Anvil
 
         private static bool[] SectionStatus(ushort primaryBitMap)
         {
-            return Converter.ConvertFromUShort(primaryBitMap);
+            return Helper.ConvertFromUShort(primaryBitMap);
         }
 
-        private static ushort SectionStatus(Section[] sections)
+        private ushort SectionStatus()
         {
-            return Converter.ConvertToUShort(sections);
+            return this.ConvertToUShort();
         }
 
         #endregion
@@ -221,21 +222,18 @@ namespace MineLib.Core.Data.Anvil
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(Chunk))
+            if (obj == null)
                 return false;
 
-            return Equals((Chunk)obj);
+            if (obj.GetType() != GetType())
+                return false;
+
+            return Equals((Chunk) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var result = Coordinates.GetHashCode();
-                result = (result * 397) ^ Sections.GetHashCode();
-                result = (result * 397) ^ Biomes.GetHashCode();
-                return result;
-            }
+            return Coordinates.GetHashCode() ^ Sections.GetHashCode() ^ Biomes.GetHashCode();
         }
     }
 

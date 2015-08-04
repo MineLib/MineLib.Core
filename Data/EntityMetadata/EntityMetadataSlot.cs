@@ -1,5 +1,4 @@
-﻿using MineLib.Core.Data.Structs;
-using MineLib.Core.IO;
+﻿using MineLib.Core.IO;
 
 namespace MineLib.Core.Data.EntityMetadata
 {

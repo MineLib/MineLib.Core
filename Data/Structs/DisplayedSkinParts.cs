@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 
 using MineLib.Core.IO;
 
 namespace MineLib.Core.Data.Structs
 {
-    public struct DisplayedSkinParts
+    // TODO: Equatable performance
+    public struct DisplayedSkinParts : IEquatable<DisplayedSkinParts>
     {
         public bool CapeEnabled;
         public bool JackedEnabled;
@@ -55,6 +57,27 @@ namespace MineLib.Core.Data.Structs
             ((ICollection) bitArray).CopyTo(byteArray, 0);
 
             return byteArray[0];
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            if (obj.GetType() != GetType())
+                return false;
+
+            return Equals((DisplayedSkinParts) obj);
+        }
+
+        public bool Equals(DisplayedSkinParts other)
+        {
+            return ToByte() == other.ToByte();
+        }
+
+        public override int GetHashCode()
+        {
+            return ToByte().GetHashCode();
         }
     }
 }

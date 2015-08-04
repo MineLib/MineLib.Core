@@ -1,4 +1,6 @@
-﻿using MineLib.Core.Data.Structs;
+﻿using System.Collections.Generic;
+using System.Reflection;
+
 using MineLib.Core.IO;
 
 namespace MineLib.Core.Data.EntityMetadata
@@ -58,14 +60,14 @@ namespace MineLib.Core.Data.EntityMetadata
             return (byte) ((Identifier << 5) | (index & 0x1F));
         }
 
-        //public override string ToString()
-        //{
-        //    Type type = GetType();
-        //    FieldInfo[] fields = type.GetFields();
-        //    string result = FriendlyName + "[" + Index + "]: ";
-        //    if (fields.Length != 0)
-        //        result += fields[0].GetValue(this).ToString();
-        //    return result;
-        //}
+        public override string ToString()
+        {
+            var type = GetType();
+            var fields = new List<FieldInfo>(type.GetRuntimeFields());
+            var result = FriendlyName + "[" + Index + "]: ";
+            if (fields.Count != 0)
+                result += fields[0].GetValue(this).ToString();
+            return result;
+        }
     }
 }

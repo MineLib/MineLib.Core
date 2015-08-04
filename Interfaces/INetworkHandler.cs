@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MineLib.Core.IO;
-using MineLib.Core.Module;
 
-namespace MineLib.Core
+using MineLib.Core.Loader;
+
+namespace MineLib.Core.Interfaces
 {
     public interface INetworkHandlerAsync
     {
         Task ConnectAsync(String ip, UInt16 port);
 
         Boolean DisconnectAsync();
-
-        Task DoSendingAsync(Type asyncSendingType, ISendingAsyncArgs parameters);
     }
 
+
+    /// <summary>
+    /// Proxy that loads defined IProtocol and handles it.
+    /// </summary>
     public interface INetworkHandler : INetworkHandlerAsync, IDisposable
     {
         #region Properties
@@ -30,30 +32,27 @@ namespace MineLib.Core
 
         #endregion
 
-        event LoadAssembly LoadAssembly;
-        event Storage GetStorage;
-
         /// <summary>
         /// Get all Modules that INetworkHandler can use.
         /// </summary>
         /// <returns></returns>
-        List<ProtocolModule> GetModules();
+        List<ProtocolAssembly> GetModules();
 
         /// <summary>
         /// "Constructor". Interface cannot use a real constructor. 
         /// </summary>
-        /// <param name="module">Which protocol type INetworkHandler will use.</param>
         /// <param name="client">IMinecraftClient that INetworkHandler will interact.</param>
-        /// <param name="tcp">INetworkTCP client that INetworkHandler will use.</param>
+        /// <param name="module">Which protocol type INetworkHandler will use.</param>
         /// <param name="debugPackets">Should INetworkHandler save IPacket information.</param>
         /// <returns></returns>
-        INetworkHandler Initialize(ProtocolModule module, IMinecraftClient client, INetworkTCP tcp, Boolean debugPackets = false);
+        INetworkHandler Initialize(IMinecraftClient client, ProtocolAssembly module, Boolean debugPackets = false);
 
-        void Connect(String ip, UInt16 port);
+        void Connect(String host, UInt16 port);
         void Disconnect();
 
-        void DoSending(Type sendingType, ISendingAsyncArgs args);
+        void DoSending(Type sendingType, SendingArgs args);
     }
+
 
     public class NetworkHandlerException : Exception
     {

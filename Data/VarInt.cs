@@ -1,6 +1,6 @@
 namespace MineLib.Core.Data
 {
-    public class VarInt
+    public struct VarInt
     {
         private readonly int _value;
 

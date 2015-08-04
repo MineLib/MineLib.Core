@@ -2,14 +2,17 @@
 using MineLib.Core.Data.Anvil;
 using MineLib.Core.Data.Structs;
 
-namespace MineLib.Core
+namespace MineLib.Core.Interfaces
 {
     /// <summary>
     /// Interface for registering supported receive types.
     /// </summary>
-    public interface IReceiveAsync { }
+    public interface IReceive { }
 
-    public struct OnChatMessage : IReceiveAsync
+    public abstract class ReceiveArgs { }
+
+
+    public struct OnChatMessage : IReceive
     {
         public string Message { get; private set; }
 
@@ -21,7 +24,7 @@ namespace MineLib.Core
 
     #region Anvil
 
-    public struct OnChunk : IReceiveAsync
+    public struct OnChunk : IReceive
     {
         public Chunk Chunk { get; private set; }
 
@@ -31,7 +34,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnChunkList : IReceiveAsync
+    public struct OnChunkList : IReceive
     {
         public ChunkList Chunks { get; private set; }
 
@@ -41,7 +44,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnBlockChange : IReceiveAsync
+    public struct OnBlockChange : IReceive
     {
         public Position Location { get; private set; }
         public int Block { get; private set; }
@@ -53,7 +56,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnMultiBlockChange : IReceiveAsync
+    public struct OnMultiBlockChange : IReceive
     {
         public Coordinates2D ChunkLocation { get; private set; }
         public Record[] Records { get; private set; }
@@ -65,7 +68,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnBlockAction : IReceiveAsync
+    public struct OnBlockAction : IReceive
     {
         public Position Location { get; private set; }
         public int Block { get; private set; }
@@ -79,7 +82,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnBlockBreakAction : IReceiveAsync
+    public struct OnBlockBreakAction : IReceive
     {
         public int EntityID { get; private set; }
         public Position Location { get; private set; }
@@ -95,7 +98,7 @@ namespace MineLib.Core
 
     #endregion
 
-    public struct OnPlayerPosition : IReceiveAsync
+    public struct OnPlayerPosition : IReceive
     {
         public Vector3 Position { get; private set; }
 
@@ -105,7 +108,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnPlayerLook : IReceiveAsync
+    public struct OnPlayerLook : IReceive
     {
         public Vector3 Look { get; private set; }
 
@@ -115,7 +118,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnHeldItemChange : IReceiveAsync
+    public struct OnHeldItemChange : IReceive
     {
         public byte Slot { get; private set; }
 
@@ -125,7 +128,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnSpawnPoint : IReceiveAsync
+    public struct OnSpawnPoint : IReceive
     {
         public Position Location { get; private set; }
 
@@ -135,7 +138,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnUpdateHealth : IReceiveAsync
+    public struct OnUpdateHealth : IReceive
     {
         public float Health { get; private set; }
         public int Food { get; set; }
@@ -149,7 +152,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnRespawn : IReceiveAsync
+    public struct OnRespawn : IReceive
     {
         public object GameInfo { get; private set; }
 
@@ -159,7 +162,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnAction : IReceiveAsync
+    public struct OnAction : IReceive
     {
         public int EntityID { get; private set; }
         public int Action { get; private set; }
@@ -171,7 +174,7 @@ namespace MineLib.Core
         }
     }
     
-    public struct OnSetExperience : IReceiveAsync
+    public struct OnSetExperience : IReceive
     {
         public float ExperienceBar { get; private set; }
         public int Level { get; private set; }
@@ -185,7 +188,7 @@ namespace MineLib.Core
         }
     }
 
-    public struct OnTimeUpdate : IReceiveAsync
+    public struct OnTimeUpdate : IReceive
     {
         public long WorldAge { get; private set; }
         public long TimeOfDay { get; private set; }
@@ -195,6 +198,5 @@ namespace MineLib.Core
             WorldAge = worldAge;
             TimeOfDay = timeOfDay;
         }
-    }
-    
+    }  
 }

@@ -11,8 +11,7 @@ namespace MineLib.Core.Data.Structs
         public byte Type;
         public int X;
         public int Y;
-
-
+        
         public static bool operator ==(Icon a, Icon b)
         {
             return a.Direction == b.Direction && a.Type == b.Type && a.X == b.X && a.Y == b.Y;
@@ -30,7 +29,10 @@ namespace MineLib.Core.Data.Structs
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(Icon))
+            if (obj == null)
+                return false;
+
+            if (obj.GetType() != GetType())
                 return false;
 
             return Equals((Icon) obj);
@@ -38,14 +40,7 @@ namespace MineLib.Core.Data.Structs
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var result = Direction.GetHashCode();
-                result = (result * 397) ^ Type.GetHashCode();
-                result = (result * 397) ^ X.GetHashCode();
-                result = (result * 397) ^ Y.GetHashCode();
-                return result;
-            }
+            return Direction.GetHashCode() ^ Type.GetHashCode() ^ X.GetHashCode() ^ Y.GetHashCode();
         }
     }
 

@@ -1,8 +1,7 @@
-﻿// From https://github.com/SirCmpwn/Craft.Net
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
+using MineLib.Core.Extensions;
 using MineLib.Core.IO;
 
 namespace MineLib.Core.Data
@@ -25,11 +24,16 @@ namespace MineLib.Core.Data
         public Vector3(float yaw, float pitch)
         {
             var yawRadians = ToRadians(yaw);
-            var cosPitch = Math.Cos(ToRadians(pitch));
+            var pitchRadians = ToRadians(pitch);
 
-            X = (float) -(cosPitch * Math.Sin(yawRadians));
-            Y = (float) -Math.Sin(ToRadians(pitch));
-            Z = (float) (cosPitch * Math.Cos(yawRadians));
+            var sinYaw = Math.Sin(yawRadians);
+            var cosYaw = Math.Cos(yawRadians);
+            var sinPitch = Math.Sin(pitchRadians);
+            var cosPitch = Math.Cos(pitchRadians);
+
+            X = (float)(-cosPitch * sinYaw);
+            Y = (float)(-sinPitch);
+            Z = (float)(cosPitch * cosYaw);
 
             //X = (float) (-Math.Cos(pitch) * Math.Sin(yaw));
             //Y = (float) -Math.Sin(pitch);
@@ -77,12 +81,30 @@ namespace MineLib.Core.Data
             );
         }
 
+        public static Vector3 FromReaderSByte(IProtocolDataReader reader)
+        {
+            return new Vector3(
+                reader.ReadSByte(),
+                reader.ReadSByte(),
+                reader.ReadSByte()
+            );
+        }
+
         public static Vector3 FromReaderShort(IProtocolDataReader reader)
         {
             return new Vector3(
                 reader.ReadShort(),
                 reader.ReadShort(),
                 reader.ReadShort()
+            );
+        }
+
+        public static Vector3 FromReaderFloat(IProtocolDataReader reader)
+        {
+            return new Vector3(
+                reader.ReadFloat(),
+                reader.ReadFloat(),
+                reader.ReadFloat()
             );
         }
 
@@ -121,11 +143,25 @@ namespace MineLib.Core.Data
             stream.WriteByte((byte) Z);
         }
 
+        public void ToStreamSByte(IProtocolStream stream)
+        {
+            stream.WriteSByte((sbyte)X);
+            stream.WriteSByte((sbyte)Y);
+            stream.WriteSByte((sbyte)Z);
+        }
+
         public void ToStreamShort(IProtocolStream stream)
         {
             stream.WriteShort((short) X);
             stream.WriteShort((short) Y);
             stream.WriteShort((short) Z);
+        }
+
+        public void ToStreamFloat(IProtocolStream stream)
+        {
+            stream.WriteFloat(X);
+            stream.WriteFloat(Y);
+            stream.WriteFloat(Z);
         }
 
         public void ToStreamDouble(IProtocolStream stream)
@@ -426,24 +462,18 @@ namespace MineLib.Core.Data
 
         public override bool Equals(object obj)
         {
-            if (obj is Vector3)
-                return Equals((Vector3) obj);
-
-            if (obj is float)
-                return Equals((float) obj);
-
-            return false;
+            if (obj == null)
+                return false;
+            
+            if (obj.GetType() != GetType())
+                return false;
+            
+            return Equals((Vector3) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var result = X.GetHashCode();
-                result = (result * 397) ^ Y.GetHashCode();
-                result = (result * 397) ^ Z.GetHashCode();
-                return result;
-            }
+            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
         }
     }
 }

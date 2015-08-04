@@ -335,20 +335,18 @@ namespace MineLib.Core.Data
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Position)) return false;
-            return Equals((Position)obj);
+            if (obj == null)
+                return false;
+
+            if (obj.GetType() != GetType())
+                return false;
+
+            return Equals((Position) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var result = X.GetHashCode();
-                result = (result * 397) ^ Y.GetHashCode();
-                result = (result * 397) ^ Z.GetHashCode();
-                return result;
-            }
+            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
         }
     }
 }

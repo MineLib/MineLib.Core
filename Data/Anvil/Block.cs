@@ -71,20 +71,18 @@ namespace MineLib.Core.Data.Anvil
 
 		public override bool Equals(object obj)
 		{
-			if (obj.GetType() != typeof(Block))
-				return false;
+            if (obj == null)
+                return false;
 
-			return Equals((Block) obj);
+            if (obj.GetType() != GetType())
+                return false;
+
+            return Equals((Block) obj);
 		}
 
 		public override int GetHashCode()
 		{
-			unchecked
-			{
-				var result = ID.GetHashCode();
-                result = (result * 397) ^ Meta.GetHashCode();
-				return result;
-			}
+			return IDMeta.GetHashCode();
 		}
 
         public bool IsAir { get { return ID == 0; } }
@@ -169,30 +167,50 @@ namespace MineLib.Core.Data.Anvil
 
 		public override bool Equals(object obj)
 		{
-			if (obj.GetType() != typeof(Block))
-				return false;
+            if (obj == null)
+                return false;
 
-			return Equals((Block) obj);
+            if (obj.GetType() != GetType())
+                return false;
+
+            return Equals((Block) obj);
 		}
 
 		public override int GetHashCode()
 		{
-			unchecked
-			{
-				var result = IDMeta.GetHashCode();
-				return result;
-			}
+		    return IDMeta.GetHashCode();
 		}
 
         public bool IsAir { get { return ID == 0; } }
 
-        public bool IsTransparent { get { return ID == 18 || ID == 161; } }
+        public bool IsTransparent
+        {
+            get
+            {
+                foreach (var i in TransparentBlocks)
+                    if (i == ID) return true;
+                return false;
+            }
+        }
 
-        public bool IsFluid { get { return ID == 18 || ID == 161; } }
+        public bool IsFluid
+        {
+            get
+            {
+                foreach (var i in FluidBlocks)
+                    if (i == ID) return true;
+                return false;
+            }
+        }
+
+        public static readonly int[] FluidBlocks = 
+        {
+            8, 9, 10, 11
+        };
 
         public static readonly int[] TransparentBlocks = 
         {
-            6, 8, 9, 18, 20, 27, 28, 30,  31, 32, 37, 38, 39, 40, 
+            6, 18, 20, 27, 28, 30, 31, 32, 37, 38, 39, 40, 161
         };
 	}
 #endif
@@ -228,7 +246,7 @@ namespace MineLib.Core.Data.Anvil
         public Block this[int x, int y, int z]
         {
             get { return _blocks[x + ((y * YSize) + z) * XSize]; }
-            set { _blocks[x + ((y*YSize) + z)*XSize] = value; }
+            set { _blocks[x + ((y * YSize) + z) * XSize] = value; }
         }
 
         public Block this[int index]

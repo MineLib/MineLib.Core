@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace MineLib.Core.Module
+namespace MineLib.Core.Loader
 {
-    public class ProtocolModule
+    public class ProtocolAssembly
     {
         public string FilePath { get; private set; }
 
@@ -16,7 +16,7 @@ namespace MineLib.Core.Module
             }
         }
 
-        public ProtocolModule(string path)
+        public ProtocolAssembly(string path)
         {
             FilePath = path;
         }

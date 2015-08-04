@@ -1,52 +1,63 @@
-﻿//using fNbt;
-//using fNbt.Serialization;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using fNbt;
+using fNbt.Serialization;
+
+using MineLib.Core.Extensions;
 using MineLib.Core.IO;
 
-namespace MineLib.Core.Data.Structs
+namespace MineLib.Core.Data
 {
-    // TODO: Uses more memory than class
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct ItemStack  : IEquatable<ItemStack>
     {
-        public readonly short ID;
-        public sbyte Count;
+        public short ID;
+        public byte Count;
         public short Damage; // Level
-        public byte[] NBTData;
+        [IgnoreOnNull]
+        public NbtCompound Nbt;
+        [NbtIgnore]
+        public byte Index;
+
+        [NbtIgnore]
+        public bool Empty { get { return ID == -1; } }
+
+        public static ItemStack EmptyStack { get { return new ItemStack(-1); } }
+
 
         public ItemStack(short id)
         {
             ID = id;
             Damage = 0;
             Count = 1;
-            NBTData = null;
+            Nbt = null;
+            Index = 0;
         }
 
-        public ItemStack(short id, sbyte count) : this(id)
+        public ItemStack(short id, byte count) : this(id)
         {
             Count = count;
         }
 
-        public ItemStack(short id, sbyte count, short damage) : this(id, count)
+        public ItemStack(short id, byte count, short damage) : this(id, count)
         {
             Damage = damage;
         }
 
-        public ItemStack(short id, sbyte count, short damage, byte[] nbtData) : this(id, count, damage)
+        public ItemStack(short id, byte count, short damage, NbtCompound nbtData) : this(id, count, damage)
         {
-            NBTData = nbtData;
+            Nbt = nbtData;
 
             if (Count == 0)
             {
                 ID = -1;
                 Damage = 0;
-                NBTData = null;
+                Nbt = null;
             }
         }
+
 
         public override string ToString()
         {
@@ -54,81 +65,86 @@ namespace MineLib.Core.Data.Structs
                 return "(Empty)";
             var result = "ID: " + ID;
             if (Count != 1) result += "; Count: " + Count;
-            //if (Metadata != 0) result += "; Metadata: " + Metadata;
-            if (NBTData != null) result += Environment.NewLine + NBTData;
+            if (Damage != 0) result += "; Damage: " + Damage;
+            if (Nbt != null) result += Environment.NewLine + Nbt;
             return "(" + result + ")";
         }
 
+
         #region NBT
 
-        public static ItemStack FromNbt(byte[] compound)
+        public static ItemStack FromNbt(NbtCompound compound)
         {
-            //var itemStack = EmptyStack;
-            //itemStack.ID = compound.Get<NbtShort>("id").Value;
-            //itemStack.Damage = compound.Get<NbtShort>("Damage").Value;
-            //itemStack.Count = (sbyte)compound.Get<NbtByte>("Count").Value;
-            ////s.Index = compound.Get<NbtByte>("Slot").Value;
-            //if (compound.Get<NbtCompound>("tag") != null)
-            //    itemStack.NBTData = compound.Get<NbtCompound>("tag");
-            //return itemStack;
-            return EmptyStack;
+            var itemStack = EmptyStack;
+            itemStack.ID = compound.Get<NbtShort>("id").Value;
+            itemStack.Damage = compound.Get<NbtShort>("Damage").Value;
+            itemStack.Count = compound.Get<NbtByte>("Count").Value;
+            itemStack.Index = compound.Get<NbtByte>("Slot").Value;
+            if (compound.Get<NbtCompound>("tag") != null)
+                itemStack.Nbt = compound.Get<NbtCompound>("tag");
+            return itemStack;
         }
 
-        public byte[] ToNbt()
+        public NbtCompound ToNbt()
         {
-            //var nbtCompound = new NbtCompound();
-            //nbtCompound.Add(new NbtShort("id", ID));
-            //nbtCompound.Add(new NbtShort("Damage", Damage));
-            //nbtCompound.Add(new NbtByte("Count", (byte)Count));
-            ////c.Add(new NbtByte("Slot", (byte)Index));
-            //if (NBTData != null)
-            //    nbtCompound.Add(new NbtCompound("tag"));
-            //return nbtCompound;
-            return null;
+            var nbtCompound = new NbtCompound();
+            nbtCompound.Add(new NbtShort("id", ID));
+            nbtCompound.Add(new NbtShort("Damage", Damage));
+            nbtCompound.Add(new NbtByte("Count", Count));
+            nbtCompound.Add(new NbtByte("Slot", Index));
+            if (Nbt != null)
+                nbtCompound.Add(new NbtCompound("tag"));
+            return nbtCompound;
         }
 
         #endregion
+
 
         #region Network
 
         public static ItemStack FromReader(IProtocolDataReader reader)
         {
-            var itemStack = new ItemStack(reader.ReadShort()); // -- ID
+            var itemStack = new ItemStack(reader.ReadShort());
 
-            if (itemStack.ID == -1 || itemStack.Count == -1)
-                return EmptyStack;
+            if (itemStack.Empty)
+                return itemStack;
             
-
-            itemStack.Count = reader.ReadSByte();
+            itemStack.Count = reader.ReadByte();
             itemStack.Damage = reader.ReadShort();
 
             var length = reader.ReadVarInt();
             if (length == -1 || length == 0)
                 return itemStack;
 
-            itemStack.NBTData = reader.ReadByteArray(length);
-            // TODO: NBTTag reading
-
+            itemStack.Nbt = new NbtCompound();
+            var buffer = reader.ReadByteArray(length);
+            var nbt = new NbtFile();
+            nbt.LoadFromBuffer(buffer, 0, length, NbtCompression.GZip, null);
+            itemStack.Nbt = nbt.RootTag;
+            
             return itemStack;
         }
 
         public void ToStream(IProtocolStream stream)
         {
             stream.WriteShort(ID);
+            if (Empty)
+                return;
+
+            stream.WriteByte(Count);
             stream.WriteShort(Damage);
-            stream.WriteShort(Count);
-
-            //if (Empty)
-            //    stream.WriteSByte(Slot);
-
-            if (NBTData == null)
+            if (Nbt == null)
             {
                 stream.WriteShort(-1);
                 return;
             }
+
+            var file = new NbtFile(Nbt);
+            file.SaveToProtocolStream(stream, NbtCompression.GZip);
         }
 
         #endregion
+
 
         #region Operators
 
@@ -143,41 +159,19 @@ namespace MineLib.Core.Data.Structs
         }
 
         #endregion
-
-        public bool Empty
-        {
-            get { return ID == -1; }
-        }
         
-        public static ItemStack EmptyStack
-        {
-            get
-            {
-                return new ItemStack(-1);
-            }
-        }
 
-        public object Clone()
-        {
-            return new ItemStack(ID, Count, Damage, NBTData);
-        }
-
-        public bool CanMerge(ItemStack other)
-        {
-            if (Empty || other.Empty)
-                return true;
-            return ID == other.ID && Damage == other.Damage && Equals(NBTData, other.NBTData);
-        }
-        
         public bool Equals(ItemStack other)
         {
-            return ID.Equals(other.ID) && Damage.Equals(other.Damage) && Count.Equals(other.Count) && Equals(NBTData, other.NBTData);
-            //return ID == other.ID && Damage == other.Damage && Count == other.Count && Slot == other.Slot && Equals(NBTData, other.NBTData);
+            return ID.Equals(other.ID) && Damage.Equals(other.Damage) && Count.Equals(other.Count) && Index.Equals(other.Index) && Equals(Nbt, other.Nbt);
         }
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(ItemStack))
+            if (obj == null)
+                return false;
+
+            if (obj.GetType() != GetType())
                 return false;
 
             return Equals((ItemStack) obj);
@@ -185,15 +179,7 @@ namespace MineLib.Core.Data.Structs
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                int hashCode = ID.GetHashCode();
-                hashCode = (hashCode * 397) ^ Damage.GetHashCode();
-                hashCode = (hashCode * 397) ^ Count.GetHashCode();
-                //hashCode = (hashCode * 397) ^ Slot.GetHashCode();
-                hashCode = (hashCode * 397) ^ (NBTData != null ? NBTData.GetHashCode() : 0);
-                return hashCode;
-            }
+            return ID.GetHashCode() ^ Damage.GetHashCode() ^ Count.GetHashCode() ^ Index.GetHashCode() ^ (Nbt != null ? Nbt.GetHashCode() : 0);
         }
     }
 
@@ -232,25 +218,8 @@ namespace MineLib.Core.Data.Structs
             var count = reader.ReadShort();
             for (int i = 0; i < count; i++)
             {
-                var slot = new ItemStack(reader.ReadShort()); // -- ID
-
-                if (slot.ID == -1 || slot.Count == -1)
-                {
-                    value[i] = ItemStack.EmptyStack;
-                    break;
-                }
-
-                slot.Count = reader.ReadSByte();
-                slot.Damage = reader.ReadShort();
-
-                var length = reader.ReadVarInt();
-                if (length == -1)
-                {
-                    value[i] = slot;
-                    break;
-                }
-
-                slot.NBTData = reader.ReadByteArray(length);
+                var slot = ItemStack.FromReader(reader);
+                value._entries.Add(slot);
             }
 
             return value;
@@ -270,7 +239,7 @@ namespace MineLib.Core.Data.Structs
                 //if (itemStack.Empty)
                 //    stream.WriteSByte(itemStack.Slot);
 
-                if (itemStack.NBTData == null)
+                if (itemStack.Nbt == null)
                 {
                     stream.WriteShort(-1);
                     return;

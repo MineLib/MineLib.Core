@@ -21,7 +21,7 @@
     {
         public byte Status { get; set; }
         public Position Location { get; set; }
-        public byte Face { get; set; }
+        public sbyte Face { get; set; }
     }
 
     public class PlayerSetRemoveBlockDataRemove : IPlayerSetRemoveBlockData

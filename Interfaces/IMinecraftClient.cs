@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MineLib.Core.IO;
 
-namespace MineLib.Core
+namespace MineLib.Core.Interfaces
 {
     // TODO: Clean this mess.
     public interface IMinecraftClientAsync
@@ -37,14 +36,13 @@ namespace MineLib.Core
         /// <summary>
         /// Constructor.
         /// </summary>
-        IMinecraftClient Initialize(String login, String password, ProtocolType mode, INetworkTCP tcp, Boolean nameVerification = false, String serverSalt = null);
+        IMinecraftClient Initialize(String login, String password, ProtocolType mode, Boolean nameVerification = false, String serverSalt = null);
 
         void Connect(String ip, UInt16 port);
         void Disconnect();
 
-        void RegisterReceiveEvent(Type receiveEventType, Action<IReceiveAsync> method);
-        void DoReceiveEvent(Type receiveEventType, IReceiveAsync data);
-
-        //IAsyncResult DoAsyncSending(Type asyncSendingType, IAsyncSendingParameters parameters);
+        void RegisterReceiveEvent(Type receiveType, Func<IReceive, Task> func);
+        void DeregisterReceiveEvent(Type receiveType, Func<IReceive, Task> func);
+        void DoReceiveEvent(Type receiveType, IReceive args);
     }
 }
