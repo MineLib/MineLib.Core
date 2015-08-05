@@ -5,7 +5,7 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{121AAB68-F93F-4DA5-A0E4-87515E2C0256}</ProjectGuid>
+    <ProjectGuid>{C6BE1779-61E7-4C62-989A-9FA62ACB2C78}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MineLib.Core</RootNamespace>
@@ -110,17 +110,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\fNbt\fNbt\fNbt.Portable.csproj">
-      <Project>{4488498d-976d-4da3-bf72-109531af0488}</Project>
+    <ProjectReference Include="fNbt\fNbt\fNbt.Portable.csproj">
+      <Project>{22ac9f07-35ca-4e0e-b3b8-4a8e719df529}</Project>
       <Name>fNbt.Portable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
