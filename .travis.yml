@@ -1,9 +1,15 @@
 language: csharp
 mono:
-  - 3.10.0
-  - 2.10.8
-  
-solution: MineLib.Network.sln
+  - latest
+
+solution: MineLib.Core.sln
+
+install:
+  - nuget restore MineLib.Core.sln
+
+script:
+  - xbuild /p:Configuration=Release MineLib.Core.sln
+  - xbuild /p:Configuration=Debug MineLib.Core.sln
 
 notifications:
   email:
