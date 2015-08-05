@@ -5,9 +5,8 @@ configuration:
 platform: Any CPU
 install:
 - git submodule update --init --recursive
-build:
-  project: MineLib.Core.sln
 before_build:
 - nuget restore
 build:
-  verbosity: minimal
+  project: MineLib.Core.sln
+    verbosity: minimal
