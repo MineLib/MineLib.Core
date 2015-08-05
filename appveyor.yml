@@ -9,4 +9,4 @@ before_build:
 - nuget restore
 build:
   project: MineLib.Core.sln
-    verbosity: minimal
+  verbosity: minimal
