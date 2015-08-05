@@ -5,7 +5,7 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{121AAB68-F93F-4DA5-A0E4-87515E2C0256}</ProjectGuid>
+    <ProjectGuid>{C6BE1779-61E7-4C62-989A-9FA62ACB2C78}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MineLib.Core</RootNamespace>
