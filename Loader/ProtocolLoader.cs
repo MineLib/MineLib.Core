@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
+using Aragas.Core.Wrappers;
+
 using MineLib.Core.Interfaces;
-using MineLib.Core.Wrappers;
 
 using PCLStorage;
 
@@ -26,12 +27,12 @@ namespace MineLib.Core.Loader
                             if (type == typeof(IProtocol))
                                 plugin = (IProtocol) Activator.CreateInstance(typeInfo.AsType());
 #elif DEBUG1
-            var assemblyFolder = FileSystemWrapper.Instance.AssemblyFolder;
+            var assemblyFolder = FileSystemWrapper.AssemblyFolder;
             if (assemblyFolder != null && assemblyFolder.CheckExistsAsync(assemblyPath).Result == ExistenceCheckResult.FileExists)
             {
                 using (var stream = assemblyFolder.GetFileAsync(assemblyPath).Result.OpenAsync(FileAccess.Read).Result)
                 {
-                    var asm = AppDomainWrapper.Instance.LoadAssembly(stream.ReadFully());
+                    var asm = AppDomainWrapper.LoadAssembly(stream.ReadFully());
 
                     foreach (var typeInfo in new List<TypeInfo>(asm.DefinedTypes))
                         foreach (var type in new List<Type>(typeInfo.ImplementedInterfaces))

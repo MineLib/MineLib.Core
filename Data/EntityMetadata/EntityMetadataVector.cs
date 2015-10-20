@@ -1,4 +1,4 @@
-﻿using MineLib.Core.IO;
+﻿using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Data.EntityMetadata
 {
@@ -26,20 +26,20 @@ namespace MineLib.Core.Data.EntityMetadata
             Coordinates = position;
         }
 
-        public override void FromReader(IProtocolDataReader reader)
+        public override void FromReader(IPacketDataReader reader)
         {
             Coordinates = new Position(
-                reader.ReadInt(),
-                reader.ReadInt(),
-                reader.ReadInt());
+                reader.Read<int>(),
+                reader.Read<int>(),
+                reader.Read<int>());
         }
 
-        public override void ToStream(IProtocolStream stream, byte index)
+        public override void ToStream(IPacketStream stream, byte index)
         {
-            stream.WriteByte(GetKey(index));
-            stream.WriteInt(Coordinates.X);
-            stream.WriteInt(Coordinates.Y);
-            stream.WriteInt(Coordinates.Z);
+            stream.Write(GetKey(index));
+            stream.Write(Coordinates.X);
+            stream.Write(Coordinates.Y);
+            stream.Write(Coordinates.Z);
         }
     }
 }

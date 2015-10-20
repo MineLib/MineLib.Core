@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
+using Aragas.Core.Data;
+using Aragas.Core.Interfaces;
+
 using MineLib.Core.Data.EntityMetadata;
-using MineLib.Core.IO;
 
 namespace MineLib.Core.Data.Structs
 {
@@ -19,7 +21,7 @@ namespace MineLib.Core.Data.Structs
             _entries = new Dictionary<byte, EntityMetadataEntry>();
         }
 
-        public int Count
+        public VarInt Count
         {
             get { return _entries.Count; }
         }
@@ -70,12 +72,12 @@ namespace MineLib.Core.Data.Structs
 
         #region Network
 
-        public static EntityMetadataList FromReader(IProtocolDataReader reader)
+        public static EntityMetadataList FromReader(IPacketDataReader reader)
         {
             var value = new EntityMetadataList();
             while (true)
             {
-                byte key = reader.ReadByte();
+                byte key = reader.Read<byte>();
                 if (key == 127) break;
 
                 var type = (byte)((key & 0xE0) >> 5);
@@ -90,12 +92,12 @@ namespace MineLib.Core.Data.Structs
             return value;
         }
 
-        public void ToStream(IProtocolStream stream)
+        public void ToStream(IPacketStream stream)
         {
             foreach (var entry in _entries)
                 entry.Value.ToStream(stream, entry.Key);
 
-            stream.WriteByte(0x7F);
+            stream.Write((byte) 0x7F);
         }
 
         #endregion

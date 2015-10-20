@@ -1,4 +1,4 @@
-﻿using MineLib.Core.IO;
+﻿using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Data.EntityMetadata
 {
@@ -27,14 +27,14 @@ namespace MineLib.Core.Data.EntityMetadata
             Rotation = rotation;
         }
 
-        public override void FromReader(IProtocolDataReader reader)
+        public override void FromReader(IPacketDataReader reader)
         {
             Rotation = Rotation.FromReaderFloat(reader);
         }
 
-        public override void ToStream(IProtocolStream stream, byte index)
+        public override void ToStream(IPacketStream stream, byte index)
         {
-            stream.WriteByte(GetKey(index));
+            stream.Write(GetKey(index));
             Rotation.ToStreamFloat(stream);
         }
     }

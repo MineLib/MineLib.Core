@@ -15,7 +15,6 @@ namespace MineLib.Core.Extensions
                     ms.Write(buffer, 0, count);
                 return ms.ToArray();
             }
-
         }
     }
 }

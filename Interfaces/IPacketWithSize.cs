@@ -1,6 +1,6 @@
 ﻿using System;
 
-using MineLib.Core.IO;
+using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Interfaces
 {
@@ -9,7 +9,7 @@ namespace MineLib.Core.Interfaces
     /// </summary>
     public interface IPacketWithSize : IPacket
     {
-        new IPacketWithSize ReadPacket(IProtocolDataReader reader);
+        new IPacketWithSize ReadPacket(IPacketDataReader reader);
         Int16 Size { get; }
     }
 }

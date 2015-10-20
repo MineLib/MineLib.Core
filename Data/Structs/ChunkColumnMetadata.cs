@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Aragas.Core.Data;
+using Aragas.Core.Interfaces;
+
 using MineLib.Core.Extensions;
-using MineLib.Core.IO;
 
 namespace MineLib.Core.Data.Structs
 {
@@ -46,7 +48,7 @@ namespace MineLib.Core.Data.Structs
             _entries = new List<ChunkColumnMetadata>();
         }
 
-        public int Count
+        public VarInt Count
         {
             get { return _entries.Count; }
         }
@@ -68,30 +70,30 @@ namespace MineLib.Core.Data.Structs
             return _entries.ToArray();
         }
 
-        public static ChunkColumnMetadataList FromReader(IProtocolDataReader reader)
+        public static ChunkColumnMetadataList FromReader(IPacketDataReader reader)
         {
             var value = new ChunkColumnMetadataList();
 
-            var count = reader.ReadVarInt();
+            var count = reader.Read<VarInt>();
             for (int i = 0; i < count; i++)
                 value[i] = new ChunkColumnMetadata
                 {
-                    Coordinates = new Coordinates2D(reader.ReadInt(), reader.ReadInt()),
-                    PrimaryBitMap = reader.ReadUShort()
+                    Coordinates = new Coordinates2D(reader.Read<int>(), reader.Read<int>()),
+                    PrimaryBitMap = reader.Read<ushort>()
                 };
             
             return value;
         }
 
-        public void ToStream(IProtocolStream stream)
+        public void ToStream(IPacketStream stream)
         {
-            stream.WriteVarInt(Count);
+            stream.Write(Count);
 
             foreach (var entry in _entries)
             {
-                stream.WriteInt(entry.Coordinates.X);
-                stream.WriteInt(entry.Coordinates.Z);
-                stream.WriteUShort(entry.PrimaryBitMap);
+                stream.Write(entry.Coordinates.X);
+                stream.Write(entry.Coordinates.Z);
+                stream.Write(entry.PrimaryBitMap);
             }
         }
     }

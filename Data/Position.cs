@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using MineLib.Core.IO;
+using Aragas.Core.Data;
+using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Data
 {
@@ -50,95 +51,95 @@ namespace MineLib.Core.Data
 
         #region Network
 
-        public static Position FromReaderVarInt(IProtocolDataReader reader)
+        public static Position FromReaderVarInt(IPacketDataReader reader)
         {
             return new Position(
-                reader.ReadVarInt(),
-                reader.ReadVarInt(),
-                reader.ReadVarInt()
+                reader.Read<VarInt>(),
+                reader.Read<VarInt>(),
+                reader.Read<VarInt>()
             );
         }
 
-        public static Position FromReaderSByte(IProtocolDataReader reader)
+        public static Position FromReaderSByte(IPacketDataReader reader)
         {
             return new Position(
-                reader.ReadSByte(),
-                reader.ReadSByte(),
-                reader.ReadSByte()
+                reader.Read<sbyte>(),
+                reader.Read<sbyte>(),
+                reader.Read<sbyte>()
             );
         }
 
-        public static Position FromReaderByte(IProtocolDataReader reader)
+        public static Position FromReaderByte(IPacketDataReader reader)
         {
             return new Position(
-                reader.ReadByte(),
-                reader.ReadByte(),
-                reader.ReadByte()
+                reader.Read<byte>(),
+                reader.Read<byte>(),
+                reader.Read<byte>()
             );
         }
 
-        public static Position FromReaderShort(IProtocolDataReader reader)
+        public static Position FromReaderShort(IPacketDataReader reader)
         {
             return new Position(
-                reader.ReadShort(),
-                reader.ReadShort(),
-                reader.ReadShort()
+                reader.Read<short>(),
+                reader.Read<short>(),
+                reader.Read<short>()
             );
         }
 
-        public static Position FromReaderInt(IProtocolDataReader reader)
+        public static Position FromReaderInt(IPacketDataReader reader)
         {
             return new Position(
-                reader.ReadInt(),
-                reader.ReadInt(),
-                reader.ReadInt()
+                reader.Read<int>(),
+                reader.Read<int>(),
+                reader.Read<int>()
             );
         }
         
-        public static Position FromReaderLong(IProtocolDataReader reader)
+        public static Position FromReaderLong(IPacketDataReader reader)
         {
-            return FromLong(reader.ReadLong());
+            return FromLong(reader.Read<long>());
         }
 
 
-        public void ToStreamVarInt(IProtocolStream stream)
+        public void ToStreamVarInt(IPacketStream stream)
         {
-            stream.WriteVarInt(X);
-            stream.WriteVarInt(Y);
-            stream.WriteVarInt(Z);
+            stream.Write(new VarInt(X));
+            stream.Write(new VarInt(Y));
+            stream.Write(new VarInt(Z));
         }
 
-        public void ToStreamSByte(IProtocolStream stream)
+        public void ToStreamSByte(IPacketStream stream)
         {
-            stream.WriteSByte((sbyte) X);
-            stream.WriteSByte((sbyte) Y);
-            stream.WriteSByte((sbyte) Z);
+            stream.Write((sbyte) X);
+            stream.Write((sbyte) Y);
+            stream.Write((sbyte) Z);
         }
 
-        public void ToStreamByte(IProtocolStream stream)
+        public void ToStreamByte(IPacketStream stream)
         {
-            stream.WriteByte((byte) X);
-            stream.WriteByte((byte) Y);
-            stream.WriteByte((byte) Z);
+            stream.Write((byte) X);
+            stream.Write((byte) Y);
+            stream.Write((byte) Z);
         }
 
-        public void ToStreamShort(IProtocolStream stream)
+        public void ToStreamShort(IPacketStream stream)
         {
-            stream.WriteShort((short) X);
-            stream.WriteShort((short) Y);
-            stream.WriteShort((short) Z);
+            stream.Write((short) X);
+            stream.Write((short) Y);
+            stream.Write((short) Z);
         }
 
-        public void ToStreamInt(IProtocolStream stream)
+        public void ToStreamInt(IPacketStream stream)
         {
-            stream.WriteInt(X);
-            stream.WriteInt(Y);
-            stream.WriteInt(Z);
+            stream.Write(X);
+            stream.Write(Y);
+            stream.Write(Z);
         }
 
-        public void ToStreamLong(IProtocolStream stream)
+        public void ToStreamLong(IPacketStream stream)
         {
-            stream.WriteLong(ToLong());
+            stream.Write(ToLong());
         }
 
         #endregion

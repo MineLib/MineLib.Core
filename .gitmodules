@@ -2,3 +2,6 @@
 	path = fNbt
 	url = https://github.com/MineLib/fNbt.git
 	branch = master
+[submodule "Aragas.Core"]
+	path = Aragas.Core
+	url = https://github.com/Aragas/Aragas.Core.git

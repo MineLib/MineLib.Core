@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using MineLib.Core.Data;
+using Aragas.Core.Data;
+
 using MineLib.Core.Data.Structs;
 
 namespace MineLib.Core.Interfaces

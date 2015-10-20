@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+using Aragas.Core.Interfaces;
+
 using MineLib.Core.Extensions;
-using MineLib.Core.IO;
 
 namespace MineLib.Core.Data
 {
@@ -33,20 +34,20 @@ namespace MineLib.Core.Data
 
         #region Network
 
-        public Rotation FromReaderFloat(IProtocolDataReader reader)
+        public static Rotation FromReaderFloat(IPacketDataReader reader)
         {
             return new Rotation(
-                reader.ReadFloat(),
-                reader.ReadFloat(),
-                reader.ReadFloat());
+                reader.Read<float>(),
+                reader.Read<float>(),
+                reader.Read<float>());
         }
 
 
-        public void ToStreamFloat(IProtocolStream stream)
+        public void ToStreamFloat(IPacketStream stream)
         {
-            stream.WriteFloat(Pitch);
-            stream.WriteFloat(Yaw);
-            stream.WriteFloat(Roll);
+            stream.Write(Pitch);
+            stream.Write(Yaw);
+            stream.Write(Roll);
         }
 
         #endregion

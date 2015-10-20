@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-using MineLib.Core.IO;
+using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Data.Structs
 {
@@ -17,9 +17,9 @@ namespace MineLib.Core.Data.Structs
         public bool HatEnabled;
         public bool Unused;
 
-        public static DisplayedSkinParts FromReader(IProtocolDataReader reader)
+        public static DisplayedSkinParts FromReader(IPacketDataReader reader)
         {
-            var value = reader.ReadByte();
+            var value = reader.Read<byte>();
 
             return FromByte(value);
         }
@@ -43,11 +43,11 @@ namespace MineLib.Core.Data.Structs
             };
         }
 
-        public void ToStream(IProtocolStream stream)
+        public void ToStream(IPacketStream stream)
         {
             var value = ToByte();
 
-            stream.WriteByte(value);
+            stream.Write(value);
         }
 
         public byte ToByte()

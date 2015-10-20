@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using MineLib.Core.IO;
+using Aragas.Core.Data;
+using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Data.Structs
 {
@@ -53,7 +54,7 @@ namespace MineLib.Core.Data.Structs
             _entries = new List<Icon>();
         }
 
-        public int Count
+        public VarInt Count
         {
             get { return _entries.Count; }
         }
@@ -64,21 +65,21 @@ namespace MineLib.Core.Data.Structs
             set { _entries[index] = value; }
         }
 
-        public static IconList FromReader(IProtocolDataReader reader)
+        public static IconList FromReader(IPacketDataReader reader)
         {
             var value = new IconList();
 
-            var count = reader.ReadVarInt();
+            var count = reader.Read<VarInt>();
             for (int i = 0; i < count; i++)
             {
                 var icon = new Icon();
 
-                var comb = reader.ReadByte();
+                var comb = reader.Read<byte>();
                 icon.Direction = (byte)(comb & 0xF0);
                 icon.Type = (byte)(comb & 0x0F);
 
-                icon.X = reader.ReadByte();
-                icon.Y = reader.ReadByte();
+                icon.X = reader.Read<byte>();
+                icon.Y = reader.Read<byte>();
 
                 value[i] = icon;
             }
@@ -86,15 +87,15 @@ namespace MineLib.Core.Data.Structs
             return value;
         }
 
-        public void ToStream(IProtocolStream stream)
+        public void ToStream(IPacketStream stream)
         {
-            stream.WriteVarInt(Count);
+            stream.Write(Count);
 
             foreach (var entry in _entries)
             {
-                stream.WriteByte((byte) ((entry.Direction << 4) | entry.Type));
-                stream.WriteByte((byte) entry.X);
-                stream.WriteByte((byte) entry.Y);
+                stream.Write((byte) ((entry.Direction << 4) | entry.Type));
+                stream.Write((byte) entry.X);
+                stream.Write((byte) entry.Y);
             }
         }
     }

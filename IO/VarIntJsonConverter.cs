@@ -1,5 +1,6 @@
 using System;
-using MineLib.Core.Data;
+
+using Aragas.Core.Data;
 
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace MineLib.Core.IO
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var number = value as VarInt? ?? new VarInt();
+            var number = value as VarInt ?? new VarInt(0);
             writer.WriteValue(number);
         }
 

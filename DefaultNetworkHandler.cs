@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using Aragas.Core.Wrappers;
+
 using MineLib.Core.Interfaces;
 using MineLib.Core.Loader;
-using MineLib.Core.Wrappers;
 
 namespace MineLib.Core
 {
@@ -36,8 +37,8 @@ namespace MineLib.Core
         {
             var protocols = new List<ProtocolAssembly>();
 
-            if (FileSystemWrapper.ProtocolsFolder != null)
-                foreach (var file in FileSystemWrapper.ProtocolsFolder.GetFilesAsync().Result)
+            if (FileSystemWrapper.AssemblyFolder != null)
+                foreach (var file in FileSystemWrapper.AssemblyFolder.GetFilesAsync().Result)
                     if (FitsMask(file.Name, "Protocol*.dll"))
                         protocols.Add(new ProtocolAssembly(file.Name));
 

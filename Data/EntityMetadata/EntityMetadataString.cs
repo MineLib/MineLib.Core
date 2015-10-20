@@ -1,6 +1,6 @@
 ﻿using System;
 
-using MineLib.Core.IO;
+using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Data.EntityMetadata
 {
@@ -32,15 +32,15 @@ namespace MineLib.Core.Data.EntityMetadata
             Value = value;
         }
 
-        public override void FromReader(IProtocolDataReader reader)
+        public override void FromReader(IPacketDataReader reader)
         {
-            Value = reader.ReadString();
+            Value = reader.Read(Value);
         }
 
-        public override void ToStream(IProtocolStream stream, byte index)
+        public override void ToStream(IPacketStream stream, byte index)
         {
-            stream.WriteByte(GetKey(index));
-            stream.WriteString(Value);
+            stream.Write(GetKey(index));
+            stream.Write(Value);
         }
     }
 }

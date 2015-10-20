@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using Aragas.Core.Data;
+using Aragas.Core.Interfaces;
+
 using fNbt;
 using fNbt.Serialization;
 
 using MineLib.Core.Extensions;
-using MineLib.Core.IO;
 
 namespace MineLib.Core.Data
 {
@@ -102,22 +104,22 @@ namespace MineLib.Core.Data
 
         #region Network
 
-        public static ItemStack FromReader(IProtocolDataReader reader)
+        public static ItemStack FromReader(IPacketDataReader reader)
         {
-            var itemStack = new ItemStack(reader.ReadShort());
+            var itemStack = new ItemStack(reader.Read<short>());
 
             if (itemStack.Empty)
                 return itemStack;
             
-            itemStack.Count = reader.ReadByte();
-            itemStack.Damage = reader.ReadShort();
+            itemStack.Count = reader.Read<byte>();
+            itemStack.Damage = reader.Read<short>();
 
-            var length = reader.ReadVarInt();
+            var length = reader.Read<VarInt>();
             if (length == -1 || length == 0)
                 return itemStack;
 
             itemStack.Nbt = new NbtCompound();
-            var buffer = reader.ReadByteArray(length);
+            var buffer = reader.Read<byte[]>(null, length);
             var nbt = new NbtFile();
             nbt.LoadFromBuffer(buffer, 0, length, NbtCompression.GZip, null);
             itemStack.Nbt = nbt.RootTag;
@@ -125,17 +127,17 @@ namespace MineLib.Core.Data
             return itemStack;
         }
 
-        public void ToStream(IProtocolStream stream)
+        public void ToStream(IPacketStream stream)
         {
-            stream.WriteShort(ID);
+            stream.Write(ID);
             if (Empty)
                 return;
 
-            stream.WriteByte(Count);
-            stream.WriteShort(Damage);
+            stream.Write((byte) Count);
+            stream.Write(Damage);
             if (Nbt == null)
             {
-                stream.WriteShort(-1);
+                stream.Write((short) -1);
                 return;
             }
 
@@ -211,11 +213,11 @@ namespace MineLib.Core.Data
 
         #region Network
 
-        public static ItemStackList FromReader(IProtocolDataReader reader)
+        public static ItemStackList FromReader(IPacketDataReader reader)
         {
             var value = new ItemStackList();
 
-            var count = reader.ReadShort();
+            var count = reader.Read<short>();
             for (int i = 0; i < count; i++)
             {
                 var slot = ItemStack.FromReader(reader);
@@ -225,23 +227,23 @@ namespace MineLib.Core.Data
             return value;
         }
 
-        public void ToStream(IProtocolStream stream)
+        public void ToStream(IPacketStream stream)
         {
             foreach (var itemStack in _entries)
             {
                 //if (itemStack.ID == 1) // AIR
                 //    return;
 
-                stream.WriteShort(itemStack.ID);
-                stream.WriteShort(itemStack.Damage);
-                stream.WriteShort(itemStack.Count);
+                stream.Write(itemStack.ID);
+                stream.Write(itemStack.Damage);
+                stream.Write((short)itemStack.Count);
 
                 //if (itemStack.Empty)
                 //    stream.WriteSByte(itemStack.Slot);
 
                 if (itemStack.Nbt == null)
                 {
-                    stream.WriteShort(-1);
+                    stream.Write((short) -1);
                     return;
                 }
             }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using MineLib.Core.IO;
+using Aragas.Core.Data;
+using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Data.Structs
 {
     public struct StatisticsEntry : IEquatable<StatisticsEntry>
     {
         public string StatisticsName;
-        public int Value;
+        public VarInt Value;
 
         public override bool Equals(object obj)
         {
@@ -41,7 +42,7 @@ namespace MineLib.Core.Data.Structs
             _entries = new List<StatisticsEntry>();
         }
 
-        public int Count
+        public VarInt Count
         {
             get { return _entries.Count; }
         }
@@ -58,26 +59,25 @@ namespace MineLib.Core.Data.Structs
             }
         }
 
-        public static StatisticsEntryList FromReader(IProtocolDataReader reader)
+        public static StatisticsEntryList FromReader(IPacketDataReader reader)
         {
-            var count = reader.ReadVarInt();
+            var count = reader.Read<VarInt>();
 
             var value = new StatisticsEntryList();
             for (int i = 0; i < count; i++)
-                value[i] = new StatisticsEntry { StatisticsName = reader.ReadString(), Value = reader.ReadVarInt() };
+                value[i] = new StatisticsEntry {StatisticsName = reader.Read<string>(), Value = reader.Read<VarInt>()};
             
-
             return value;
         }
 
-        public void ToStream(IProtocolStream stream)
+        public void ToStream(IPacketStream stream)
         {
-            stream.WriteVarInt(Count);
+            stream.Write(Count);
 
             foreach (var entry in _entries)
             {
-                stream.WriteString(entry.StatisticsName);
-                stream.WriteVarInt(entry.Value);
+                stream.Write(entry.StatisticsName);
+                stream.Write(entry.Value);
             }
         }
     }

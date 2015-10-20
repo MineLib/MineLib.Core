@@ -1,6 +1,6 @@
 ﻿using System;
 
-using MineLib.Core.IO;
+using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Interfaces
 {
@@ -17,11 +17,11 @@ namespace MineLib.Core.Interfaces
         /// <summary>
         /// Read packet from any stream.
         /// </summary>
-        IPacket ReadPacket(IProtocolDataReader reader);
+        IPacket ReadPacket(IPacketDataReader reader);
 
         /// <summary>
         /// Write packet to any stream.
         /// </summary>
-        IPacket WritePacket(IProtocolStream stream);
+        IPacket WritePacket(IPacketStream stream);
     }
 }

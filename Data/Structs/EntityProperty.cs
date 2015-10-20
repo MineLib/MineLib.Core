@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using MineLib.Core.IO;
+using Aragas.Core.Data;
+using Aragas.Core.Interfaces;
+
+using MineLib.Core.Extensions;
 
 using Org.BouncyCastle.Math;
 
@@ -72,7 +75,7 @@ namespace MineLib.Core.Data.Structs
             _entries = new List<EntityProperty>();
         }
 
-        public int Count
+        public VarInt Count
         {
             get { return _entries.Count; }
         }
@@ -91,27 +94,27 @@ namespace MineLib.Core.Data.Structs
 
         #region Network
 
-        public static EntityPropertyList FromReader(IProtocolDataReader reader)
+        public static EntityPropertyList FromReader(IPacketDataReader reader)
         {
-            var count = reader.ReadInt();
+            var count = reader.Read<int>();
 
             var value = new EntityPropertyList();
             for (int i = 0; i < count; i++)
             {
                 var property = new EntityProperty();
 
-                property.Key = reader.ReadString();
-                property.Value = (float) reader.ReadDouble();
-                var listLength = reader.ReadVarInt();
+                property.Key = reader.Read<string>();
+                property.Value = (float) reader.Read<double>();
+                var listLength = reader.Read<VarInt>();
 
                 property.Modifiers = new Modifiers[listLength];
                 for (var j = 0; j < listLength; j++)
                 {
                     var item = new Modifiers
                     {
-                        UUID = reader.ReadBigInteger(),
-                        Amount = (float) reader.ReadDouble(),
-                        Operation = reader.ReadSByte()
+                        UUID = reader.Read<BigInteger>(),
+                        Amount = (float) reader.Read<double>(),
+                        Operation = reader.Read<sbyte>()
                     };
 
                     property.Modifiers[j] = item;
@@ -123,21 +126,21 @@ namespace MineLib.Core.Data.Structs
             return value;
         }
 
-        public void ToStream(IProtocolStream stream)
+        public void ToStream(IPacketStream stream)
         {
-            stream.WriteInt(Count);
+            stream.Write(Count);
 
             foreach (var entry in _entries)
             {
-                stream.WriteString(entry.Key);
-                stream.WriteDouble(entry.Value);
+                stream.Write(entry.Key);
+                stream.Write((double) entry.Value);
 
-                stream.WriteShort((short)entry.Modifiers.Length);
+                stream.Write((short) entry.Modifiers.Length);
                 foreach (var modifiers in entry.Modifiers)
                 {
-                    stream.WriteBigInteger(modifiers.UUID);
-                    stream.WriteDouble(modifiers.Amount);
-                    stream.WriteSByte(modifiers.Operation);
+                    stream.Write(modifiers.UUID);
+                    stream.Write((double) modifiers.Amount);
+                    stream.Write(modifiers.Operation);
                 }
             }
         }

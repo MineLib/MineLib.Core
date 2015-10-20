@@ -1,4 +1,6 @@
-﻿using MineLib.Core.Data;
+﻿using Aragas.Core.Data;
+
+using MineLib.Core.Data;
 using MineLib.Core.Data.Anvil;
 using MineLib.Core.Data.Structs;
 

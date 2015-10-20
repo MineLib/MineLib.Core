@@ -1,3 +1,5 @@
+using Aragas.Core.Data;
+
 namespace MineLib.Core.Data.Structs
 {
     public enum PlaverMovedMode

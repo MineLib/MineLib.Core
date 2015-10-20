@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using MineLib.Core.IO;
+using Aragas.Core.Data;
+using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Data
 {
@@ -33,61 +34,61 @@ namespace MineLib.Core.Data
 
         #region Network
 
-        public static Coordinates2D FromReaderVarInt(IProtocolDataReader reader)
+        public static Coordinates2D FromReaderVarInt(IPacketDataReader reader)
         {
             return new Coordinates2D(
-                reader.ReadVarInt(),
-                reader.ReadVarInt()
+                reader.Read<VarInt>(),
+                reader.Read<VarInt>()
             );
         }
 
-        public static Coordinates2D FromReaderByte(IProtocolDataReader reader)
+        public static Coordinates2D FromReaderByte(IPacketDataReader reader)
         {
             return new Coordinates2D(
-                reader.ReadByte(),
-                reader.ReadByte()
+                reader.Read<byte>(),
+                reader.Read<byte>()
             );
         }
 
-        public static Coordinates2D FromReaderShort(IProtocolDataReader reader)
+        public static Coordinates2D FromReaderShort(IPacketDataReader reader)
         {
             return new Coordinates2D(
-                reader.ReadShort(),
-                reader.ReadShort()
+                reader.Read<short>(),
+                reader.Read<short>()
             );
         }
 
-        public static Coordinates2D FromReaderInt(IProtocolDataReader reader)
+        public static Coordinates2D FromReaderInt(IPacketDataReader reader)
         {
             return new Coordinates2D(
-                reader.ReadInt(),
-                reader.ReadInt()
+                reader.Read<int>(),
+                reader.Read<int>()
             );
         }
 
 
-        public void ToStreamVarInt(IProtocolStream stream)
+        public void ToStreamVarInt(IPacketStream stream)
         {
-            stream.WriteVarInt(X);
-            stream.WriteVarInt(Z);
+            stream.Write(new VarInt(X));
+            stream.Write(new VarInt(Z));
         }
 
-        public void ToStreamByte(IProtocolStream stream)
+        public void ToStreamByte(IPacketStream stream)
         {
-            stream.WriteByte((byte) X);
-            stream.WriteByte((byte) Z);
+            stream.Write((byte) X);
+            stream.Write((byte) Z);
         }
 
-        public void ToStreamShort(IProtocolStream stream)
+        public void ToStreamShort(IPacketStream stream)
         {
-            stream.WriteShort((short) X);
-            stream.WriteShort((short) Z);
+            stream.Write((short) X);
+            stream.Write((short) Z);
         }
 
-        public void ToStreamInt(IProtocolStream stream)
+        public void ToStreamInt(IPacketStream stream)
         {
-            stream.WriteInt(X);
-            stream.WriteInt(Z);
+            stream.Write(X);
+            stream.Write(Z);
         }
 
         #endregion

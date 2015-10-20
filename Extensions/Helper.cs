@@ -36,7 +36,6 @@ namespace MineLib.Core.Extensions
         {
             return Math.Abs(value1 - value2) < unimportantDifference;
         }
-
         public static bool NearlyEquals(this double? value1, double? value2, double unimportantDifference = 0.0001)
         {
             if (value1 != value2)
@@ -55,7 +54,6 @@ namespace MineLib.Core.Extensions
         {
             return Math.Abs(value1 - value2) < unimportantDifference;
         }
-
         public static bool NearlyEquals(this float? value1, float? value2, float unimportantDifference = 0.0001f)
         {
             if (value1 != value2)
