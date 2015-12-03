@@ -10,7 +10,7 @@ namespace MineLib.Core.Interfaces
     {
         Task ConnectAsync(String ip, UInt16 port);
 
-        Boolean DisconnectAsync();
+        Task<Boolean> DisconnectAsync();
     }
 
 

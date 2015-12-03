@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Aragas.Core.Packets;
 
 namespace MineLib.Core.Interfaces
 {
@@ -17,17 +18,17 @@ namespace MineLib.Core.Interfaces
 
     public interface IProtocolDebug
     {
-        List<IPacket> PacketsReceived { get; }
-        List<IPacket> PacketsSended { get; }
-        List<IPacket> LastPackets { get; }
-        IPacket LastPacket { get; }
+        List<ProtobufPacket> PacketsReceived { get; }
+        List<ProtobufPacket> PacketsSended { get; }
+        List<ProtobufPacket> LastPackets { get; }
+        ProtobufPacket LastProtobufPacket { get; }
         Boolean SavePackets { get; }
     }
 
     public interface IProtocolAsync
     {
         Task ConnectAsync(String host, UInt16 port);
-        Boolean DisconnectAsync();
+        Task<Boolean> DisconnectAsync();
     }
 
     public interface IProtocolLoginAsync
@@ -81,15 +82,15 @@ namespace MineLib.Core.Interfaces
         /// <summary>
         /// Only for internal use!
         /// </summary>
-        void RegisterReceiving(Type packetType, Func<IPacket, Task> func);
+        void RegisterReceiving(Type packetType, Func<ProtobufPacket, Task> func);
         /// <summary>
         /// Only for internal use!
         /// </summary>
-        void DeregisterReceiving(Type packetType, Func<IPacket, Task> func);
+        void DeregisterReceiving(Type packetType, Func<ProtobufPacket, Task> func);
         /// <summary>
         /// Only for internal use!
         /// </summary>
-        void DoReceiving(Type packetType, IPacket packet);
+        void DoReceiving(Type packetType, ProtobufPacket protobufPacket);
     }
 
 

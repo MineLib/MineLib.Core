@@ -20,7 +20,6 @@ namespace MineLib.Core.Extensions
             
             return intArray;
         }
-
         public static ushort ConvertToUShort(this Chunk chunk)
         {
             foreach (var section in chunk.Sections)
@@ -30,7 +29,6 @@ namespace MineLib.Core.Extensions
             }
             return 0;
         }
-
 
         public static bool NearlyEquals(this double value1, double value2, double unimportantDifference = 0.0001)
         {
@@ -48,7 +46,6 @@ namespace MineLib.Core.Extensions
 
             return true;
         }
-
 
         public static bool NearlyEquals(this float value1, float value2, float unimportantDifference = 0.0001f)
         {

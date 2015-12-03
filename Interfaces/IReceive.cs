@@ -36,11 +36,11 @@ namespace MineLib.Core.Interfaces
         }
     }
 
-    public struct OnChunkList : IReceive
+    public struct OnChunkArray : IReceive
     {
-        public ChunkList Chunks { get; private set; }
+        public Chunk[] Chunks { get; private set; }
 
-        public OnChunkList(ChunkList chunks) : this()
+        public OnChunkArray(Chunk[] chunks) : this()
         {
             Chunks = chunks;
         }

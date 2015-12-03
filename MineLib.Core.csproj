@@ -35,9 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Data\NotSupportedType.cs" />
     <Compile Include="Extensions\PacketExtensions.cs" />
     <Compile Include="IO\Base64JsonConverter.cs" />
-    <Compile Include="Extensions\BinaryReaderExtension.cs" />
     <Compile Include="IO\VarIntJsonConverter.cs" />
     <Compile Include="Interfaces\IStatusClient.cs" />
     <Compile Include="Data\ServerInfo.Json.cs" />
@@ -74,8 +74,7 @@
     <Compile Include="Interfaces\ISending.cs" />
     <Compile Include="Interfaces\IMinecraftClient.cs" />
     <Compile Include="Interfaces\INetworkHandler.cs" />
-    <Compile Include="Interfaces\IPacket.cs" />
-    <Compile Include="Interfaces\IPacketWithSize.cs" />
+    <Compile Include="Interfaces\PacketWithSize.cs" />
     <Compile Include="Interfaces\IProtocol.cs" />
     <Compile Include="Loader\ProtocolLoader.cs" />
     <Compile Include="Loader\Protocol.cs" />
@@ -118,11 +117,25 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Choose>
+    <When Condition="Exists('..\Aragas.Core')">
+      <ItemGroup>
+        <ProjectReference Include="..\Aragas.Core\Aragas.Core.csproj">
+          <Project>{468d9d51-dfe7-47a8-b0d6-52d035fc714d}</Project>
+          <Name>Aragas.Core</Name>
+        </ProjectReference>
+      </ItemGroup>
+    </When>
+    <When Condition="!Exists('..\Aragas.Core')">
+      <ItemGroup>
+        <ProjectReference Include="Aragas.Core\Aragas.Core.csproj">
+          <Project>{468d9d51-dfe7-47a8-b0d6-52d035fc714d}</Project>
+          <Name>Aragas.Core</Name>
+        </ProjectReference>
+      </ItemGroup>
+    </When>
+  </Choose>
   <ItemGroup>
-    <ProjectReference Include="Aragas.Core\Aragas.Core.csproj">
-      <Project>{468d9d51-dfe7-47a8-b0d6-52d035fc714d}</Project>
-      <Name>Aragas.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="fNbt\fNbt\fNbt.Portable.csproj">
       <Project>{22ac9f07-35ca-4e0e-b3b8-4a8e719df529}</Project>
       <Name>fNbt.Portable</Name>

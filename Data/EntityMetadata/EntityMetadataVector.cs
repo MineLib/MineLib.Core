@@ -7,8 +7,8 @@ namespace MineLib.Core.Data.EntityMetadata
     /// </summary>
     public class EntityMetadataVector : EntityMetadataEntry
     {
-        public override byte Identifier { get { return 6; } }
-        public override string FriendlyName { get { return "vector"; } }
+        protected override byte Identifier => 6;
+        protected override string FriendlyName => "vector";
 
         public Position Coordinates;
 
@@ -26,7 +26,7 @@ namespace MineLib.Core.Data.EntityMetadata
             Coordinates = position;
         }
 
-        public override void FromReader(IPacketDataReader reader)
+        public override void FromReader(PacketDataReader reader)
         {
             Coordinates = new Position(
                 reader.Read<int>(),

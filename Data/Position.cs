@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 
 using Aragas.Core.Data;
-using Aragas.Core.Interfaces;
 
 namespace MineLib.Core.Data
 {
@@ -20,14 +19,12 @@ namespace MineLib.Core.Data
         {
             X = Y = Z = value;
         }
-
         public Position(int x, int y, int z)
         {
             X = x;
             Y = y;
             Z = z;
         }
-
         public Position(Position v)
         {
             X = v.X;
@@ -49,108 +46,13 @@ namespace MineLib.Core.Data
             return ((X & 0x3FFFFFF) << 38) | ((Y & 0xFFF) << 26) | (Z & 0x3FFFFFF);
         }
 
-        #region Network
-
-        public static Position FromReaderVarInt(IPacketDataReader reader)
-        {
-            return new Position(
-                reader.Read<VarInt>(),
-                reader.Read<VarInt>(),
-                reader.Read<VarInt>()
-            );
-        }
-
-        public static Position FromReaderSByte(IPacketDataReader reader)
-        {
-            return new Position(
-                reader.Read<sbyte>(),
-                reader.Read<sbyte>(),
-                reader.Read<sbyte>()
-            );
-        }
-
-        public static Position FromReaderByte(IPacketDataReader reader)
-        {
-            return new Position(
-                reader.Read<byte>(),
-                reader.Read<byte>(),
-                reader.Read<byte>()
-            );
-        }
-
-        public static Position FromReaderShort(IPacketDataReader reader)
-        {
-            return new Position(
-                reader.Read<short>(),
-                reader.Read<short>(),
-                reader.Read<short>()
-            );
-        }
-
-        public static Position FromReaderInt(IPacketDataReader reader)
-        {
-            return new Position(
-                reader.Read<int>(),
-                reader.Read<int>(),
-                reader.Read<int>()
-            );
-        }
-        
-        public static Position FromReaderLong(IPacketDataReader reader)
-        {
-            return FromLong(reader.Read<long>());
-        }
-
-
-        public void ToStreamVarInt(IPacketStream stream)
-        {
-            stream.Write(new VarInt(X));
-            stream.Write(new VarInt(Y));
-            stream.Write(new VarInt(Z));
-        }
-
-        public void ToStreamSByte(IPacketStream stream)
-        {
-            stream.Write((sbyte) X);
-            stream.Write((sbyte) Y);
-            stream.Write((sbyte) Z);
-        }
-
-        public void ToStreamByte(IPacketStream stream)
-        {
-            stream.Write((byte) X);
-            stream.Write((byte) Y);
-            stream.Write((byte) Z);
-        }
-
-        public void ToStreamShort(IPacketStream stream)
-        {
-            stream.Write((short) X);
-            stream.Write((short) Y);
-            stream.Write((short) Z);
-        }
-
-        public void ToStreamInt(IPacketStream stream)
-        {
-            stream.Write(X);
-            stream.Write(Y);
-            stream.Write(Z);
-        }
-
-        public void ToStreamLong(IPacketStream stream)
-        {
-            stream.Write(ToLong());
-        }
-
-        #endregion
-
         /// <summary>
         /// Converts this Position to a string.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("X: {0}, Y: {1}, Z: {2}", X, Y, Z);
+            return $"X: {X}, Y: {Y}, Z: {Z}";
         }
 
         #region Math

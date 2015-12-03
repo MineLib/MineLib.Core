@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Aragas.Core.Data;
-
+using Aragas.Core.Packets;
 using MineLib.Core.Data.Structs;
 
 namespace MineLib.Core.Interfaces
@@ -11,10 +11,10 @@ namespace MineLib.Core.Interfaces
 
     public abstract class SendingArgs
     {
-        public Action<IPacket> SendPacket { get; private set; }
-        public Func<IPacket, Task> SendPacketAsync { get; private set; }
+        public Action<ProtobufPacket> SendPacket { get; private set; }
+        public Func<ProtobufPacket, Task> SendPacketAsync { get; private set; }
 
-        public void RegisterSending(Action<IPacket> sendPacket, Func<IPacket, Task> sendPacketAsync)
+        public void RegisterSending(Action<ProtobufPacket> sendPacket, Func<ProtobufPacket, Task> sendPacketAsync)
         {
             SendPacket += sendPacket;
             SendPacketAsync += sendPacketAsync;
@@ -31,7 +31,7 @@ namespace MineLib.Core.Interfaces
 
         public ConnectToServerArgs(string serverHost, ushort port, string username, VarInt protocol)
         {
-            ServerHost = ServerHost;
+            ServerHost = serverHost;
             Port = port;
 
             Username = username;

@@ -15,5 +15,3 @@ namespace MineLib.Core.Extensions
         }
     }
 }
-
-// "Я ставил не против себя, я ставил не на себя"

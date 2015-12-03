@@ -7,8 +7,8 @@ namespace MineLib.Core.Data.EntityMetadata
     /// </summary>
     public class EntityMetadataRotation : EntityMetadataEntry
     {
-        public override byte Identifier { get { return 7; } }
-        public override string FriendlyName { get { return "rotation"; } }
+        protected override byte Identifier => 7;
+        protected override string FriendlyName => "rotation";
 
         public Rotation Rotation;
 
@@ -27,15 +27,21 @@ namespace MineLib.Core.Data.EntityMetadata
             Rotation = rotation;
         }
 
-        public override void FromReader(IPacketDataReader reader)
+        public override void FromReader(PacketDataReader reader)
         {
-            Rotation = Rotation.FromReaderFloat(reader);
+            Rotation = new Rotation(
+                reader.Read<float>(),
+                reader.Read<float>(),
+                reader.Read<float>());
         }
 
         public override void ToStream(IPacketStream stream, byte index)
         {
             stream.Write(GetKey(index));
-            Rotation.ToStreamFloat(stream);
+
+            stream.Write(Rotation.Pitch);
+            stream.Write(Rotation.Yaw);
+            stream.Write(Rotation.Roll);
         }
     }
 }

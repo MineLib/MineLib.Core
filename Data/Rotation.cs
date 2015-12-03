@@ -23,7 +23,7 @@ namespace MineLib.Core.Data
             Yaw = yaw;
             Roll = roll;
         }
-
+ 
         public Rotation(Rotation v)
         {
             Pitch = v.Pitch;
@@ -32,34 +32,13 @@ namespace MineLib.Core.Data
         }
 
 
-        #region Network
-
-        public static Rotation FromReaderFloat(IPacketDataReader reader)
-        {
-            return new Rotation(
-                reader.Read<float>(),
-                reader.Read<float>(),
-                reader.Read<float>());
-        }
-
-
-        public void ToStreamFloat(IPacketStream stream)
-        {
-            stream.Write(Pitch);
-            stream.Write(Yaw);
-            stream.Write(Roll);
-        }
-
-        #endregion
-
-
         /// <summary>
         /// Converts this Rotation to a string.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("Pitch: {0}, Yaw: {1}, Roll: {2}", Pitch, Yaw, Roll);
+            return $"Pitch: {Pitch}, Yaw: {Yaw}, Roll: {Roll}";
         }
 
         public static bool operator ==(Rotation a, Rotation b)

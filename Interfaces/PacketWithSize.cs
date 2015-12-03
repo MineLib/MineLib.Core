@@ -1,15 +1,14 @@
 ﻿using System;
 
-using Aragas.Core.Interfaces;
+using Aragas.Core.Packets;
 
 namespace MineLib.Core.Interfaces
 {
     /// <summary>
     /// Extension of IPacket with defenitioned packet size within it.
     /// </summary>
-    public interface IPacketWithSize : IPacket
+    public abstract class ProtobufPacketWithSize : ProtobufPacket
     {
-        new IPacketWithSize ReadPacket(IPacketDataReader reader);
         Int16 Size { get; }
     }
 }

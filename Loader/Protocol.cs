@@ -4,7 +4,7 @@ namespace MineLib.Core.Loader
 {
     public class ProtocolAssembly
     {
-        public string FilePath { get; private set; }
+        public string FilePath { get; }
 
         public string FileName
         {

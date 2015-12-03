@@ -106,11 +106,11 @@ namespace MineLib.Core.Data.Anvil
 		private readonly ushort IDMeta;
 		private byte SkyAndBlockLight;
 
-		public ushort ID { get { return (ushort) (IDMeta >> 4); } }
+		public ushort ID => (ushort) (IDMeta >> 4);
 
-		public byte Meta { get { return (byte) (IDMeta & 0x000F); } }
+        public byte Meta => (byte) (IDMeta & 0x000F);
 
-		public byte SkyLight
+        public byte SkyLight
 		{
 			get { return (byte)(SkyAndBlockLight >> 4); }
 			set { SkyAndBlockLight = (byte)(value << 4      | Light & 0x0F); }
@@ -147,7 +147,7 @@ namespace MineLib.Core.Data.Anvil
 
 		public override string ToString()
 		{
-			return string.Format("ID: {0}, Meta: {1}, Light: {2}, SkyLight: {3}", ID, Meta, Light, SkyLight);
+			return $"ID: {ID}, Meta: {Meta}, Light: {Light}, SkyLight: {SkyLight}";
 		}
 
 		public static bool operator ==(Block a, Block b)
@@ -181,7 +181,7 @@ namespace MineLib.Core.Data.Anvil
 		    return IDMeta.GetHashCode();
 		}
 
-        public bool IsAir { get { return ID == 0; } }
+        public bool IsAir => ID == 0;
 
         public bool IsTransparent
         {

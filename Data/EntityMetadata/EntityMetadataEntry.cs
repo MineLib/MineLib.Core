@@ -7,11 +7,11 @@ namespace MineLib.Core.Data.EntityMetadata
 {
     public abstract class EntityMetadataEntry
     {
-        public abstract byte Identifier { get; }
-        public abstract string FriendlyName { get; }
-        internal byte Index { get; set; }
+        protected abstract byte Identifier { get; }
+        protected abstract string FriendlyName { get; }
+        internal byte Index { private get; set; }
 
-        public abstract void FromReader(IPacketDataReader reader);
+        public abstract void FromReader(PacketDataReader reader);
         public abstract void ToStream(IPacketStream stream, byte index);
 
         public static implicit operator EntityMetadataEntry(byte value)

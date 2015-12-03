@@ -17,15 +17,15 @@ namespace MineLib.Core
     {
         #region Properties
 
-        public ProtocolType NetworkMode { get { return _minecraft.Mode; } }
+        public ProtocolType NetworkMode => _minecraft.Mode;
 
-        public ConnectionState ConnectionState { get { return _protocol.State; } }
+        public ConnectionState ConnectionState => _protocol.State;
 
-        public bool Connected { get { return _protocol.Connected; } }
+        public bool Connected => _protocol.Connected;
 
-        public bool UseLogin { get { return _minecraft.UseLogin; } }
+        public bool UseLogin => _minecraft.UseLogin;
 
-        public bool SavePackets { get { return _protocol.SavePackets; } }
+        public bool SavePackets => _protocol.SavePackets;
 
         #endregion
 
@@ -97,7 +97,7 @@ namespace MineLib.Core
             return _protocol.ConnectAsync(ip, port);
         }
 
-        public bool DisconnectAsync()
+        public Task<bool> DisconnectAsync()
         {
             return _protocol.DisconnectAsync();
         }
@@ -105,8 +105,7 @@ namespace MineLib.Core
 
         public void Dispose()
         {
-            if (_protocol != null)
-                _protocol.Dispose();
+            _protocol?.Dispose();
         }
     }
 }

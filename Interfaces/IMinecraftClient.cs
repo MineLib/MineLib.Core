@@ -7,7 +7,7 @@ namespace MineLib.Core.Interfaces
     public interface IMinecraftClientAsync
     {
         Task ConnectAsync(String ip, UInt16 port);
-        Boolean DisconnectAsync();
+        Task<Boolean> DisconnectAsync();
     }
     public interface IMinecraftClient : IMinecraftClientAsync, IDisposable
     {

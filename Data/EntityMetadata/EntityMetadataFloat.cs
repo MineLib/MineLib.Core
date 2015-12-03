@@ -7,8 +7,8 @@ namespace MineLib.Core.Data.EntityMetadata
     /// </summary>
     public class EntityMetadataFloat : EntityMetadataEntry
     {
-        public override byte Identifier { get { return 3; } }
-        public override string FriendlyName { get { return "float"; } }
+        protected override byte Identifier => 3;
+        protected override string FriendlyName => "float";
 
         public float Value;
 
@@ -26,7 +26,7 @@ namespace MineLib.Core.Data.EntityMetadata
             Value = value;
         }
 
-        public override void FromReader(IPacketDataReader reader)
+        public override void FromReader(PacketDataReader reader)
         {
             Value = reader.Read(Value);
         }

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using Aragas.Core.Data;
-using Aragas.Core.Interfaces;
-
 namespace MineLib.Core.Data
 {
     /// <summary>
@@ -19,79 +16,16 @@ namespace MineLib.Core.Data
         {
             X = Z = value;
         }
-
         public Coordinates2D(int x, int z)
         {
             X = x;
             Z = z;
         }
-
         public Coordinates2D(Coordinates2D v)
         {
             X = v.X;
             Z = v.Z;
         }
-
-        #region Network
-
-        public static Coordinates2D FromReaderVarInt(IPacketDataReader reader)
-        {
-            return new Coordinates2D(
-                reader.Read<VarInt>(),
-                reader.Read<VarInt>()
-            );
-        }
-
-        public static Coordinates2D FromReaderByte(IPacketDataReader reader)
-        {
-            return new Coordinates2D(
-                reader.Read<byte>(),
-                reader.Read<byte>()
-            );
-        }
-
-        public static Coordinates2D FromReaderShort(IPacketDataReader reader)
-        {
-            return new Coordinates2D(
-                reader.Read<short>(),
-                reader.Read<short>()
-            );
-        }
-
-        public static Coordinates2D FromReaderInt(IPacketDataReader reader)
-        {
-            return new Coordinates2D(
-                reader.Read<int>(),
-                reader.Read<int>()
-            );
-        }
-
-
-        public void ToStreamVarInt(IPacketStream stream)
-        {
-            stream.Write(new VarInt(X));
-            stream.Write(new VarInt(Z));
-        }
-
-        public void ToStreamByte(IPacketStream stream)
-        {
-            stream.Write((byte) X);
-            stream.Write((byte) Z);
-        }
-
-        public void ToStreamShort(IPacketStream stream)
-        {
-            stream.Write((short) X);
-            stream.Write((short) Z);
-        }
-
-        public void ToStreamInt(IPacketStream stream)
-        {
-            stream.Write(X);
-            stream.Write(Z);
-        }
-
-        #endregion
 
         /// <summary>
         /// Converts this Coordinates2D to a string.
@@ -99,7 +33,7 @@ namespace MineLib.Core.Data
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("X: {0}, Z: {1}", X, Z);
+            return $"X: {X}, Z: {Z}";
         }
 
         #region Math

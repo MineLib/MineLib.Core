@@ -17,7 +17,7 @@ namespace MineLib.Core.Data.Structs
         public bool HatEnabled;
         public bool Unused;
 
-        public static DisplayedSkinParts FromReader(IPacketDataReader reader)
+        public static DisplayedSkinParts FromReader(PacketDataReader reader)
         {
             var value = reader.Read<byte>();
 

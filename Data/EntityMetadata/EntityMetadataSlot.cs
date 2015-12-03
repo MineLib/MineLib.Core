@@ -1,5 +1,7 @@
 ﻿using Aragas.Core.Interfaces;
 
+using MineLib.Core.Extensions;
+
 namespace MineLib.Core.Data.EntityMetadata
 {
     /// <summary>
@@ -7,8 +9,8 @@ namespace MineLib.Core.Data.EntityMetadata
     /// </summary>
     public class EntityMetadataSlot : EntityMetadataEntry
     {
-        public override byte Identifier { get { return 5; } }
-        public override string FriendlyName { get { return "slot"; } }
+        protected override byte Identifier => 5;
+        protected override string FriendlyName => "slot";
 
         public ItemStack Value;
 
@@ -26,15 +28,15 @@ namespace MineLib.Core.Data.EntityMetadata
             Value = value;
         }
 
-        public override void FromReader(IPacketDataReader reader)
+        public override void FromReader(PacketDataReader reader)
         {
-            Value = ItemStack.FromReader(reader);
+            Value = reader.Read<ItemStack>();
         }
 
         public override void ToStream(IPacketStream stream, byte index)
         {
             stream.Write(GetKey(index));
-            Value.ToStream(stream);
+            stream.Write(Value);
         }
     }
 }

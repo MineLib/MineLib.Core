@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 
-using MineLib.Core.Data.Structs;
 using MineLib.Core.Extensions;
 
 namespace MineLib.Core.Data.Anvil
@@ -45,7 +43,7 @@ namespace MineLib.Core.Data.Anvil
 
         public override string ToString()
         {
-            return string.Format("Filled Sections: {0}", GetFilledSectionsCount());
+            return $"Filled Sections: {GetFilledSectionsCount()}";
         }
 
         /// <summary>
@@ -234,47 +232,6 @@ namespace MineLib.Core.Data.Anvil
         public override int GetHashCode()
         {
             return Coordinates.GetHashCode() ^ Sections.GetHashCode() ^ Biomes.GetHashCode();
-        }
-    }
-
-    public class ChunkList
-    {
-        private readonly List<Chunk> _entries;
-
-        public ChunkColumnMetadataList Metadata;
-
-        public bool GroundUp;
-
-        public ChunkList()
-        {
-            _entries = new List<Chunk>();
-        }
-
-        public ChunkList(List<Chunk> chunks)
-        {
-            _entries = chunks;
-        }
-
-        public int Count
-        {
-            get { return _entries.Count ; }
-        }
-
-        public Chunk this[int index]
-        {
-            get { return _entries[index]; }
-            set
-            {
-                if (_entries.Count - 1 < index)
-                    _entries.Add(value);
-                else
-                    _entries[index] = value;
-            }
-        }
-
-        public IEnumerable<Chunk> GetChunk()
-        {
-            return _entries.ToArray();
         }
     }
 }

@@ -41,7 +41,7 @@ namespace MineLib.Core.Data
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("Width: {0}, Height: {1}, Depth: {2}", Width, Height, Depth);
+            return $"Width: {Width}, Height: {Height}, Depth: {Depth}";
         }
         
         // TODO: More operators
