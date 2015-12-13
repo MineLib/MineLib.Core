@@ -5,7 +5,7 @@ using System.Reflection;
 
 using Aragas.Core.Wrappers;
 
-using MineLib.Core.Interfaces;
+using MineLib.Core.Protocols;
 
 using PCLStorage;
 
@@ -13,19 +13,18 @@ namespace MineLib.Core.Loader
 {
     public static class ProtocolAssemblyLoader
     {
-        public static IProtocol CreateProtocol(string assemblyPath)
+        public static Type GetProtocolType(string assemblyPath)
         {
-            var plugin = default(IProtocol);
+            Type protocol = null;
 
-#if DEBUG
+#if DEBUG //|| !DEBUG
             //var asm = Assembly.Load(new AssemblyName("ProtocolTrueCraft"));
             var asm = Assembly.Load(new AssemblyName("ProtocolModern"));
             //var asm = Assembly.Load(new AssemblyName("ProtocolClassic"));
             if (asm != null)
-                    foreach (var typeInfo in new List<TypeInfo>(asm.DefinedTypes))
-                        foreach (var type in new List<Type>(typeInfo.ImplementedInterfaces))
-                            if (type == typeof(IProtocol))
-                                plugin = (IProtocol) Activator.CreateInstance(typeInfo.AsType());
+                foreach (var typeInfo in new List<TypeInfo>(asm.DefinedTypes))
+                    if (typeInfo.IsSubclassOf(typeof(Protocol)))
+                        protocol = typeInfo.AsType();
 #elif DEBUG1
             var assemblyFolder = FileSystemWrapper.AssemblyFolder;
             if (assemblyFolder != null && assemblyFolder.CheckExistsAsync(assemblyPath).Result == ExistenceCheckResult.FileExists)
@@ -35,14 +34,13 @@ namespace MineLib.Core.Loader
                     var asm = AppDomainWrapper.LoadAssembly(stream.ReadFully());
 
                     foreach (var typeInfo in new List<TypeInfo>(asm.DefinedTypes))
-                        foreach (var type in new List<Type>(typeInfo.ImplementedInterfaces))
-                            if (type == typeof (IProtocol))
-                                plugin = (IProtocol) Activator.CreateInstance(typeInfo.AsType());
+                        if (typeInfo.IsSubclassOf(typeof(Protocol)))
+                            plugin = typeInfo.AsType();
                 }
             }
 #endif
 
-            return plugin;
+            return protocol;
         }
 
         private static byte[] ReadFully(this Stream input)

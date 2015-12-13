@@ -36,7 +36,32 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Data\NotSupportedType.cs" />
+    <Compile Include="Events\SendingEvents\ConnectToServerEvent.cs" />
+    <Compile Include="Events\SendingEvents\KeepAliveEvent.cs" />
+    <Compile Include="Events\SendingEvents\PlayerHeldItemEvent.cs" />
+    <Compile Include="Events\SendingEvents\PlayerMovedEvent.cs" />
+    <Compile Include="Events\SendingEvents\PlayerSetRemoveBlockEvent.cs" />
+    <Compile Include="Events\SendingEvents\RespawnEvent.cs" />
+    <Compile Include="Events\SendingEvents\SendClientInfoEvent.cs" />
+    <Compile Include="Events\SendingEvents\SendMessageEvent.cs" />
+    <Compile Include="Exceptions\ProtocolException.cs" />
     <Compile Include="Extensions\PacketExtensions.cs" />
+    <Compile Include="Events\ReceiveEvents\Anvil\BlockActionEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\Anvil\BlockBreakActionEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\Anvil\BlockChangeEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\Anvil\ChunkEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\Anvil\ChunkArrayEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\Anvil\MultiBlockChangeEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\ActionEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\ChatMessageEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\HeldItemChangeEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\PlayerLookEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\PlayerPositionEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\RespawnEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\SetExperienceEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\SpawnPointEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\TimeUpdateEvent.cs" />
+    <Compile Include="Events\ReceiveEvents\UpdateHealthEvent.cs" />
     <Compile Include="IO\Base64JsonConverter.cs" />
     <Compile Include="IO\VarIntJsonConverter.cs" />
     <Compile Include="Interfaces\IStatusClient.cs" />
@@ -70,15 +95,15 @@
     <Compile Include="Data\Structs\Records.cs" />
     <Compile Include="Data\Structs\StatisticsEntry.cs" />
     <Compile Include="Extensions\Helper.cs" />
-    <Compile Include="Interfaces\IReceive.cs" />
-    <Compile Include="Interfaces\ISending.cs" />
-    <Compile Include="Interfaces\IMinecraftClient.cs" />
-    <Compile Include="Interfaces\INetworkHandler.cs" />
+    <Compile Include="Events\ReceiveEvent.cs" />
+    <Compile Include="Events\SendingEvent.cs" />
+    <Compile Include="MineLibClient.cs" />
+    <Compile Include="NetworkHandler.cs" />
     <Compile Include="Interfaces\PacketWithSize.cs" />
-    <Compile Include="Interfaces\IProtocol.cs" />
+    <Compile Include="Protocols\Protocol.cs" />
     <Compile Include="Loader\ProtocolLoader.cs" />
     <Compile Include="Loader\Protocol.cs" />
-    <Compile Include="DefaultNetworkHandler.cs" />
+    <Compile Include="ModularNetworkHandler.cs" />
     <Compile Include="Data\ObjectPool.cs" />
     <Compile Include="ProtocolType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -144,5 +169,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-using Aragas.Core.Interfaces;
+using Aragas.Core.IO;
 
 namespace MineLib.Core.Data.Structs
 {
@@ -43,7 +43,7 @@ namespace MineLib.Core.Data.Structs
             };
         }
 
-        public void ToStream(IPacketStream stream)
+        public void ToStream(PacketStream stream)
         {
             var value = ToByte();
 

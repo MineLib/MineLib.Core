@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-using Aragas.Core.Interfaces;
+using Aragas.Core.IO;
 
 namespace MineLib.Core.Data.EntityMetadata
 {
@@ -12,7 +12,7 @@ namespace MineLib.Core.Data.EntityMetadata
         internal byte Index { private get; set; }
 
         public abstract void FromReader(PacketDataReader reader);
-        public abstract void ToStream(IPacketStream stream, byte index);
+        public abstract void ToStream(PacketStream stream, byte index);
 
         public static implicit operator EntityMetadataEntry(byte value)
         {

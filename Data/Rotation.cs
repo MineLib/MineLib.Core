@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using Aragas.Core.Interfaces;
-
 using MineLib.Core.Extensions;
 
 namespace MineLib.Core.Data

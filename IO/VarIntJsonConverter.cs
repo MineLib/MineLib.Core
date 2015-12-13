@@ -10,8 +10,10 @@ namespace MineLib.Core.IO
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var number = value as VarInt ?? new VarInt(0);
-            writer.WriteValue(number);
+            if (value is VarInt)
+                writer.WriteValue((VarInt) value);
+            else
+                writer.WriteValue(new VarInt(0));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
