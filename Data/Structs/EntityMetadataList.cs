@@ -20,7 +20,7 @@ namespace MineLib.Core.Data.Structs
             _entries = new Dictionary<byte, EntityMetadataEntry>(length);
         }
 
-        public VarInt Count => _entries.Count;
+        public int Count => _entries.Count;
 
         public EntityMetadataEntry this[byte index]
         {

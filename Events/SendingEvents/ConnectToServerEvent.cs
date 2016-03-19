@@ -9,9 +9,9 @@ namespace MineLib.Core.Events.SendingEvents
         public string ServerHost { get; private set; }
         public ushort Port { get; private set; }
         public string Username { get; private set; }
-        public VarInt Protocol { get; private set; }
+        public int Protocol { get; private set; }
 
-        public ConnectToServerArgs(string serverHost, ushort port, string username, VarInt protocol)
+        public ConnectToServerArgs(string serverHost, ushort port, string username, int protocol)
         {
             ServerHost = serverHost;
             Port = port;

@@ -2,6 +2,7 @@
 
 using Aragas.Core.Data;
 using Aragas.Core.IO;
+
 using fNbt;
 
 using MineLib.Core.Data;
@@ -9,28 +10,35 @@ using MineLib.Core.Data.Structs;
 
 using Org.BouncyCastle.Math;
 
+using static Aragas.Core.IO.PacketStream;
 using static Aragas.Core.IO.PacketDataReader;
 
 namespace MineLib.Core.Extensions
 {
     public static class PacketExtensions
     {
+        private static void Extend<T>(Func<PacketDataReader, int, T> readFunc, Action<PacketStream, T> writeAction)
+        {
+            ExtendRead(readFunc);
+            ExtendWrite(writeAction);
+        }
+
         public static void Init()
         {
             Aragas.Core.Extensions.PacketExtensions.Init();
 
-            ExtendRead<BigInteger>(ReadBigInteger);
-            ExtendRead<Position>(ReadPosition);
-            ExtendRead<EntityMetadataList>(ReadEntityMetadata);
-            ExtendRead<ItemStack>(ReadItemStack);
+            Extend<BigInteger>(ReadBigInteger, WriteBigInteger);
+            Extend<Position>(ReadPosition, WritePosition);
+            Extend<EntityMetadataList>(ReadEntityMetadata, WriteEntityMetadataList);
+            Extend<ItemStack>(ReadItemStack, WriteItemStack);
 
-            ExtendRead<ItemStack[]>(ReadItemStackArray);
-            //ExtendRead<EntityProperty[]>(ReadEntityPropertyArray);
-            ExtendRead<Record[]>(ReadRecordArray);
-            ExtendRead<ChunkColumnMetadata[]>(ReadChunkColumnMetadataArray);
+            Extend<ItemStack[]>(ReadItemStackArray, WriteItemStackArray);
+            Extend<EntityProperty[]>(ReadEntityPropertyArray, WriteEntityPropertyArray);
+            Extend<Record[]>(ReadRecordArray, WriteRecordArray);
+            Extend<ChunkColumnMetadata[]>(ReadChunkColumnMetadataArray, WriteChunkColumnMetadataArray);
         }
 
-        public static void Write(this PacketStream stream, BigInteger value)
+        private static void WriteBigInteger(PacketStream stream, BigInteger value)
         {
             stream.Write(value.ToByteArray());
         }
@@ -39,16 +47,16 @@ namespace MineLib.Core.Extensions
             return new BigInteger(reader.Read<byte[]>(null, 4));
         }
 
-        public static void Write(this PacketStream stream, Position value)
+        private static void WritePosition(PacketStream stream, Position value)
         {
             stream.Write(value.ToLong());
         }
-        private static object ReadPosition(PacketDataReader reader, int length = 0)
+        private static Position ReadPosition(PacketDataReader reader, int length = 0)
         {
-            return Position.FromLong(reader.Read<long>());
+            return MineLib.Core.Data.Position.FromLong(reader.Read<long>());
         }
 
-        public static void Write(this PacketStream stream, EntityMetadataList value)
+        private static void WriteEntityMetadataList(PacketStream stream, EntityMetadataList value)
         {
             foreach (var entry in value._entries)
                 entry.Value.ToStream(stream, entry.Key);
@@ -79,7 +87,7 @@ namespace MineLib.Core.Extensions
             return array;
         }
 
-        public static void Write(this PacketStream stream, ItemStack value)
+        private static void WriteItemStack(PacketStream stream, ItemStack value)
         {
             stream.Write(value.ID);
             if (value.Empty)
@@ -96,7 +104,7 @@ namespace MineLib.Core.Extensions
             var file = new NbtFile(value.Nbt);
             file.SaveToProtocolStream(stream, NbtCompression.GZip);
         }
-        private static object ReadItemStack(PacketDataReader reader, int length = 0)
+        private static ItemStack ReadItemStack(PacketDataReader reader, int length = 0)
         {
             var itemStack = new ItemStack(reader.Read<short>());
 
@@ -119,7 +127,7 @@ namespace MineLib.Core.Extensions
             return itemStack;
         }
 
-        public static void Write(this PacketStream stream, ItemStack[] value)
+        private static void WriteItemStackArray(PacketStream stream, ItemStack[] value)
         {
             foreach (var itemStack in value)
             {
@@ -153,7 +161,7 @@ namespace MineLib.Core.Extensions
             return array;
         }
 
-        public static void Write(this PacketStream stream, EntityProperty[] value)
+        private static void WriteEntityPropertyArray(PacketStream stream, EntityProperty[] value)
         {
             foreach (var entry in value)
             {
@@ -201,8 +209,8 @@ namespace MineLib.Core.Extensions
 
             return array;
         }
-        
-        public static void Write(this PacketStream stream, Record[] value)
+
+        private static void WriteRecordArray(PacketStream stream, Record[] value)
         {
             foreach (var entry in value)
             {
@@ -233,7 +241,7 @@ namespace MineLib.Core.Extensions
             return array;
         }
 
-        public static void Write(this PacketStream stream, ChunkColumnMetadata[] value)
+        private static void WriteChunkColumnMetadataArray(PacketStream stream, ChunkColumnMetadata[] value)
         {
             foreach (var entry in value)
             {
@@ -242,7 +250,7 @@ namespace MineLib.Core.Extensions
                 stream.Write(entry.PrimaryBitMap);
             }
         }
-        private static object ReadChunkColumnMetadataArray(PacketDataReader reader, int length = 0)
+        private static ChunkColumnMetadata[] ReadChunkColumnMetadataArray(PacketDataReader reader, int length = 0)
         {
             if (length == 0)
                 length = reader.Read<VarInt>();

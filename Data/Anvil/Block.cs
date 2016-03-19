@@ -113,12 +113,12 @@ namespace MineLib.Core.Data.Anvil
         public byte SkyLight
 		{
 			get { return (byte)(SkyAndBlockLight >> 4); }
-			set { SkyAndBlockLight = (byte)(value << 4      | Light & 0x0F); }
+			set { SkyAndBlockLight = (byte) (value << 4      | Light & 0x0F); }
 		}
 		public byte Light
 		{
 			get { return (byte)(SkyAndBlockLight & 0x0F); }
-			set { SkyAndBlockLight = (byte)(SkyLight << 4   | value & 0x0F); }
+			set { SkyAndBlockLight = (byte) (SkyLight << 4   | value & 0x0F); }
 		}
 
 		public Block(ushort id)

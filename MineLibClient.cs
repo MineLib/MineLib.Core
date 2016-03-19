@@ -11,54 +11,43 @@ namespace MineLib.Core
     {
         public List<ProtocolAssembly> Modules { get; }
         public ProtocolAssembly ChosedModule { get; private set; }
-
-
-        public ChoseModuleEventArgs(List<ProtocolAssembly> modules)
-        {
-            Modules = modules;
-        }
-
-
-        public void SetModule(ProtocolAssembly module)
-        {
-            ChosedModule = module;
-        }
+        
+        public ChoseModuleEventArgs(List<ProtocolAssembly> modules) { Modules = modules; }
+        
+        public void SetModule(ProtocolAssembly module) { ChosedModule = module; }
     }
 
     // TODO: Clean this mess.
     public abstract class MineLibClient : IDisposable
     {
-        public abstract event EventHandler<ChoseModuleEventArgs> ChoseModule;
-
         public ProtocolType Mode { get; }
 
-        public String ClientUsername { get; set; }
-        public String ClientLogin { get; }
-        public String ClientPassword { get; }
-        public Boolean UseLogin { get; }
+        public string ClientUsername { get; set; }
+        public string ClientLogin { get; }
+        public string ClientPassword { get; }
+        public bool UseLogin { get; }
 
-        public abstract String ClientBrand { get; }
-        public String ServerBrand { get; protected set; }
+        public abstract string ClientBrand { get; }
+        public string ServerBrand { get; protected set; }
 
-        public abstract String ServerHost { get; }
-        public abstract UInt16 ServerPort { get; }
+        public abstract string ServerHost { get; }
+        public abstract ushort ServerPort { get; }
 
         public abstract ConnectionState ConnectionState { get; }
-        public abstract Boolean Connected { get; }
+        public abstract bool Connected { get; }
 
         protected NetworkHandler NetworkHandler { get; set; }
 
 
-        protected MineLibClient(String login, String password, ProtocolType mode, Boolean nameVerification = false)
+        protected MineLibClient(string login, string password, ProtocolType mode, bool nameVerification = false)
         {
             ClientLogin = login;
             ClientPassword = password;
             UseLogin = nameVerification;
             Mode = mode;
         }
-
-
-        public abstract void Connect(String ip, UInt16 port);
+        
+        public abstract void Connect(string ip, ushort port);
         public abstract void Disconnect();
 
         public abstract void RegisterReceiveEvent(Type receiveType, Func<ReceiveEvent, Task> func);

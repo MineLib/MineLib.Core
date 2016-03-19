@@ -15,10 +15,10 @@ namespace MineLib.Core.Protocols
     {
         #region Login
 
-        public abstract Boolean UseLogin { get; }
+        public abstract bool UseLogin { get; }
 
-        public abstract Task<Boolean> Login(String login, String password);
-        public abstract Task<Boolean> Logout();
+        public abstract Task<bool> Login(string login, string password);
+        public abstract Task<bool> Logout();
 
         #endregion Login
 
@@ -28,12 +28,12 @@ namespace MineLib.Core.Protocols
         protected abstract List<ProtobufPacket> PacketsSended { get; }
         protected abstract List<ProtobufPacket> LastPackets { get; }
         protected abstract ProtobufPacket LastProtobufPacket { get; }
-        public abstract Boolean SavePackets { get; }
+        public abstract bool SavePackets { get; }
 
         #endregion Debug
 
-        public abstract String Name { get; }
-        public abstract String Version { get; }
+        public abstract string Name { get; }
+        public abstract string Version { get; }
 
         /// <summary>
         /// Current state of IProtocol client/server connection.
@@ -41,13 +41,13 @@ namespace MineLib.Core.Protocols
         public abstract ConnectionState State { get; protected set; }
 
 
-        public abstract String Host { get; }
-        public abstract UInt16 Port { get; }
-        public abstract Boolean Connected { get; }
+        public abstract string Host { get; }
+        public abstract ushort Port { get; }
+        public abstract bool Connected { get; }
 
-        protected Protocol(MineLibClient client, Boolean debugPackets = false) { }
+        protected Protocol(MineLibClient client, bool debugPackets = false) { }
 
-        public abstract void Connect(String host, UInt16 port);
+        public abstract void Connect(string host, ushort port);
         public abstract void Disconnect();
 
         /// <summary>

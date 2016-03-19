@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using MineLib.Core.Events;
 using MineLib.Core.Loader;
@@ -15,44 +14,29 @@ namespace MineLib.Core
         public ProtocolType NetworkMode => Client.Mode;
         public ConnectionState ConnectionState => Protocol.State;
 
-        public Boolean UseLogin => Client.UseLogin;
+        public bool UseLogin => Client.UseLogin;
 
-        public Boolean SavePackets => Protocol.SavePackets;
+        public bool SavePackets => Protocol.SavePackets;
 
-        public String Host => Protocol.Host;
-        public UInt16 Port => Protocol.Port;
-        public Boolean Connected => Protocol.Connected;
+        public string Host => Protocol.Host;
+        public ushort Port => Protocol.Port;
+        public bool Connected => Protocol.Connected;
 
         protected MineLibClient Client { get; }
         protected Protocol Protocol { get; set; }
 
 
-        protected NetworkHandler(MineLibClient client, ProtocolAssembly protocol, Boolean debugPackets = false)
-        {
-            Client = client;
-        }
+        protected NetworkHandler(MineLibClient client, ProtocolAssembly protocol, bool debugPackets = false) { Client = client; }
 
 
-        public abstract List<ProtocolAssembly> GetModules();
+        //public abstract List<ProtocolAssembly> GetModules();
         
-        public void Connect(String host, UInt16 port)
-        {
-            Protocol.Connect(host, port);
-        }
-        public void Disconnect()
-        {
-            Protocol.Disconnect();
-        }
+        public void Connect(string host, ushort port) { Protocol.Connect(host, port); }
+        public void Disconnect() { Protocol.Disconnect(); }
         
-        public void DoSending(Type sendingType, SendingEventArgs args)
-        {
-            Protocol.DoSending(sendingType, args);
-        }
+        public void DoSending(Type sendingType, SendingEventArgs args) { Protocol.DoSending(sendingType, args); }
         
-        public virtual void Dispose()
-        {
-            Protocol?.Dispose();
-        }
+        public virtual void Dispose() { Protocol?.Dispose(); }
     }
 
 
