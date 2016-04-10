@@ -4,8 +4,6 @@ using Aragas.Core.IO;
 
 using MineLib.Core.Data;
 
-using Org.BouncyCastle.Math;
-
 using static Aragas.Core.IO.PacketStream;
 using static Aragas.Core.IO.PacketDataReader;
 
@@ -25,21 +23,11 @@ namespace MineLib.Core.Extensions
 
             Extend<NotSupportedType>(ReadNotSupportedType, WriteNotSupportedType);
 
-            Extend<BigInteger>(ReadBigInteger, WriteBigInteger);
             Extend<Position>(ReadPosition, WritePosition);
         }
 
         public static void WriteNotSupportedType(PacketStream stream, NotSupportedType value, bool writeDefaultLength = true) { }
         private static NotSupportedType ReadNotSupportedType(PacketDataReader reader, int length = 0) { return null; }
-
-        private static void WriteBigInteger(PacketStream stream, BigInteger value, bool writeDefaultLength = true)
-        {
-            stream.Write(value.ToByteArray());
-        }
-        private static BigInteger ReadBigInteger(PacketDataReader reader, int length = 0)
-        {
-            return new BigInteger(reader.Read<byte[]>(null, 4));
-        }
 
         private static void WritePosition(PacketStream stream, Position value, bool writeDefaultLength = true)
         {
