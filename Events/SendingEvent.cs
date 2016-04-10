@@ -4,9 +4,7 @@ using Aragas.Core.Packets;
 
 namespace MineLib.Core.Events
 {
-    public abstract class SendingEvent { }
-
-    public abstract class SendingEventArgs
+    public abstract class SendingEvent
     {
         public Action<ProtobufPacket> SendPacket { get; private set; }
 

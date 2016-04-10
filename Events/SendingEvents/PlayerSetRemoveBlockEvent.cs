@@ -2,14 +2,12 @@ using MineLib.Core.Data.Structs;
 
 namespace MineLib.Core.Events.SendingEvents
 {
-    public class PlayerSetRemoveBlockEvent : SendingEvent {  }
-
-    public class PlayerSetRemoveBlockEventArgs : SendingEventArgs
+    public class PlayerSetRemoveBlockEvent : SendingEvent
     {
         public PlayerSetRemoveBlockMode Mode { get; private set; }
         public IPlayerSetRemoveBlockData Data { get; private set; }
 
-        public PlayerSetRemoveBlockEventArgs(IPlayerSetRemoveBlockData data)
+        public PlayerSetRemoveBlockEvent(IPlayerSetRemoveBlockData data)
         {
             {
                 var type = data as PlayerSetRemoveBlockDataDig;
@@ -32,7 +30,7 @@ namespace MineLib.Core.Events.SendingEvents
             Data = data;
         }
 
-        public PlayerSetRemoveBlockEventArgs(PlayerSetRemoveBlockMode mode, IPlayerSetRemoveBlockData data)
+        public PlayerSetRemoveBlockEvent(PlayerSetRemoveBlockMode mode, IPlayerSetRemoveBlockData data)
         {
             Mode = mode;
 

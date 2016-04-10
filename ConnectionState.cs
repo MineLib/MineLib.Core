@@ -1,7 +1,7 @@
 ﻿namespace MineLib.Core
 {
     /// <summary>
-    /// Current connection state
+    /// Connection state.
     /// </summary>
     public enum ConnectionState
     {

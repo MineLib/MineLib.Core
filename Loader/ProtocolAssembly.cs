@@ -16,14 +16,8 @@ namespace MineLib.Core.Loader
             }
         }
 
-        public ProtocolAssembly(string path)
-        {
-            FilePath = path;
-        }
+        public ProtocolAssembly(string path) { FilePath = path; }
 
-        public override string ToString()
-        {
-            return FileName;
-        }
+        public override string ToString() => FileName;
     }
 }

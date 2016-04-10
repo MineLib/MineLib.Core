@@ -1,12 +1,10 @@
 namespace MineLib.Core.Events.SendingEvents
 {
-    public class KeepAliveEvent : SendingEvent { }
-
-    public class KeepAliveEventArgs : SendingEventArgs
+    public class KeepAliveEvent : SendingEvent
     {
         public int KeepAlive { get; private set; }
 
-        public KeepAliveEventArgs(int value)
+        public KeepAliveEvent(int value)
         {
             KeepAlive = value;
         }

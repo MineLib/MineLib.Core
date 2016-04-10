@@ -150,22 +150,10 @@ namespace MineLib.Core.Data.Anvil
 			return $"ID: {ID}, Meta: {Meta}, Light: {Light}, SkyLight: {SkyLight}";
 		}
 
-		public static bool operator ==(Block a, Block b)
-		{
-			return a.IDMeta == b.IDMeta && a.SkyAndBlockLight == b.SkyAndBlockLight;
-		}
+		public static bool operator ==(Block a, Block b) => a.IDMeta == b.IDMeta && a.SkyAndBlockLight == b.SkyAndBlockLight;
+        public static bool operator !=(Block a, Block b) => a.IDMeta != b.IDMeta && a.SkyAndBlockLight != b.SkyAndBlockLight;
 
-		public static bool operator !=(Block a, Block b)
-		{
-			return a.IDMeta != b.IDMeta && a.SkyAndBlockLight != b.SkyAndBlockLight;
-		}
-
-		public bool Equals(Block other)
-		{
-			return other.IDMeta.Equals(IDMeta);
-		}
-
-		public override bool Equals(object obj)
+        public override bool Equals(object obj)
 		{
             if (obj == null)
                 return false;
@@ -175,11 +163,9 @@ namespace MineLib.Core.Data.Anvil
 
             return Equals((Block) obj);
 		}
+        public bool Equals(Block other) => other.IDMeta.Equals(IDMeta);
 
-		public override int GetHashCode()
-		{
-		    return IDMeta.GetHashCode();
-		}
+        public override int GetHashCode() => IDMeta.GetHashCode();
 
         public bool IsAir => ID == 0;
 

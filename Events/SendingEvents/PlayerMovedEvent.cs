@@ -2,14 +2,12 @@ using MineLib.Core.Data.Structs;
 
 namespace MineLib.Core.Events.SendingEvents
 {
-    public class PlayerMovedEvent : SendingEvent { }
-
-    public class PlayerMovedEventArgs : SendingEventArgs
+    public class PlayerMovedEvent : SendingEvent
     {
         public PlaverMovedMode Mode { get; private set; }
         public IPlaverMovedData Data { get; private set; }
 
-        public PlayerMovedEventArgs(IPlaverMovedData data)
+        public PlayerMovedEvent(IPlaverMovedData data)
         {
             {
                 var type = data as PlaverMovedDataOnGround;
@@ -38,7 +36,7 @@ namespace MineLib.Core.Events.SendingEvents
             Data = data;
         }
 
-        public PlayerMovedEventArgs(PlaverMovedMode mode, IPlaverMovedData data)
+        public PlayerMovedEvent(PlaverMovedMode mode, IPlaverMovedData data)
         {
             Mode = mode;
 

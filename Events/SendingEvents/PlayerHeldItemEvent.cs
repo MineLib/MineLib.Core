@@ -1,12 +1,10 @@
 namespace MineLib.Core.Events.SendingEvents
 {
-    public class PlayerHeldItemEvent : SendingEvent { }
-
-    public class PlayerHeldItemEventArgs : SendingEventArgs
+    public class PlayerHeldItemEvent : SendingEvent
     {
         public short Slot { get; private set; }
 
-        public PlayerHeldItemEventArgs(short slot)
+        public PlayerHeldItemEvent(short slot)
         {
             Slot = slot;
         }

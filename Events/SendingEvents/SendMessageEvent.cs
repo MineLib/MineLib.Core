@@ -1,12 +1,10 @@
 namespace MineLib.Core.Events.SendingEvents
 {
-    public class SendMessageEvent : SendingEvent { }
-
-    public class SendMessageEventArgs : SendingEventArgs
+    public class SendMessageEvent : SendingEvent
     {
         public string Message { get; private set; }
 
-        public SendMessageEventArgs(string message)
+        public SendMessageEvent(string message)
         {
             Message = message;
         }

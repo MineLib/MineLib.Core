@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 
+using MineLib.Core.Data.Structs;
 using MineLib.Core.Extensions;
 
 namespace MineLib.Core.Data.Anvil
@@ -28,7 +30,7 @@ namespace MineLib.Core.Data.Anvil
         public Section[] Sections;
 
         // -- Debugging
-        public bool[] PrimaryBitMapConverted { get { return SectionStatus(PrimaryBitMap); } }
+        public bool[] PrimaryBitMapConverted => SectionStatus(PrimaryBitMap);
         // -- Debugging
     
         public Chunk(Coordinates2D chunkCoordinates)
@@ -41,14 +43,8 @@ namespace MineLib.Core.Data.Anvil
                 Sections[i] = new Section(new Position(Coordinates.X, i, Coordinates.Z));     
         }
 
-        public override string ToString()
-        {
-            return $"Filled Sections: {GetFilledSectionsCount()}";
-        }
+        public override string ToString() => $"Filled Sections: {GetFilledSectionsCount()}";
 
-        /// <summary>
-        /// Get the total sections included in the bitMap
-        /// </summary>
         public static int GetSectionCount(ushort bitMap)
         {
             var sectionCount = 0;
@@ -62,99 +58,74 @@ namespace MineLib.Core.Data.Anvil
         public Block GetBlock(Position coordinates)
         {
             var destSection = GetSectionByY(coordinates.Y);
-
             return destSection.GetBlock(GetSectionCoordinates(coordinates));
         }
-
         public void SetBlock(Position worldCoordinates, Block block)
         {
             var destSection = GetSectionByY(worldCoordinates.Y);
-
             destSection.SetBlock(GetSectionCoordinates(worldCoordinates), block);
         }
 
         public void SetBlockMultiBlock(Position coordinates, Block block)
         {
             var destSection = GetSectionByY(coordinates.Y);
-
             destSection.SetBlock(new Position(coordinates.X, GetYinSection(coordinates.Y), coordinates.Z), block);
         }
 
         public byte GetBlockLight(Position worldCoordinates)
         {
             var destSection = GetSectionByY(worldCoordinates.Y);
-
             return destSection.GetBlockLighting(GetSectionCoordinates(worldCoordinates));
         }
-
         public void SetBlockLight(Position worldCoordinates, byte light)
         {
             var destSection = GetSectionByY(worldCoordinates.Y);
-
             destSection.SetBlockLighting(GetSectionCoordinates(worldCoordinates), light);
         }
 
         public byte GetBlockSkylight(Position worldCoordinates)
         {
             var destSection = GetSectionByY(worldCoordinates.Y);
-
             return destSection.GetBlockSkylight(GetSectionCoordinates(worldCoordinates));
         }
-
         public void SetBlockSkylight(Position worldCoordinates, byte light)
         {
             var destSection = GetSectionByY(worldCoordinates.Y);
-
             destSection.SetBlockSkylight(GetSectionCoordinates(worldCoordinates), light);
         }
 
         public byte GetBlockBiome(Position worldCoordinates)
         {
             var chunkCoordinates = GetChunkCoordinates(worldCoordinates);
-
             return Biomes[(chunkCoordinates.Z * 16) + chunkCoordinates.X];
         }
-
         public void SetBlockBiome(Position worldCoordinates, byte biome)
         {
             var chunkCoordinates = GetChunkCoordinates(worldCoordinates);
-
             Biomes[(chunkCoordinates.Z * 16) + chunkCoordinates.X] = biome;
         }
 
-        public byte GetBlockBiome(Coordinates2D chunkCoordinates)
-        {
-            return Biomes[(chunkCoordinates.Z * 16) + chunkCoordinates.X];
-        }
-
-        public void SetBlockBiome(Coordinates2D chunkCoordinates, byte biome)
-        {
-            Biomes[(chunkCoordinates.Z * 16) + chunkCoordinates.X] = biome;
-        }
+        public byte GetBlockBiome(Coordinates2D chunkCoordinates) => Biomes[(chunkCoordinates.Z * 16) + chunkCoordinates.X];
+        public void SetBlockBiome(Coordinates2D chunkCoordinates, byte biome) { Biomes[(chunkCoordinates.Z * 16) + chunkCoordinates.X] = biome; }
 
         #region Helping Methods
+
         public Position GetBlockPosition(Section section, int index)
         {
             var sectionPosition = Section.GetSectionPositionByIndex(index);
 
             return new Position(
-                16 * Coordinates.X + sectionPosition.X,
-                16 * section.ChunkPosition.Y + sectionPosition.Y,
-                16 * Coordinates.Z + sectionPosition.Z);
+                Section.Width * Coordinates.X + sectionPosition.X,
+                Section.Height * section.ChunkPosition.Y + sectionPosition.Y,
+                Section.Depth * Coordinates.Z + sectionPosition.Z);
         }
 
-        private Section GetSectionByY(int blockY)
-        {
-            return Sections[blockY / 16];
-        }
+        private Section GetSectionByY(int blockY) => Sections[blockY / Section.Height];
 
-        public static Position GetSectionCoordinates(Position coordinates, Coordinates2D chunkCoordinates)
-        {
-            return new Position(
-                Math.Abs(coordinates.X - (chunkCoordinates.X * 16)),
-                coordinates.Y % 16,
-                coordinates.Z % chunkCoordinates.Z);
-        }
+        public static Position GetSectionCoordinates(Position coordinates, Coordinates2D chunkCoordinates) => new Position(
+                Math.Abs(coordinates.X - (chunkCoordinates.X*Section.Width)),
+                coordinates.Y%Section.Height,
+                coordinates.Z%chunkCoordinates.Z);
 
         private Position GetSectionCoordinates(Position coordinates)
         {
@@ -162,7 +133,7 @@ namespace MineLib.Core.Data.Anvil
 
             // -- https://github.com/Azzi777/Umbra-Voxel-Engine/blob/master/Umbra%20Voxel%20Engine/Implementations/ChunkManager.cs#L172
             if (chunk.X != Coordinates.X || chunk.Z != Coordinates.Z)
-                throw new ArgumentOutOfRangeException("coordinates", "You stupid asshole!");
+                throw new ArgumentOutOfRangeException(nameof(coordinates), "You stupid asshole!");
 
             return new Position(
                 GetXinSection(coordinates.X),
@@ -170,53 +141,24 @@ namespace MineLib.Core.Data.Anvil
                 GetZinSection(coordinates.Z));
         }
 
-        private static Coordinates2D GetChunkCoordinates(Position worldCoordinates)
-        {
-            return new Coordinates2D(
-                worldCoordinates.X >> 4,
-                worldCoordinates.Z >> 4);
-        }
+        private static Coordinates2D GetChunkCoordinates(Position worldCoordinates) => new Coordinates2D(
+            worldCoordinates.X >> 4,
+            worldCoordinates.Z >> 4);
 
-        private int GetXinSection(int blockX)
-        {
-            return Math.Abs(blockX - (Coordinates.X * 16));
-        }
-        private int GetYinSection(int blockY)
-        {
-            return blockY % 16;
-        }
-        private int GetZinSection(int blockZ)
-        {
-            return blockZ % Coordinates.Z;
-        }
+        private int GetXinSection(int blockX) => Math.Abs(blockX - (Coordinates.X * Section.Width));
+        private int GetYinSection(int blockY) => blockY % Section.Height;
+        private int GetZinSection(int blockZ) => blockZ % Coordinates.Z;
 
-        private int GetFilledSectionsCount()
-        {
-            var count = 0;
+        private int GetFilledSectionsCount() => Sections.Count(section => section.IsFilled);
 
-            foreach (var section in Sections)
-                if (section.IsFilled) count++;
-            
-            return count;
-        }
+        private static bool[] SectionStatus(ushort primaryBitMap) => Helper.ConvertFromUShort(primaryBitMap);
 
-        private static bool[] SectionStatus(ushort primaryBitMap)
-        {
-            return Helper.ConvertFromUShort(primaryBitMap);
-        }
-
-        private ushort SectionStatus()
-        {
-            return this.ConvertToUShort();
-        }
+        private ushort SectionStatus() => this.ConvertToUShort();
 
         #endregion
 
-        // You need to be a really freak to use it
-        public bool Equals(Chunk chunk)
-        {
-            return Coordinates.Equals(chunk.Coordinates) && Sections.Equals(chunk.Sections) && Biomes.Equals(chunk.Biomes);
-        }
+        public static bool operator ==(Chunk a, Chunk b) => a.Coordinates == b.Coordinates && a.Sections == b.Sections && a.Biomes == b.Biomes;
+        public static bool operator !=(Chunk a, Chunk b) => a.Coordinates != b.Coordinates && a.Sections != b.Sections && a.Biomes != b.Biomes;
 
         public override bool Equals(object obj)
         {
@@ -228,10 +170,8 @@ namespace MineLib.Core.Data.Anvil
 
             return Equals((Chunk) obj);
         }
+        public bool Equals(Chunk chunk) => Coordinates.Equals(chunk.Coordinates) && Sections.Equals(chunk.Sections) && Biomes.Equals(chunk.Biomes);
 
-        public override int GetHashCode()
-        {
-            return Coordinates.GetHashCode() ^ Sections.GetHashCode() ^ Biomes.GetHashCode();
-        }
+        public override int GetHashCode() => Coordinates.GetHashCode() ^ Sections.GetHashCode() ^ Biomes.GetHashCode();
     }
 }

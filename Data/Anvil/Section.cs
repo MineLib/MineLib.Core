@@ -27,10 +27,7 @@ namespace MineLib.Core.Data.Anvil
             IsFilled = false;
         }
 
-        public override string ToString()
-        {
-            return IsFilled ? "Filled" : "Empty";
-        }
+        public override string ToString() => IsFilled ? "Filled" : "Empty";
 
         public void BuildEmpty()
         {
@@ -41,7 +38,6 @@ namespace MineLib.Core.Data.Anvil
 
             IsFilled = true;
         }
-
         // REWRITE: Big indivilual work
         public void BuildFromNibbleData(byte[] blocks, byte[] blockLights, byte[] blockSkyLights)
         {
@@ -68,7 +64,6 @@ namespace MineLib.Core.Data.Anvil
 
             IsFilled = true;
         }
-
         public void BuildFromBlocks(BlockList list)
         {
             if (IsFilled)
@@ -86,7 +81,6 @@ namespace MineLib.Core.Data.Anvil
 
             return Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z];
         }
-
         public void SetBlock(Position sectionPos, Block block)
         {
             if (!IsFilled)
@@ -108,7 +102,6 @@ namespace MineLib.Core.Data.Anvil
 
             return Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z].Light;
         }
-
         public void SetBlockLighting(Position sectionPos, byte data)
         {
             if (!IsFilled)
@@ -126,7 +119,6 @@ namespace MineLib.Core.Data.Anvil
 
             return Blocks[sectionPos.X, sectionPos.Y, sectionPos.Z].SkyLight;
         }
-
         public void SetBlockSkylight(Position sectionPos, byte data)
         {
             if (!IsFilled)
@@ -139,48 +131,35 @@ namespace MineLib.Core.Data.Anvil
 
         #region Helping Methods
 
-        public static Position GetSectionPositionByIndex(int index)
-        {
-            return new Position(
-                index % 16,
-                index / (16 * 16),
-                (index / 16) % 16);
-        }
+        public static Position GetSectionPositionByIndex(int index) => new Position(
+            index % 16,
+            index / (16 * 16),
+            (index / 16) % 16);
 
-	    public int GetIndexByPosition(Position pos)
-	    {
-		    return pos.X + ((pos.Y * 16) + pos.Z) * 16;
-	    }
+        public int GetIndexByPosition(Position pos) => pos.X + ((pos.Y * 16) + pos.Z) * 16;
 
         public Position GetGlobalPositionByIndex(int index)
         {
             var sectionPos = GetSectionPositionByIndex(index);
-
             return new Position(
                 Width * ChunkPosition.X + sectionPos.X,
                 Height * ChunkPosition.Y + sectionPos.Y,
                 Depth * ChunkPosition.Z + sectionPos.Z);
         }
 
-        public Position GetGlobalPositionByArrayIndex(int x, int y, int z)
+        public Position GetGlobalPositionByArrayIndex(int x, int y, int z) => GetGlobalPositionByPosition(new Position(x, y, z));
+
+        public Position GetGlobalPositionByPosition(Position pos) => new Position(
+		    Width * ChunkPosition.X + pos.X,
+		    Height * ChunkPosition.Y + pos.Y,
+		    Depth * ChunkPosition.Z + pos.Z);
+
+        public static byte[] ToBytePerBlock(byte[] halfByteData)
         {
-            return GetGlobalPositionByPosition(new Position(x, y, z));
-        }
+            if (halfByteData.Length != Chunk.HalfByteData)
+                throw new ArgumentOutOfRangeException(nameof(halfByteData), "Length != Half Byte Metadata length");
 
-		public Position GetGlobalPositionByPosition(Position pos)
-		{
-			return new Position(
-				Width * ChunkPosition.X + pos.X,
-				Height * ChunkPosition.Y + pos.Y,
-				Depth * ChunkPosition.Z + pos.Z);
-		}
-
-		private static byte[] ToBytePerBlock(byte[] halfByteData)
-        {
-            if (halfByteData.Length != Width * Height * Depth / 2)
-                throw new ArgumentOutOfRangeException("halfByteData", "Length != Half Byte Metadata length");
-
-			var newMeta = new byte[Width * Height * Depth];
+			var newMeta = new byte[Chunk.OneByteData];
 
 			for (var i = 0; i < halfByteData.Length; i++)
             {
@@ -194,13 +173,12 @@ namespace MineLib.Core.Data.Anvil
 
             return newMeta;
         }
-
-        private static byte[] ToHalfBytePerBlock(byte[] byteData)
+        public static byte[] ToHalfBytePerBlock(byte[] byteData)
         {
-            var newMeta = new byte[Width * Height * Depth / 2];
+            var newMeta = new byte[Chunk.HalfByteData];
 
-            if (byteData.Length != Width * Height * Depth)
-                throw new ArgumentOutOfRangeException("byteData", "Length != Full Byte Metadata length");
+            if (byteData.Length != Chunk.OneByteData)
+                throw new ArgumentOutOfRangeException(nameof(byteData), "Length != Full Byte Metadata length");
 
             for (var i = 0; i < byteData.Length; i++)
             {
@@ -216,24 +194,8 @@ namespace MineLib.Core.Data.Anvil
 
         #endregion
 
-        public static bool operator ==(Section a, Section b)
-        {
-            if (!ReferenceEquals(a, b))
-                return false;
-
-            return a.Blocks == b.Blocks && a.IsFilled == b.IsFilled && a.ChunkPosition == b.ChunkPosition;
-        }
-
-        public static bool operator !=(Section a, Section b)
-        {
-            return !(a == b);
-        }
-
-        // You need to be a really freak to use it
-        public bool Equals(Section section)
-        {
-            return Blocks.Equals(section.Blocks) && ChunkPosition.Equals(section.ChunkPosition);
-        }
+        public static bool operator ==(Section a, Section b) => a.IsFilled == b.IsFilled && a.ChunkPosition == b.ChunkPosition && a.Blocks == b.Blocks;
+        public static bool operator !=(Section a, Section b) => a.IsFilled != b.IsFilled && a.ChunkPosition != b.ChunkPosition && a.Blocks != b.Blocks;
 
         public override bool Equals(object obj)
         {
@@ -245,10 +207,8 @@ namespace MineLib.Core.Data.Anvil
 
             return Equals((Section) obj);
         }
+        public bool Equals(Section section) => Blocks.Equals(section.Blocks) && ChunkPosition.Equals(section.ChunkPosition);
 
-        public override int GetHashCode()
-        {
-            return Blocks.GetHashCode() ^ ChunkPosition.GetHashCode();
-        }
+        public override int GetHashCode() => Blocks.GetHashCode() ^ ChunkPosition.GetHashCode();
     }
 }

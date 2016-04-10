@@ -1,71 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Aragas.Core.PacketHandlers;
 using Aragas.Core.Packets;
 
 using MineLib.Core.Events;
+using MineLib.Core.Interfaces;
 
-namespace MineLib.Core.Protocols
+namespace MineLib.Core
 {
-    /// <summary>
-    /// Any Minecraft protocol can be implemented by using this. And even more.
-    /// </summary>
-    public abstract class Protocol : IDisposable
+    public enum ProtocolMode { Play, Status }
+
+    public abstract class Protocol : IPacketHandlerContext, IDisposable
     {
+        protected MineLibClient Client { get; }
+
         #region Login
 
-        public abstract bool UseLogin { get; }
+        protected bool UseLogin => Client.UseLogin;
 
         public abstract Task<bool> Login(string login, string password);
         public abstract Task<bool> Logout();
 
         #endregion Login
 
-        #region Debug
-
-        protected abstract List<ProtobufPacket> PacketsReceived { get; }
-        protected abstract List<ProtobufPacket> PacketsSended { get; }
-        protected abstract List<ProtobufPacket> LastPackets { get; }
-        protected abstract ProtobufPacket LastProtobufPacket { get; }
-        public abstract bool SavePackets { get; }
-
-        #endregion Debug
-
         public abstract string Name { get; }
         public abstract string Version { get; }
+        public abstract int ProtocolVersion { get; }
 
-        /// <summary>
-        /// Current state of IProtocol client/server connection.
-        /// </summary>
-        public abstract ConnectionState State { get; protected set; }
+        public abstract IStatusClient CreateStatusClient { get; }
+
+        public ConnectionState State { get; protected set; }
 
 
         public abstract string Host { get; }
         public abstract ushort Port { get; }
         public abstract bool Connected { get; }
 
-        protected Protocol(MineLibClient client, bool debugPackets = false) { }
+
+        protected Protocol(MineLibClient client, ProtocolMode mode)
+        {
+            Client = client;
+            switch (mode)
+            {
+                case ProtocolMode.Play:
+                    State = ConnectionState.Joining;
+                    break;
+                case ProtocolMode.Status:
+                    State = ConnectionState.InfoRequest;
+                    break;
+            }
+        }
+
 
         public abstract void Connect(string host, ushort port);
         public abstract void Disconnect();
 
-        /// <summary>
-        /// Only for internal use!
-        /// </summary>
-        public abstract void RegisterSending(Type sendingType, Action<SendingEventArgs> func);
-        /// <summary>
-        /// Only for internal use!
-        /// </summary>
-        public abstract void DeregisterSending(Type sendingType, Action<SendingEventArgs> func);
-        public abstract void DoSending(Type sendingType, SendingEventArgs args);
+        public abstract void RegisterSending<TSendingType>(Action<TSendingType> func) where TSendingType : SendingEvent;
+        public abstract void DeregisterSending<TSendingType>(Action<TSendingType> func) where TSendingType : SendingEvent;
+        public abstract void DoSending<TSendingType>(TSendingType args) where TSendingType : SendingEvent;
 
-        /// <summary>
-        /// Only for internal use!
-        /// </summary>
-        public abstract void RegisterReceiving(Type packetType, Func<ProtobufPacket, Task> func);
-        protected abstract void DeregisterReceiving(Type packetType, Func<ProtobufPacket, Task> func);
-        protected abstract void DoReceiving(Type packetType, ProtobufPacket protobufPacket);
+        public abstract void RegisterCustomReceiving<TPacketType>(Action<TPacketType> func) where TPacketType : ProtobufPacket;
+        public abstract void DeregisterCustomReceiving<TPacketType>(Action<TPacketType> func) where TPacketType : ProtobufPacket;
+        public abstract void DoCustomReceiving<TPacketType>(TPacketType protobufPacket) where TPacketType : ProtobufPacket;
 
         public abstract void Dispose();
     }

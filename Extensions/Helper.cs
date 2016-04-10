@@ -63,6 +63,5 @@ namespace MineLib.Core.Extensions
 
             return true;
         }
-
     }
 }

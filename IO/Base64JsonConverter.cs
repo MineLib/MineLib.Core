@@ -8,12 +8,12 @@ namespace MineLib.Core.IO
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(byte[]);
+            return objectType == typeof (byte[]);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var text = (string)reader.Value;
+            var text = (string) reader.Value;
 
             // Cut non-used data
             text = text.Replace("data:image/png;base64,", "");
@@ -23,7 +23,7 @@ namespace MineLib.Core.IO
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var bytes = (byte[])value;
+            var bytes = (byte[]) value;
             writer.WriteValue(Convert.ToBase64String(bytes));
         }
     }

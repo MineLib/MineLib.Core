@@ -1,12 +1,12 @@
 ﻿namespace MineLib.Core
 {
     /// <summary>
-    /// Defines protocol type we will use
+    /// The assembly type used.
     /// </summary>
     public enum ProtocolType
     {
         /// <summary>
-        /// C# protocol.
+        /// .NET protocol.
         /// </summary>
         Module,
 

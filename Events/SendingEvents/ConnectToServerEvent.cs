@@ -1,24 +1,17 @@
-using Aragas.Core.Data;
-
 namespace MineLib.Core.Events.SendingEvents
 {
-    public class ConnectToServerEvent : SendingEvent { }
-
-    public class ConnectToServerArgs : SendingEventArgs
+    public class ConnectToServer : SendingEvent
     {
         public string ServerHost { get; private set; }
         public ushort Port { get; private set; }
         public string Username { get; private set; }
-        public int Protocol { get; private set; }
 
-        public ConnectToServerArgs(string serverHost, ushort port, string username, int protocol)
+        public ConnectToServer(string serverHost, ushort port, string username)
         {
             ServerHost = serverHost;
             Port = port;
 
             Username = username;
-
-            Protocol = protocol;
         }
     }
 }
