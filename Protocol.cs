@@ -53,7 +53,7 @@ namespace MineLib.Core
         }
 
 
-        public abstract void Connect(string host, ushort port);
+        public abstract void Connect(IServerInfo serverInfo);
         public abstract void Disconnect();
 
         public abstract void RegisterSending<TSendingType>(Action<TSendingType> func) where TSendingType : SendingEvent;

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using MineLib.Core.Events;
 using MineLib.Core.Interfaces;
 using MineLib.Core.Loader;
@@ -27,7 +27,7 @@ namespace MineLib.Core
         protected NetworkHandler(MineLibClient client, ProtocolAssembly protocolAssembly) { Client = client; ProtocolAssembly = protocolAssembly; }
 
 
-        public void Connect(string host, ushort port) { Protocol.Connect(host, port); }
+        public void Connect(IServerInfo serverInfo) { Protocol.Connect(serverInfo); }
         public void Disconnect() { Protocol.Disconnect(); }
         
         public void DoSending(SendingEvent args) { Protocol.DoSending(args); }

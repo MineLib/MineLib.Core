@@ -20,7 +20,7 @@ namespace MineLib.Core.Data.Structs
 
             return Equals((BlockPosition) obj);
         }
-        public bool Equals(BlockPosition other) => Block == other.Block && Coordinates == other.Coordinates;
+        public bool Equals(BlockPosition other) => Block.Equals(other.Block) && Coordinates.Equals(other.Coordinates);
 
         public override int GetHashCode() => Block.GetHashCode() ^ Coordinates.GetHashCode();
     }

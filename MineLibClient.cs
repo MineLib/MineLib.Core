@@ -36,7 +36,7 @@ namespace MineLib.Core
             Mode = mode;
         }
         
-        public abstract void Connect(string ip, ushort port);
+        public abstract void Connect(IServerInfo serverInfo);
         public abstract void Disconnect();
 
         public abstract void RegisterReceiveEvent<TReceiveEvent>(Action<TReceiveEvent> func) where TReceiveEvent : ReceiveEvent;

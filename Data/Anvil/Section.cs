@@ -6,7 +6,7 @@ namespace MineLib.Core.Data.Anvil
     // -- Full  - 12304 bytes.
     // -- Empty - 20    bytes.
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class Section : IEquatable<Section>
+    public struct Section : IEquatable<Section>
     {
         public const int Width = 16;
         public const int Height = 16;
@@ -194,8 +194,8 @@ namespace MineLib.Core.Data.Anvil
 
         #endregion
 
-        public static bool operator ==(Section a, Section b) => a.IsFilled == b.IsFilled && a.ChunkPosition == b.ChunkPosition && a.Blocks == b.Blocks;
-        public static bool operator !=(Section a, Section b) => a.IsFilled != b.IsFilled && a.ChunkPosition != b.ChunkPosition && a.Blocks != b.Blocks;
+        public static bool operator ==(Section a, Section b) => a.IsFilled.Equals(b.IsFilled) && a.ChunkPosition.Equals(b.ChunkPosition) && a.Blocks.Equals(b.Blocks);
+        public static bool operator !=(Section a, Section b) => !a.IsFilled.Equals(b.IsFilled) && !a.ChunkPosition.Equals(b.ChunkPosition) && !a.Blocks.Equals(b.Blocks);
 
         public override bool Equals(object obj)
         {

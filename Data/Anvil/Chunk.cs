@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-using MineLib.Core.Data.Structs;
 using MineLib.Core.Extensions;
 
 namespace MineLib.Core.Data.Anvil
@@ -157,8 +156,8 @@ namespace MineLib.Core.Data.Anvil
 
         #endregion
 
-        public static bool operator ==(Chunk a, Chunk b) => a.Coordinates == b.Coordinates && a.Sections == b.Sections && a.Biomes == b.Biomes;
-        public static bool operator !=(Chunk a, Chunk b) => a.Coordinates != b.Coordinates && a.Sections != b.Sections && a.Biomes != b.Biomes;
+        public static bool operator ==(Chunk a, Chunk b) => !ReferenceEquals(a, null) && !ReferenceEquals(b, null) && (a.Coordinates.Equals(b.Coordinates) && a.Sections.Equals(b.Sections) && a.Biomes.Equals(b.Biomes));
+        public static bool operator !=(Chunk a, Chunk b) => ReferenceEquals(a, null) || ReferenceEquals(b, null) || (!a.Coordinates.Equals(b.Coordinates) && !a.Sections.Equals(b.Sections) && !a.Biomes.Equals(b.Biomes));
 
         public override bool Equals(object obj)
         {

@@ -150,8 +150,8 @@ namespace MineLib.Core.Data.Anvil
 			return $"ID: {ID}, Meta: {Meta}, Light: {Light}, SkyLight: {SkyLight}";
 		}
 
-		public static bool operator ==(Block a, Block b) => a.IDMeta == b.IDMeta && a.SkyAndBlockLight == b.SkyAndBlockLight;
-        public static bool operator !=(Block a, Block b) => a.IDMeta != b.IDMeta && a.SkyAndBlockLight != b.SkyAndBlockLight;
+        public static bool operator ==(Block a, Block b) => a.IDMeta.Equals(b.IDMeta) && a.SkyAndBlockLight.Equals(b.SkyAndBlockLight);
+        public static bool operator !=(Block a, Block b) => !a.IDMeta.Equals(b.IDMeta) && !a.SkyAndBlockLight.Equals(b.SkyAndBlockLight);
 
         public override bool Equals(object obj)
 		{
