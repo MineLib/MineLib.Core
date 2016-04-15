@@ -10,6 +10,8 @@ namespace MineLib.Core.Data.Anvil
     // -- Empty (empty       Section) - 26     bytes.
     public class Chunk : IEquatable<Chunk>
     {
+        public static Chunk Empty => new Chunk(Coordinates2D.Zero);
+
         public const ushort Width = 16;
         public const ushort Height = 256;
         public const ushort Depth = 16;
@@ -19,28 +21,31 @@ namespace MineLib.Core.Data.Anvil
         public const int TwoByteData = OneByteData * 2;
         public const int BiomesLength = Width * Depth;
 
-        public Coordinates2D Coordinates;
-        public ushort PrimaryBitMap;
-        public bool OverWorld;
-        public bool GroundUp;
+        public Coordinates2D Coordinates { get; }
+        public ushort PrimaryBitMap => Sections.ConvertToUShort();
+        public bool OverWorld { get; set; }
+        public bool GroundUp { get; set; }
 
-        public byte[] Biomes;
+        public byte[] Biomes { get; }
 
-        public Section[] Sections;
+        public Section[] Sections { get; }
 
         // -- Debugging
-        public bool[] PrimaryBitMapConverted => SectionStatus(PrimaryBitMap);
+        public bool[] PrimaryBitMapConverted => Helper.ConvertFromUShort(Sections);
         // -- Debugging
-    
+
+
         public Chunk(Coordinates2D chunkCoordinates)
         {
             Coordinates = chunkCoordinates;
+
             Biomes = new byte[BiomesLength];
 
             Sections = new Section[16];
             for (var i = 0; i < Sections.Length; i++)
-                Sections[i] = new Section(new Position(Coordinates.X, i, Coordinates.Z));     
+                Sections[i] = new Section(new Position(Coordinates.X, i, Coordinates.Z));
         }
+
 
         public override string ToString() => $"Filled Sections: {GetFilledSectionsCount()}";
 
@@ -150,14 +155,19 @@ namespace MineLib.Core.Data.Anvil
 
         private int GetFilledSectionsCount() => Sections.Count(section => section.IsFilled);
 
-        private static bool[] SectionStatus(ushort primaryBitMap) => Helper.ConvertFromUShort(primaryBitMap);
-
-        private ushort SectionStatus() => this.ConvertToUShort();
-
         #endregion
 
-        public static bool operator ==(Chunk a, Chunk b) => !ReferenceEquals(a, null) && !ReferenceEquals(b, null) && (a.Coordinates.Equals(b.Coordinates) && a.Sections.Equals(b.Sections) && a.Biomes.Equals(b.Biomes));
-        public static bool operator !=(Chunk a, Chunk b) => ReferenceEquals(a, null) || ReferenceEquals(b, null) || (!a.Coordinates.Equals(b.Coordinates) && !a.Sections.Equals(b.Sections) && !a.Biomes.Equals(b.Biomes));
+        public static bool operator ==(Chunk a, Chunk b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+                return false;
+
+            return a.Coordinates == b.Coordinates && a.Sections == b.Sections && a.Biomes == b.Biomes;
+        }
+        public static bool operator !=(Chunk a, Chunk b) => !(a == b);
 
         public override bool Equals(object obj)
         {

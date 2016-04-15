@@ -4,14 +4,16 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace MineLib.Core.Data.Anvil
-{	
+{
 #if FULLBLOCK
+    // -- Full  - 5 bytes.
+    // -- Empty - 5 bytes.
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Block : IEquatable<Block>
 	{
-        public ushort ID { get; set; }
+        public ushort ID { get; }
 
-        public byte Meta { get; set; }
+        public byte Meta { get; }
 
         public byte SkyLight { get; set; }
         public byte Light { get; set; }
@@ -49,27 +51,12 @@ namespace MineLib.Core.Data.Anvil
             Light = light;
 		}
 
-		public override string ToString()
-		{
-			return String.Format("ID: {0}, Meta: {1}, Light: {2}, SkyLight: {3}", ID, Meta, Light, SkyLight);
-		}
+		public override string ToString() => $"ID: {ID}, Meta: {Meta}, Light: {Light}, SkyLight: {SkyLight}";
 
-		public static bool operator ==(Block a, Block b)
-		{
-            return a.ID == b.ID && a.Meta == b.Meta && a.Light == b.Light && a.SkyLight == b.SkyLight;
-		}
+        public static bool operator ==(Block a, Block b) => a.ID == b.ID && a.Meta == b.Meta && a.Light == b.Light && a.SkyLight == b.SkyLight;
+        public static bool operator !=(Block a, Block b) => !(a == b);
 
-		public static bool operator !=(Block a, Block b)
-		{
-			return !(a == b);
-		}
-
-		public bool Equals(Block other)
-		{
-            return other.ID.Equals(ID) && other.Meta.Equals(ID);
-		}
-
-		public override bool Equals(object obj)
+        public override bool Equals(object obj)
 		{
             if (obj == null)
                 return false;
@@ -79,35 +66,58 @@ namespace MineLib.Core.Data.Anvil
 
             return Equals((Block) obj);
 		}
+        public bool Equals(Block other) => other.ID.Equals(ID) && other.Meta.Equals(Meta);
 
-		public override int GetHashCode()
+        public override int GetHashCode()
 		{
-			return IDMeta.GetHashCode();
+			return ID.GetHashCode() ^ Meta.GetHashCode();
 		}
 
-        public bool IsAir { get { return ID == 0; } }
+        public bool IsAir => ID == 0;
 
-        public bool IsTransparent { get { return ID == 18 || ID == 161; } }
-
-        public bool IsFluid { get { return ID == 18 || ID == 161; } }
-
-        public static readonly int[] TransparentBlocks = 
+        public bool IsTransparent
         {
-            6, 8, 9, 18, 20, 27, 28, 30,  31, 32, 37, 38, 39, 40, 
+            get
+            {
+                foreach (var i in TransparentBlocks)
+                    if (i == ID) return true;
+                return false;
+            }
+        }
+
+        public bool IsFluid
+        {
+            get
+            {
+                foreach (var i in FluidBlocks)
+                    if (i == ID) return true;
+                return false;
+            }
+        }
+
+        public static readonly int[] FluidBlocks =
+        {
+            8, 9, 10, 11
         };
-	}
+
+        public static readonly int[] TransparentBlocks =
+        {
+            6, 18, 20, 27, 28, 30, 31, 32, 37, 38, 39, 40, 161
+        };
+    }
 #else
     // -- Full  - 3 bytes.
     // -- Empty - 3 bytes.
-    // -- Performace cost isn't too high. We are handling maximum 1kk, loose ~5 ms, but win 10mb.
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct Block : IEquatable<Block>
 	{
+        public static Block Empty => new Block(0);
+
+
 		private readonly ushort IDMeta;
 		private byte SkyAndBlockLight;
 
 		public ushort ID => (ushort) (IDMeta >> 4);
-
         public byte Meta => (byte) (IDMeta & 0x000F);
 
         public byte SkyLight
@@ -145,13 +155,10 @@ namespace MineLib.Core.Data.Anvil
 			SkyAndBlockLight = (byte)(skyLight << 4 & 0xF0  | light & 0x0F);
 		}
 
-		public override string ToString()
-		{
-			return $"ID: {ID}, Meta: {Meta}, Light: {Light}, SkyLight: {SkyLight}";
-		}
+		public override string ToString() => $"ID: {ID}, Meta: {Meta}, Light: {Light}, SkyLight: {SkyLight}";
 
-        public static bool operator ==(Block a, Block b) => a.IDMeta.Equals(b.IDMeta) && a.SkyAndBlockLight.Equals(b.SkyAndBlockLight);
-        public static bool operator !=(Block a, Block b) => !a.IDMeta.Equals(b.IDMeta) && !a.SkyAndBlockLight.Equals(b.SkyAndBlockLight);
+        public static bool operator ==(Block a, Block b) => a.IDMeta == b.IDMeta && a.SkyAndBlockLight == b.SkyAndBlockLight;
+        public static bool operator !=(Block a, Block b) => !(a == b);
 
         public override bool Equals(object obj)
 		{

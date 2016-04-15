@@ -1,42 +1,34 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace MineLib.Core.Data.Anvil
 {
     // -- Full  - 12304 bytes.
     // -- Empty - 20    bytes.
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct Section : IEquatable<Section>
+    public class Section : IEquatable<Section>
     {
+        public static Section Empty => new Section(Position.Zero);
+
         public const int Width = 16;
         public const int Height = 16;
         public const int Depth = 16;
 
-        public readonly Position ChunkPosition;
+        public Position ChunkPosition { get; }
 
-        public BlockList Blocks;
+        public BlockList Blocks { get; private set; } = new BlockList(0);
 
-        public bool IsFilled;
+        public bool IsFilled => Blocks.XSize * Blocks.YSize * Blocks.ZSize > 0;
 
 
-        public Section(Position position)
-        {
-            ChunkPosition = position;
-
-            Blocks = new BlockList(0);
-            IsFilled = false;
-        }
+        public Section(Position position) { ChunkPosition = position; }
 
         public override string ToString() => IsFilled ? "Filled" : "Empty";
 
-        public void BuildEmpty()
+        private void BuildEmpty()
         {
             if(IsFilled)
                 return;
 
             Blocks = new BlockList(Width, Height, Depth);
-
-            IsFilled = true;
         }
         // REWRITE: Big indivilual work
         public void BuildFromNibbleData(byte[] blocks, byte[] blockLights, byte[] blockSkyLights)
@@ -61,8 +53,6 @@ namespace MineLib.Core.Data.Anvil
 
                 j = j + 2;
             }
-
-            IsFilled = true;
         }
         public void BuildFromBlocks(BlockList list)
         {
@@ -70,8 +60,6 @@ namespace MineLib.Core.Data.Anvil
                 return;
 
             Blocks = list;
-
-            IsFilled = true;
         }
 
         public Block GetBlock(Position sectionPos)
@@ -194,8 +182,18 @@ namespace MineLib.Core.Data.Anvil
 
         #endregion
 
-        public static bool operator ==(Section a, Section b) => a.IsFilled.Equals(b.IsFilled) && a.ChunkPosition.Equals(b.ChunkPosition) && a.Blocks.Equals(b.Blocks);
-        public static bool operator !=(Section a, Section b) => !a.IsFilled.Equals(b.IsFilled) && !a.ChunkPosition.Equals(b.ChunkPosition) && !a.Blocks.Equals(b.Blocks);
+        public static bool operator ==(Section a, Section b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+                return false;
+            
+            return a.IsFilled == b.IsFilled && a.ChunkPosition == b.ChunkPosition && a.Blocks == b.Blocks;
+        }
+        public static bool operator !=(Section a, Section b) => !(a == b);
+
 
         public override bool Equals(object obj)
         {

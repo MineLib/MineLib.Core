@@ -13,21 +13,39 @@ namespace MineLib.Core.Extensions
         /// <returns></returns>
         public static bool[] ConvertFromUShort(ushort value)
         {
-            var intArray = new bool[15];
+            var array = new bool[15];
 
             for (var i = 0; i < 15; i++)
-                intArray[i] = ((value & (1 << i)) > 0);
+                array[i] = (value & (1 << i)) > 0;
             
-            return intArray;
+            return array;
         }
-        public static ushort ConvertToUShort(this Chunk chunk)
+        public static ushort ConvertToUShort(this Section[] sections)
         {
-            foreach (var section in chunk.Sections)
+            ushort primaryBitMap = 0, mask = 1;
+
+            for (var i = sections.Length - 1; i >= 0; i--)
             {
-                if (section.IsFilled)
-                    ;
+                if (sections[i].IsFilled)
+                    primaryBitMap |= mask;
+                
+                mask <<= 1;
             }
-            return 0;
+
+            return primaryBitMap |= mask;
+        }
+        public static bool[] ConvertFromUShort(Section[] sections)
+        {
+            if (sections.Length > 16)
+                throw new NotSupportedException();
+
+            var array = new bool[sections.Length];
+
+            for (var i = 0; i < 15; i++)
+                if (sections[i].IsFilled)
+                    array[i] = true;
+
+            return array;
         }
 
         public static bool NearlyEquals(this double value1, double value2, double unimportantDifference = 0.0001)

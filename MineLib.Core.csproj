@@ -35,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Client\ProtocolPurpose.cs" />
     <Compile Include="Data\NotSupportedType.cs" />
     <Compile Include="Data\Structs\BlockPosition.cs" />
     <Compile Include="Events\ReceiveEvents\DisconnectEvent.cs" />
@@ -69,9 +70,10 @@
     <Compile Include="Events\ReceiveEvents\SpawnPointEvent.cs" />
     <Compile Include="Events\ReceiveEvents\TimeUpdateEvent.cs" />
     <Compile Include="Events\ReceiveEvents\UpdateHealthEvent.cs" />
-    <Compile Include="Interfaces\IStatusClient.cs" />
-    <Compile Include="Interfaces\IServerInfo.cs" />
-    <Compile Include="ConnectionState.cs" />
+    <Compile Include="IModAPIContext.cs" />
+    <Compile Include="Client\IStatusClient.cs" />
+    <Compile Include="Client\IServerInfo.cs" />
+    <Compile Include="Client\ClientState.cs" />
     <Compile Include="Data\Anvil\Block.cs" />
     <Compile Include="Data\Anvil\Chunk.cs" />
     <Compile Include="Data\Anvil\Section.cs" />
@@ -86,13 +88,13 @@
     <Compile Include="Extensions\Helper.cs" />
     <Compile Include="Events\ReceiveEvent.cs" />
     <Compile Include="Events\SendingEvent.cs" />
-    <Compile Include="MineLibClient.cs" />
-    <Compile Include="NetworkHandler.cs" />
-    <Compile Include="Protocol.cs" />
-    <Compile Include="Loader\ProtocolAssemblyLoader.cs" />
-    <Compile Include="Loader\ProtocolAssembly.cs" />
-    <Compile Include="ModularNetworkHandler.cs" />
-    <Compile Include="ProtocolType.cs" />
+    <Compile Include="Client\MineLibClient.cs" />
+    <Compile Include="ModAPI.cs" />
+    <Compile Include="Client\ProtocolHandler.cs" />
+    <Compile Include="Client\Protocol.cs" />
+    <Compile Include="Loader\AssemblyParser.cs" />
+    <Compile Include="Loader\AssemblyInfo.cs" />
+    <Compile Include="Client\ModularProtocolHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\Anvil\World.cs" />
   </ItemGroup>
@@ -113,9 +115,6 @@
       <Project>{22ac9f07-35ca-4e0e-b3b8-4a8e719df529}</Project>
       <Name>fNbt.Portable</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

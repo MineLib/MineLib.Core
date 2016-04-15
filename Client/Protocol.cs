@@ -5,60 +5,49 @@ using Aragas.Core.PacketHandlers;
 using Aragas.Core.Packets;
 
 using MineLib.Core.Events;
-using MineLib.Core.Interfaces;
 
-namespace MineLib.Core
+namespace MineLib.Core.Client
 {
-    public enum ProtocolMode { Play, Status }
-
     public abstract class Protocol : IPacketHandlerContext, IDisposable
     {
         protected MineLibClient Client { get; }
 
-        #region Login
-
-        protected bool UseLogin => Client.UseLogin;
-
-        public abstract Task<bool> Login(string login, string password);
-        public abstract Task<bool> Logout();
-
-        #endregion Login
-
         public abstract string Name { get; }
         public abstract string Version { get; }
-        public abstract int ProtocolVersion { get; }
-
-        public abstract IStatusClient CreateStatusClient { get; }
-
-        public ConnectionState State { get; protected set; }
-
-
+        public abstract int NetworkVersion { get; }
+        
         public abstract string Host { get; }
         public abstract ushort Port { get; }
         public abstract bool Connected { get; }
+        public ClientState State { get; protected set; }
 
 
-        protected Protocol(MineLibClient client, ProtocolMode mode)
+        protected Protocol(MineLibClient client, ProtocolPurpose purpose)
         {
             Client = client;
-            switch (mode)
+            switch (purpose)
             {
-                case ProtocolMode.Play:
-                    State = ConnectionState.Joining;
+                case ProtocolPurpose.Play:
+                    State = ClientState.Joining;
                     break;
-                case ProtocolMode.Status:
-                    State = ConnectionState.InfoRequest;
+                case ProtocolPurpose.InfoRequest:
+                    State = ClientState.InfoRequest;
                     break;
             }
         }
 
 
-        public abstract void Connect(IServerInfo serverInfo);
+        public abstract IStatusClient CreateStatusClient();
+
+        public abstract Task<bool> Login(string login, string password);
+        public abstract Task<bool> Logout();
+
+        public abstract void Connect(ServerInfo serverInfo);
         public abstract void Disconnect();
 
         public abstract void RegisterSending<TSendingType>(Action<TSendingType> func) where TSendingType : SendingEvent;
         public abstract void DeregisterSending<TSendingType>(Action<TSendingType> func) where TSendingType : SendingEvent;
-        public abstract void DoSending<TSendingType>(TSendingType args) where TSendingType : SendingEvent;
+        public abstract void FireEvent<TSendingType>(TSendingType args) where TSendingType : SendingEvent;
 
         public abstract void RegisterCustomReceiving<TPacketType>(Action<TPacketType> func) where TPacketType : ProtobufPacket;
         public abstract void DeregisterCustomReceiving<TPacketType>(Action<TPacketType> func) where TPacketType : ProtobufPacket;

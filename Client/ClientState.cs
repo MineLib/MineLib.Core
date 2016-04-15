@@ -1,9 +1,9 @@
-﻿namespace MineLib.Core
+﻿namespace MineLib.Core.Client
 {
     /// <summary>
-    /// Connection state.
+    /// Client connection state.
     /// </summary>
-    public enum ConnectionState
+    public enum ClientState
     {
         /// <summary>
         /// Not initialized.

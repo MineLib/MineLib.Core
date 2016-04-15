@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace MineLib.Core.Interfaces
+namespace MineLib.Core.Client
 {
-    public interface IServerInfo
+    public class ServerInfo
     {
-        string Name { get; }
-        ServerAddress Address { get; }
+        public string Name { get; }
+        public ServerAddress Address { get; set; }
 
-        IServerResponse ServerResponse { get; }
+        public IServerResponse ServerResponse { get; set; }
     }
-    public struct ServerAddress
+    public class ServerAddress
     {
         public string IP { get; set; }
 
