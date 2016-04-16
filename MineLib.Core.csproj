@@ -36,8 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Client\ProtocolPurpose.cs" />
-    <Compile Include="Data\NotSupportedType.cs" />
-    <Compile Include="Data\Structs\BlockPosition.cs" />
+    <Compile Include="Data\BlockPosition.cs" />
     <Compile Include="Events\ReceiveEvents\DisconnectEvent.cs" />
     <Compile Include="Events\ReceiveEvents\GameInfoEvent.cs" />
     <Compile Include="Events\ReceiveEvents\PlayerIDEvent.cs" />

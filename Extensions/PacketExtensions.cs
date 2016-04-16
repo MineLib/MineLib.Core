@@ -21,13 +21,8 @@ namespace MineLib.Core.Extensions
         {
             Aragas.Core.Extensions.PacketExtensions.Init();
 
-            Extend<NotSupportedType>(ReadNotSupportedType, WriteNotSupportedType);
-
             Extend<Position>(ReadPosition, WritePosition);
         }
-
-        public static void WriteNotSupportedType(PacketStream stream, NotSupportedType value, bool writeDefaultLength = true) { }
-        private static NotSupportedType ReadNotSupportedType(PacketDataReader reader, int length = 0) { return null; }
 
         private static void WritePosition(PacketStream stream, Position value, bool writeDefaultLength = true)
         {

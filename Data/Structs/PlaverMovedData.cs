@@ -15,25 +15,22 @@ namespace MineLib.Core.Data.Structs
         bool OnGround { get; set; }
     }
 
-    public class PlaverMovedDataOnGround : IPlaverMovedData
+    public struct PlaverMovedDataOnGround : IPlaverMovedData
     {
         public bool OnGround { get; set; }
     }
-
-    public class PlaverMovedDataVector3 : IPlaverMovedData
+    public struct PlaverMovedDataVector3 : IPlaverMovedData
     {
         public Vector3 Vector3 { get; set; }
         public bool OnGround { get; set; }
     }
-
-    public class PlaverMovedDataYawPitch : IPlaverMovedData
+    public struct PlaverMovedDataYawPitch : IPlaverMovedData
     {
         public float Yaw { get; set; }
         public float Pitch { get; set; }
         public bool OnGround { get; set; }
     }
-
-    public class PlaverMovedDataAll : IPlaverMovedData
+    public struct PlaverMovedDataAll : IPlaverMovedData
     {
         public float Yaw { get; set; }
         public float Pitch { get; set; }

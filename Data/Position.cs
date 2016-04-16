@@ -15,45 +15,18 @@ namespace MineLib.Core.Data
         public readonly int Y;
         public readonly int Z;
 
-        public Position(int value)
-        {
-            X = Y = Z = value;
-        }
-        public Position(int x, int y, int z)
-        {
-            X = x;
-            Y = y;
-            Z = z;
-        }
-        public Position(Position v)
-        {
-            X = v.X;
-            Y = v.Y;
-            Z = v.Z;
-        }
 
-        public static Position FromLong(long value)
-        {
-            return new Position(
-                (int) (value >> 38),
-                (int) (value >> 26) & 0xFFF,
-                (int) value << 38 >> 38
-            );
-        }
+        public Position(int value) { X = Y = Z = value; }
+        public Position(int x, int y, int z) { X = x; Y = y; Z = z; }
+        public Position(Position p) { X = p.X; Y = p.Y; Z = p.Z; }
 
-        public long ToLong()
-        {
-            return ((X & 0x3FFFFFF) << 38) | ((Y & 0xFFF) << 26) | (Z & 0x3FFFFFF);
-        }
+        public static Position FromLong(long value) => new Position((int) (value >> 38), (int) (value >> 26) & 0xFFF, (int) value << 38 >> 38);
+        public long ToLong() => ((X & 0x3FFFFFF) << 38) | ((Y & 0xFFF) << 26) | (Z & 0x3FFFFFF);
 
         /// <summary>
         /// Converts this Position to a string.
         /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return $"X: {X}, Y: {Y}, Z: {Z}";
-        }
+        public override string ToString() => $"X: {X}, Y: {Y}, Z: {Z}";
 
         #region Math
 
@@ -105,110 +78,33 @@ namespace MineLib.Core.Data
 
         #region Operators
 
-        public static bool operator !=(Position a, Position b)
-        {
-            return !a.Equals(b);
-        }
+        public static Position operator -(Position a) => new Position(-a.X, -a.Y, -a.Z);
+        public static Position operator ++(Position a) => new Position(a.X, a.Y, a.Z) + 1;
+        public static Position operator --(Position a) => new Position(a.X, a.Y, a.Z) - 1;
 
-        public static bool operator ==(Position a, Position b)
-        {
-            return a.Equals(b);
-        }
+        public static bool operator ==(Position a, Position b) => a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+        public static bool operator !=(Position a, Position b) => !(a == b);
+        
+        public static Position operator +(Position a, Position b) => new Position(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        public static Position operator -(Position a, Position b) => new Position(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        public static Position operator *(Position a, Position b) => new Position(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+        public static Position operator /(Position a, Position b) => new Position(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
+        public static Position operator %(Position a, Position b) => new Position(a.X % b.X, a.Y % b.Y, a.Z % b.Z);
 
-        public static Position operator +(Position a, Position b)
-        {
-            return new Position(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
-        }
+        public static Position operator +(Position a, int b) => new Position(a.X + b, a.Y + b, a.Z + b);
+        public static Position operator -(Position a, int b) => new Position(a.X - b, a.Y - b, a.Z - b);
+        public static Position operator *(Position a, int b) => new Position(a.X * b, a.Y * b, a.Z * b);
+        public static Position operator /(Position a, int b) => new Position(a.X / b, a.Y / b, a.Z / b);
+        public static Position operator %(Position a, int b) => new Position(a.X % b, a.Y % b, a.Z % b);
 
-        public static Position operator -(Position a, Position b)
-        {
-            return new Position(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
-        }
+        public static Position operator +(int a, Position b) => new Position(a + b.X, a + b.Y, a + b.Z);
+        public static Position operator -(int a, Position b) => new Position(a - b.X, a - b.Y, a - b.Z);
+        public static Position operator *(int a, Position b) => new Position(a * b.X, a * b.Y, a * b.Z);
+        public static Position operator /(int a, Position b) => new Position(a / b.X, a / b.Y, a / b.Z);
+        public static Position operator %(int a, Position b) => new Position(a % b.X, a % b.Y, a % b.Z);
 
-        public static Position operator -(Position a)
-        {
-            return new Position(-a.X, -a.Y, -a.Z);
-        }
-
-        public static Position operator *(Position a, Position b)
-        {
-            return new Position(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
-        }
-
-        public static Position operator /(Position a, Position b)
-        {
-            return new Position(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
-        }
-
-        public static Position operator %(Position a, Position b)
-        {
-            return new Position(a.X % b.X, a.Y % b.Y, a.Z % b.Z);
-        }
-
-        public static Position operator +(Position a, int b)
-        {
-            return new Position(a.X + b, a.Y + b, a.Z + b);
-        }
-
-        public static Position operator -(Position a, int b)
-        {
-            return new Position(a.X - b, a.Y - b, a.Z - b);
-        }
-
-        public static Position operator *(Position a, int b)
-        {
-            return new Position(a.X * b, a.Y * b, a.Z * b);
-        }
-
-        public static Position operator /(Position a, int b)
-        {
-            return new Position(a.X / b, a.Y / b, a.Z / b);
-        }
-
-        public static Position operator %(Position a, int b)
-        {
-            return new Position(a.X % b, a.Y % b, a.Z % b);
-        }
-
-        public static Position operator +(int a, Position b)
-        {
-            return new Position(a + b.X, a + b.Y, a + b.Z);
-        }
-
-        public static Position operator -(int a, Position b)
-        {
-            return new Position(a - b.X, a - b.Y, a - b.Z);
-        }
-
-        public static Position operator *(int a, Position b)
-        {
-            return new Position(a * b.X, a * b.Y, a * b.Z);
-        }
-
-        public static Position operator /(int a, Position b)
-        {
-            return new Position(a / b.X, a / b.Y, a / b.Z);
-        }
-
-        public static Position operator %(int a, Position b)
-        {
-            return new Position(a % b.X, a % b.Y, a % b.Z);
-        }
-
-        public static explicit operator Position(Coordinates2D a)
-        {
-            return new Position(a.X, 0, a.Z);
-        }
-
-        public static implicit operator Position(Vector3 a)
-        {
-            return new Position((int)a.X, (int)a.Y, (int)a.Z);
-        }
-
-        public static implicit operator Vector3(Position a)
-        {
-            return new Vector3(a.X, a.Y, a.Z);
-        }
+        public static implicit operator Position(Vector3 a) => new Position((int) a.X, (int) a.Y, (int) a.Z);
+        public static implicit operator Vector3(Position a) => new Vector3(a.X, a.Y, a.Z);
 
         #endregion
 
@@ -231,11 +127,6 @@ namespace MineLib.Core.Data
 
         #endregion
 
-        public bool Equals(Position other)
-        {
-            return other.X.Equals(X) && other.Y.Equals(Y) && other.Z.Equals(Z);
-        }
-
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -246,10 +137,8 @@ namespace MineLib.Core.Data
 
             return Equals((Position) obj);
         }
+        public bool Equals(Position other) => other.X.Equals(X) && other.Y.Equals(Y) && other.Z.Equals(Z);
 
-        public override int GetHashCode()
-        {
-            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
-        }
+        public override int GetHashCode() => X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
     }
 }

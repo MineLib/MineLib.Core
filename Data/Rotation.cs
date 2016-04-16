@@ -15,49 +15,19 @@ namespace MineLib.Core.Data
         public readonly float Yaw;
         public readonly float Roll;
 
-        public Rotation(float pitch, float yaw, float roll)
-        {
-            Pitch = pitch;
-            Yaw = yaw;
-            Roll = roll;
-        }
- 
-        public Rotation(Rotation v)
-        {
-            Pitch = v.Pitch;
-            Yaw = v.Yaw;
-            Roll = v.Roll;
-        }
+
+        public Rotation(float pitch, float yaw, float roll) { Pitch = pitch; Yaw = yaw; Roll = roll; }
+        public Rotation(double pitch, double yaw, double roll) { Pitch = (float) pitch; Yaw = (float) yaw; Roll = (float) roll; }
+        public Rotation(Rotation r) { Pitch = r.Pitch;  Yaw = r.Yaw; Roll = r.Roll; }
 
 
         /// <summary>
         /// Converts this Rotation to a string.
         /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return $"Pitch: {Pitch}, Yaw: {Yaw}, Roll: {Roll}";
-        }
+        public override string ToString() => $"Pitch: {Pitch}, Yaw: {Yaw}, Roll: {Roll}";
 
-        public static bool operator ==(Rotation a, Rotation b)
-        {
-            return a.Pitch.Equals(b.Pitch) && a.Yaw.Equals(b.Yaw) && a.Roll.Equals(b.Roll);
-        }
-
-        public static bool operator !=(Rotation a, Rotation b)
-        {
-            return !a.Pitch.Equals(b.Pitch) && !a.Yaw.Equals(b.Yaw) && !a.Roll.Equals(b.Roll);
-        }
-
-        public bool Equals(Rotation other)
-        {
-            return other.Pitch.NearlyEquals(Pitch) && other.Yaw.NearlyEquals(Yaw) && other.Roll.NearlyEquals(Roll);
-        }
-
-        public bool Equals(float other)
-        {
-            return other.NearlyEquals(Pitch) && other.NearlyEquals(Yaw) && other.NearlyEquals(Roll);
-        }
+        public static bool operator ==(Rotation a, Rotation b) => a.Pitch == b.Pitch && a.Yaw == b.Yaw && a.Roll == b.Roll;
+        public static bool operator !=(Rotation a, Rotation b) => !(a == b);
 
         public override bool Equals(object obj)
         {
@@ -69,10 +39,8 @@ namespace MineLib.Core.Data
 
             return Equals((Rotation) obj);         
         }
+        public bool Equals(Rotation other) => other.Pitch.Equals(Pitch) && other.Yaw.Equals(Yaw) && other.Roll.Equals(Roll);
 
-        public override int GetHashCode()
-        {
-            return Pitch.GetHashCode() ^ Yaw.GetHashCode() ^ Roll.GetHashCode();
-        }
+        public override int GetHashCode() => Pitch.GetHashCode() ^ Yaw.GetHashCode() ^ Roll.GetHashCode();
     }
 }

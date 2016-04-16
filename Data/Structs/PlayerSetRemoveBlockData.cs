@@ -9,22 +9,20 @@
 
     public interface IPlayerSetRemoveBlockData { }
 
-    public class PlayerSetRemoveBlockDataPlace : IPlayerSetRemoveBlockData
+    public struct PlayerSetRemoveBlockDataPlace : IPlayerSetRemoveBlockData
     {
         public Position Location { get; set; }
         public ItemStack Slot { get; set; }
         public Position Crosshair { get; set; }
         public byte Direction { get; set; }
     }
-
-    public class PlayerSetRemoveBlockDataDig : IPlayerSetRemoveBlockData
+    public struct PlayerSetRemoveBlockDataDig : IPlayerSetRemoveBlockData
     {
         public byte Status { get; set; }
         public Position Location { get; set; }
         public sbyte Face { get; set; }
     }
-
-    public class PlayerSetRemoveBlockDataRemove : IPlayerSetRemoveBlockData
+    public struct PlayerSetRemoveBlockDataRemove : IPlayerSetRemoveBlockData
     {
         public Position Location { get; set; }
         public int BlockID { get; set; }

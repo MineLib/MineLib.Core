@@ -210,42 +210,41 @@ namespace MineLib.Core.Data.Anvil
     
     public class BlockList
     {
-        public readonly int XSize;
-        public readonly int YSize;
-        public readonly int ZSize;
+        public int XSize { get; }
+        public int YSize { get; }
+        public int ZSize { get; }
 
-        private readonly Block[] _blocks;
+        private Block[] Blocks { get; }
+
 
         public BlockList(int size)
         {
-            _blocks = new Block[size];
+            Blocks = new Block[size];
         }
-
         public BlockList(int xSize, int ySize, int zSize)
         {
             XSize = xSize;
             YSize = ySize;
             ZSize = zSize;
 
-            _blocks = new Block[XSize * YSize * ZSize];
+            Blocks = new Block[XSize * YSize * ZSize];
         }
+
 
         public Block this[Position pos]
         {
-            get { return _blocks[pos.X + ((pos.Y * YSize) + pos.Z) * XSize]; }
-            set { _blocks[pos.X + ((pos.Y * YSize) + pos.Z) * XSize] = value; }
+            get { return Blocks[pos.X + ((pos.Y * YSize) + pos.Z) * XSize]; }
+            set { Blocks[pos.X + ((pos.Y * YSize) + pos.Z) * XSize] = value; }
         }
-
         public Block this[int x, int y, int z]
         {
-            get { return _blocks[x + ((y * YSize) + z) * XSize]; }
-            set { _blocks[x + ((y * YSize) + z) * XSize] = value; }
+            get { return Blocks[x + ((y * YSize) + z) * XSize]; }
+            set { Blocks[x + ((y * YSize) + z) * XSize] = value; }
         }
-
         public Block this[int index]
         {
-            get { return _blocks[index]; }
-            set { _blocks[index] = value; }
+            get { return Blocks[index]; }
+            set { Blocks[index] = value; }
         }
     }
 }
